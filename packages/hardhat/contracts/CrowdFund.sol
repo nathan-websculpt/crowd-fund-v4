@@ -3,6 +3,7 @@ pragma solidity >=0.8.0 <0.9.0;
 
 /**
  * @dev NOT PRODUCTION-READY ... FOR LEARNING PURPOSES ONLY
+ * In progress, may break, check out V1 instead: https://github.com/nathan-websculpt/crowd-fund
  * CrowdFund.sol is a barebones POC of a multi-user "Crowd Fund Creator"
  * known issues/enhancements saved for V2 --
  * - Fund Runs that receive 0 donations will never be de-activated
