@@ -1,3 +1,104 @@
+# 🚀 🌑 Crowd Fund
+Note: In progress, you may want to [use Crowd Fund V1 instead](https://github.com/nathan-websculpt/crowd-fund)
+
+A barebones proof-of-concept for a “Crowdfunding” app.
+
+⚙️ Built with [Scaffold-ETH 2](#Contents), using NextJS, RainbowKit, Hardhat, Wagmi, and Typescript.
+
+## Overview
+### 📜 *The 'rules-of-use' are simplistic and standard:*
+
+- Crowd Fund is a way for users to create **“Fund Runs”** that other users can donate to.
+- These Fund Runs have deadlines 
+  - defined in *minutes* by the user during Fund Run creation
+- Fund Runs also have a *target money goal* 
+- A donor can get their funds back from a Fund Run **IF**:
+  - The deadline has passed
+  - The fund failed to raise its target capital
+- An owner can get their new donations **IF**:
+  - The deadline has passed
+  - The fund’s donations are greater-than/equal-to the *target money goal* 
+
+### 🔗 *CrowdFund.sol*
+- The smart contract only works with (Sepolia) Ether
+- It does not do any profit-taking
+  - therefore has no owner
+- The **FundRun** *struct* will hold the Fund Run's data
+  - While a second *struct* (**DonorsLog**) maintains a mapping of *fundRunId* =>   *donationAmount*
+    - Therefore, a user's (a donor's) address will then map to their **DonorsLog** (which - itself - is keeping all of the user's donations [to various Fund Runs] separated)
+
+## 🧐 Before You Start
+
+Before you begin, you need to install the following tools:
+
+- [Node (v18 LTS)](https://nodejs.org/en/download/)
+- Yarn ([v1](https://classic.yarnpkg.com/en/docs/install/) or [v2+](https://yarnpkg.com/getting-started/install))
+- [Git](https://git-scm.com/downloads)
+
+## Crowd Fund Quickstart
+
+To get started with Crowd Fund, follow the steps below ([To get started with SE-2 instead, click here](#requirements)):
+
+1. Clone this repo & install dependencies
+
+```
+git clone https://github.com/nathan-websculpt/crowd-fund.git
+cd crowd-fund
+yarn install
+```
+
+2. Run a local network in the first terminal:
+
+```
+yarn chain
+```
+
+This command starts a local Ethereum network using Hardhat. The network runs on your local machine and can be used for testing and development. You can customize the network configuration in `hardhat.config.ts`.
+
+3. On a second terminal, deploy the test contract:
+
+```
+yarn deploy
+```
+
+This command deploys a test smart contract to the local network. The contract is located in `packages/hardhat/contracts` and can be modified to suit your needs. The `yarn deploy` command uses the deploy script located in `packages/hardhat/deploy` to deploy the contract to the network. You can also customize the deploy script.
+
+4. On a third terminal, start your NextJS app:
+
+```
+yarn start
+```
+
+Visit your app on: `http://localhost:3000`. You can tweak the app config in `packages/nextjs/scaffold.config.ts`.
+
+Run smart contract test with `yarn hardhat:test`
+
+- Edit your smart contract `CrowdFund.sol` in `packages/hardhat/contracts`
+- Edit your frontend in `packages/nextjs/pages`
+- Edit your deployment scripts in `packages/hardhat/deploy`
+
+## 📝 Testing CrowdFund.sol
+Test script: *`packages/hardhat/test/CrowdFundTest.ts`*
+
+The test script will act on behalf of 3 test users: Alice, Bob, and John.
+
+**Alice, Bob, and John will all three make Fund Runs...**
+
+Then the users will donate to one another, such that:
+- Alice's Fund is successful
+- John's Fund doesn't collect quite enough
+- Bob's Fund is a total failure
+
+The test then ensures that:
+- Alice can do an 'Owner Withdrawal'
+- Alice and Bob both can do a 'Donor Withdrawal' from John's Fund
+- Bob's Fund is empty
+
+<br />
+<br />
+
+
+###### [ *Crowd Fund is built using Scaffold-ETH 2* ]
 # 🏗 Scaffold-ETH 2
 
 🧪 An open-source, up-to-date toolkit for building decentralized applications (dapps) on the Ethereum blockchain. It's designed to make it easier for developers to create and deploy smart contracts and build user interfaces that interact with those contracts.
