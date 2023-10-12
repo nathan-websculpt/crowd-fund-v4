@@ -60,11 +60,11 @@ contract CrowdFund is Ownable {
 
 	event DonationHappened(address owner, address donor, uint256 amount); //todo: rename to Donation
 
-	event OwnerWithdrawal(address owner, uint256 amount);
+	event OwnerWithdrawal(address owner, uint256 amount); //todo: rename to FundRunOwnerWithdrawal (because now we will have a contract owner withdrawal)
 
 	event DonorWithdrawal(address owner, address donor, uint256 amount);
 
-	event contractOwnerWithdrawal(address contractOwner, uint256 amount);
+	event ContractOwnerWithdrawal(address contractOwner, uint256 amount);
 
 	modifier ownsThisFundRun(
 		uint16 id,
@@ -312,7 +312,7 @@ contract CrowdFund is Ownable {
 		);
 
 		require(success, "Withdrawal reverted.");
-		if (success) emit contractOwnerWithdrawal(msg.sender, amountToWithdraw);
+		if (success) emit ContractOwnerWithdrawal(msg.sender, amountToWithdraw);
 	}
 
 	/**
