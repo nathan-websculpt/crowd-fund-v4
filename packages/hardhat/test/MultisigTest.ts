@@ -266,3 +266,8 @@ const signMultisigWithdraw = async (
   
   });
 });
+
+//TODO:
+//users log reason for proposals
+//test locking vault
+//reentrancy
