@@ -5,7 +5,7 @@ const contracts = {
       name: "localhost",
       contracts: {
         CrowdFund: {
-          address: "0x67d269191c92Caf3cD7723F116c85e6E9bf55933",
+          address: "0xc3e53F4d16Ae77Db1c982e75a937B9f60FE63690",
           abi: [
             {
               inputs: [
@@ -571,6 +571,11 @@ const contracts = {
                       internalType: "address",
                       name: "proposedBy",
                       type: "address",
+                    },
+                    {
+                      internalType: "string",
+                      name: "reason",
+                      type: "string",
                     },
                   ],
                   internalType: "struct CrowdFund.MultiSigRequest",

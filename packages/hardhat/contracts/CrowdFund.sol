@@ -51,6 +51,7 @@ contract CrowdFund is Ownable {
 		uint256 amount;
 		address to;
 		address proposedBy;
+		string reason;
 	}
     string constant private MSG_PREFIX = "\x19Ethereum Signed Message:\n32"; //todo:
     uint256 public nonce;
@@ -181,7 +182,6 @@ contract CrowdFund is Ownable {
             bytes memory signature = _signatures[i];
             address signer = ECDSA.recover(digest, signature);
             require(signer != initialSigner, "duplicate signature has been prevented.");
-			console.log("HARDHAT CONSOLE__>        not a duplicate.....");
 			console.log("HARDHAT CONSOLE__>        signer Address: ", signer);
             //require(isSignerValid(signer), "not a co-owner of this Fund Run"); //todo:
             initialSigner = signer;
@@ -205,6 +205,7 @@ contract CrowdFund is Ownable {
 		);
 		console.log("HARDHAT CONSOLE__>         tx success: ", success, ", to address: ", _tx.to);
 		console.log("HARDHAT CONSOLE__>              for the amount of: ", _tx.amount);
+		console.log("HARDHAT CONSOLE__>              REASON BEING: ", _tx.reason);
         require(success, "Transfer not fulfilled");
     }
 
