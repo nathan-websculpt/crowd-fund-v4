@@ -143,6 +143,20 @@ contract CrowdFund is Ownable {
 		_;
 	}
 
+	modifier isMultisig(
+		uint16 id, bool mustBeMultisig
+	)
+	{
+		FundRun storage fundRun = fundRuns[id];
+		if(mustBeMultisig){
+			require(fundRun.owners.length > 1, "This is NOT a multisig Fund Run - Operation not allowed.");
+		}
+		else {
+			require(fundRun.owners.length == 1, "This IS a multisig Fund Run - Operation not allowed.");
+		}
+		_;
+	}
+
 	constructor(address _contractOwner) {
 		_transferOwnership(_contractOwner);
 	}
@@ -163,6 +177,7 @@ contract CrowdFund is Ownable {
 		uint16 _fundRunId
 	)
 	external
+	isMultisig(_fundRunId, true)
 	ownsThisFundRun(_fundRunId, msg.sender, true)
 	{
 		console.log("HARDHAT CONSOLE__>   createMultiSigProposal hit");
@@ -178,6 +193,7 @@ contract CrowdFund is Ownable {
 		uint16 _proposalId
 	)
 	external
+	isMultisig(_fundRunId, true)
 	ownsThisFundRun(_fundRunId, msg.sender, true)
 	{
 		console.log("HARDHAT CONSOLE__>   supportMultisigProposal hit");
@@ -193,6 +209,7 @@ contract CrowdFund is Ownable {
 		uint16 _proposalId
 	)
 	external
+	isMultisig(_fundRunId, true)
 	ownsThisFundRun(_fundRunId, msg.sender, true)
 	///reentrancyGuard //todo:
 	{
@@ -351,6 +368,7 @@ contract CrowdFund is Ownable {
 		uint16 _id
 	)
 		public
+		isMultisig(_id, false)
 		ownsThisFundRun(_id, msg.sender, true)
 		fundRunCompleted(_id, true)
 		fundRunSucceeded(_id, true)
