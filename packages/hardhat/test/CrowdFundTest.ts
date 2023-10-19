@@ -1,3 +1,5 @@
+/* eslint-disable prettier/prettier */
+//yarn test ./test/CrowdFundTest.ts
 import { ethers } from "hardhat";
 import { CrowdFund } from "../typechain-types";
 import { formatEther, parseEther } from "ethers/lib/utils";
@@ -35,11 +37,12 @@ describe("CrowdFund", function () {
     description: string,
     targetAmount: BigNumber,
     deadline: number,
+    owners: string[],
   ) => {
-    const tx = await crowdFund.connect(walletSigning).createFundRun(title, description, targetAmount, deadline);
+    const tx = await crowdFund.connect(walletSigning).createFundRun(title, description, targetAmount, deadline, owners);
     await expect(tx)
       .to.emit(crowdFund, "FundRunCreated")
-      .withArgs(numberOfFundRuns, walletSigning.address, title, targetAmount)
+      .withArgs(numberOfFundRuns, [walletSigning.address], title, targetAmount)
       .then(() => {
         numberOfFundRuns++;
       });
@@ -57,7 +60,7 @@ describe("CrowdFund", function () {
     const tx = await crowdFund.connect(walletSigning).donateToFundRun(fundRunId, { value: donationAmount });
     await expect(tx)
       .to.emit(crowdFund, "DonationHappened")
-      .withArgs(fundRunOwnerAddress.address, walletSigning.address, donationAmount); //owner, donor, amount
+      .withArgs([fundRunOwnerAddress.address], walletSigning.address, donationAmount); //owner, donor, amount
     console.log("wallet balance POST-donation: ", formatEther(await walletSigning.getBalance()));
 
     totalContractBalance = totalContractBalance.add(donationAmount);
@@ -108,9 +111,9 @@ describe("CrowdFund", function () {
         const [, bob, alice, john] = await ethers.getSigners();
         const deadlineToCreateWith = 1;
 
-        await createFundRun(bob, "Bob's Fund Run", "Bob's Description", parseEther("1"), deadlineToCreateWith);
-        await createFundRun(alice, "Alice's Fund Run", "Alice's Description", parseEther("2"), deadlineToCreateWith);
-        await createFundRun(john, "John's Fund Run", "John's Description", parseEther("3"), deadlineToCreateWith);
+        await createFundRun(bob, "Bob's Fund Run", "Bob's Description", parseEther("1"), deadlineToCreateWith, [bob.address]);
+        await createFundRun(alice, "Alice's Fund Run", "Alice's Description", parseEther("2"), deadlineToCreateWith, [alice.address]);
+        await createFundRun(john, "John's Fund Run", "John's Description", parseEther("3"), deadlineToCreateWith, [john.address]);
 
         const bobsFundRun = await crowdFund.getFundRun(bobsId);
         const alicesFundRun = await crowdFund.getFundRun(alicesId);
@@ -171,7 +174,7 @@ describe("CrowdFund", function () {
         const expectedCommission = expected.commission;
         console.log("\nALICE'S wallet balance PRE-withdrawal:  ", formatEther(await alice.getBalance()));
         const tx = await crowdFund.connect(alice).fundRunOwnerWithdraw(alicesId);
-        await expect(tx).to.emit(crowdFund, "OwnerWithdrawal").withArgs(alice.address, expectedAmount);
+        await expect(tx).to.emit(crowdFund, "OwnerWithdrawal").withArgs([alice.address], expectedAmount);
         console.log("ALICE'S wallet balance POST-withdrawal: ", formatEther(await alice.getBalance()));
 
         totalContractBalance = totalContractBalance.sub(expectedAmount);
@@ -191,7 +194,7 @@ describe("CrowdFund", function () {
         const [, bob, , john] = await ethers.getSigners();
         console.log("\nBOB'S wallet balance PRE-withdrawal:  ", formatEther(await bob.getBalance()));
         const tx = await crowdFund.connect(bob).fundRunDonorWithdraw(johnsId);
-        await expect(tx).to.emit(crowdFund, "DonorWithdrawal").withArgs(john.address, bob.address, parseEther("1"));
+        await expect(tx).to.emit(crowdFund, "DonorWithdrawal").withArgs([john.address], bob.address, parseEther("1"));
         console.log("BOB'S wallet balance POST-withdrawal: ", formatEther(await bob.getBalance()));
 
         totalContractBalance = totalContractBalance.sub(parseEther("1"));
@@ -211,7 +214,7 @@ describe("CrowdFund", function () {
         const [, , alice, john] = await ethers.getSigners();
         console.log("\nALICE'S wallet balance PRE-withdrawal:  ", formatEther(await alice.getBalance()));
         const tx = await crowdFund.connect(alice).fundRunDonorWithdraw(johnsId);
-        await expect(tx).to.emit(crowdFund, "DonorWithdrawal").withArgs(john.address, alice.address, parseEther("1"));
+        await expect(tx).to.emit(crowdFund, "DonorWithdrawal").withArgs([john.address], alice.address, parseEther("1"));
         console.log("ALICE'S wallet balance POST-withdrawal: ", formatEther(await alice.getBalance()));
 
         totalContractBalance = totalContractBalance.sub(parseEther("1"));

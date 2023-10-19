@@ -185,7 +185,7 @@ contract CrowdFund is Ownable {
 		emit ProposalSupported(msg.sender, _fundRunId, _proposalId);
 	}
 
-
+	//final call (when all signers are thought to have signed)
 	function multisigWithdraw(
 		MultiSigRequest calldata _tx, 
 		uint256 _nonce, 
@@ -212,9 +212,7 @@ contract CrowdFund is Ownable {
     {
 		console.log("HARDHAT CONSOLE__>   _verifyMultisigRequest hit");
         require(_nonce > nonce, "nonce already used");
-
-
-        uint256 count = _signatures.length; //todo: get the signatures from signatureList ... mapping(uint16 => mapping(uint16 => MultiSigSignature[]))
+		uint256 count = _signatures.length;
         require(count == fundRuns[_fundRunId].owners.length, "not enough signers");
         bytes32 digest = _processMultisigRequest(_tx, _nonce);
 		console.log("HARDHAT CONSOLE__>        made it through all the requires of _verifyMultisigRequest w/ nonce:", _nonce, ", signatures count: ", count);
