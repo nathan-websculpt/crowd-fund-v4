@@ -1,6 +1,7 @@
 //SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0 <0.9.0;
-// pragma experimental "ABIEncoderV2";
+
+////TODO: contractOwnerWithdraw has no profits taken from multisig vaults.
 
 import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 import {ECDSA} from "../node_modules/@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
@@ -368,7 +369,7 @@ contract CrowdFund is Ownable {
 		uint16 _id
 	)
 		public
-		isMultisig(_id, false)
+		isMultisig(_id, false) ///owner withdrawals not allowed for multisigs -- they will behave like a vault
 		ownsThisFundRun(_id, msg.sender, true)
 		fundRunCompleted(_id, true)
 		fundRunSucceeded(_id, true)
