@@ -186,11 +186,11 @@ const signMultisigWithdraw = async (
 
           //sign digest; CREATE proposal; then store signature in contract
           const aliceProposal_signature = await alice.signMessage(ethers.utils.arrayify(digest));
-          await crowdFund.connect(alice).createMultisigProposal(aliceProposal_signature);
+          await crowdFund.connect(alice).createMultisigProposal(aliceProposal_signature, fundRunID);
           
           //sign digest; SUPPORT proposal; then store signature in contract
           const johnSupport_signature = await john.signMessage(ethers.utils.arrayify(digest));
-          await crowdFund.connect(john).supportMultisigProposal(johnSupport_signature, proposalID);
+          await crowdFund.connect(john).supportMultisigProposal(johnSupport_signature, fundRunID, proposalID);
 
           
           const tx = await signMultisigWithdraw(john, nonce, transferAmount, john.address, alice.address, fundRunID, proposalID, reason);

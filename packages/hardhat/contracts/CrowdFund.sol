@@ -56,10 +56,9 @@ contract CrowdFund is Ownable {
     string constant private MSG_PREFIX = "\x19Ethereum Signed Message:\n32"; //todo:
     uint256 public nonce;
 
-	//list of signatures to fulfill...a request
-	//map a signature to a request
+	
 	//      proposalId...
-	mapping(uint16 => bytes[]) public signatureList; //todo: something like this? ... would only work one at a time.
+	mapping(uint16 => bytes[]) public signatureList;
 	uint16 public numberOfMultisigProposals = 0;
 	//END:new
 
@@ -156,23 +155,25 @@ contract CrowdFund is Ownable {
 
 	//user will sign (initial) Message, then send it here...
 	function createMultisigProposal(
-		bytes calldata _signature
+		bytes calldata _signature,
+		uint16 _fundRunId
 	)
 	external
+	ownsThisFundRun(_fundRunId, msg.sender, true)
 	{
 		console.log("HARDHAT CONSOLE__>   createMultiSigProposal hit");
-
 		signatureList[numberOfMultisigProposals].push(_signature);
-
 		numberOfMultisigProposals++;
 	}
 	
 	//users will sign (supporting) Messages, then send them here...
 	function supportMultisigProposal(
 		bytes calldata _signature,
+		uint16 _fundRunId,
 		uint16 _proposalId
 	)
 	external
+	ownsThisFundRun(_fundRunId, msg.sender, true)
 	{
 		console.log("HARDHAT CONSOLE__>   supportMultisigProposal hit");
 		signatureList[_proposalId].push(_signature);
@@ -186,6 +187,7 @@ contract CrowdFund is Ownable {
 		uint16 _proposalId
 	)
 	external
+	ownsThisFundRun(_fundRunId, msg.sender, true)
 	///reentrancyGuard //todo:
 	{
 		console.log("HARDHAT CONSOLE__>   multisigWithdraw hit");
