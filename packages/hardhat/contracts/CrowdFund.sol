@@ -56,14 +56,11 @@ contract CrowdFund is Ownable {
     string constant private MSG_PREFIX = "\x19Ethereum Signed Message:\n32"; //todo:
     uint256 public nonce;
 
-	struct MultiSigSignature {
-		address signer;
-	}
-
 	//list of signatures to fulfill...a request
 	//map a signature to a request
-	//      fundRunId         proposalId...
-	mapping(uint16 => mapping(uint16 => MultiSigSignature[])) signatureList; //todo: something like this? 
+	//      proposalId...
+	mapping(uint16 => bytes[]) public signatureList; //todo: something like this? ... would only work one at a time.
+	uint16 public numberOfMultisigProposals = 0;
 	//END:new
 
 
@@ -156,25 +153,51 @@ contract CrowdFund is Ownable {
 
 
 	///NEW multisig code
+
+	//user will sign (initial) Message, then send it here...
+	function createMultisigProposal(
+		bytes calldata _signature
+	)
+	external
+	{
+		console.log("HARDHAT CONSOLE__>   createMultiSigProposal hit");
+
+		signatureList[numberOfMultisigProposals].push(_signature);
+
+		numberOfMultisigProposals++;
+	}
+	
+	//users will sign (supporting) Messages, then send them here...
+	function supportMultisigProposal(
+		bytes calldata _signature,
+		uint16 _proposalId
+	)
+	external
+	{
+		console.log("HARDHAT CONSOLE__>   supportMultisigProposal hit");
+		signatureList[_proposalId].push(_signature);
+	}
+
+
 	function multisigWithdraw(
 		MultiSigRequest calldata _tx, 
 		uint256 _nonce, 
-		bytes[] calldata _signatures, //todo: stored on the contract
-		uint16 _fundRunId 
+		uint16 _fundRunId,
+		uint16 _proposalId
 	)
 	external
 	///reentrancyGuard //todo:
 	{
 		console.log("HARDHAT CONSOLE__>   multisigWithdraw hit");
-		//TODO: know when it is the first run -- differentiate as the "proposal" (initial) signature
-        _verifyMultisigRequest(_tx, _nonce, _signatures, _fundRunId);
+		
+        _verifyMultisigRequest(_tx, _nonce, signatureList[_proposalId], _fundRunId);
         _multisigTransfer(_tx, _fundRunId);
 	}
 
     function _verifyMultisigRequest(
         MultiSigRequest calldata _tx,
         uint256 _nonce,
-        bytes[] calldata _signatures, //todo: stored on the contract
+        bytes[] storage _signatures,
 		uint16 _fundRunId 
     )
     private

@@ -5,7 +5,7 @@ const contracts = {
       name: "localhost",
       contracts: {
         CrowdFund: {
-          address: "0xc3e53F4d16Ae77Db1c982e75a937B9f60FE63690",
+          address: "0x84eA74d481Ee0A5332c457a4d796187F6Ba67fEB",
           abi: [
             {
               inputs: [
@@ -192,6 +192,19 @@ const contracts = {
                 },
               ],
               name: "createFundRun",
+              outputs: [],
+              stateMutability: "nonpayable",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  internalType: "bytes",
+                  name: "_signature",
+                  type: "bytes",
+                },
+              ],
+              name: "createMultisigProposal",
               outputs: [],
               stateMutability: "nonpayable",
               type: "function",
@@ -588,13 +601,13 @@ const contracts = {
                   type: "uint256",
                 },
                 {
-                  internalType: "bytes[]",
-                  name: "_signatures",
-                  type: "bytes[]",
+                  internalType: "uint16",
+                  name: "_fundRunId",
+                  type: "uint16",
                 },
                 {
                   internalType: "uint16",
-                  name: "_fundRunId",
+                  name: "_proposalId",
                   type: "uint16",
                 },
               ],
@@ -631,6 +644,19 @@ const contracts = {
             },
             {
               inputs: [],
+              name: "numberOfMultisigProposals",
+              outputs: [
+                {
+                  internalType: "uint16",
+                  name: "",
+                  type: "uint16",
+                },
+              ],
+              stateMutability: "view",
+              type: "function",
+            },
+            {
+              inputs: [],
               name: "owner",
               outputs: [
                 {
@@ -645,6 +671,48 @@ const contracts = {
             {
               inputs: [],
               name: "renounceOwnership",
+              outputs: [],
+              stateMutability: "nonpayable",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  internalType: "uint16",
+                  name: "",
+                  type: "uint16",
+                },
+                {
+                  internalType: "uint256",
+                  name: "",
+                  type: "uint256",
+                },
+              ],
+              name: "signatureList",
+              outputs: [
+                {
+                  internalType: "bytes",
+                  name: "",
+                  type: "bytes",
+                },
+              ],
+              stateMutability: "view",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  internalType: "bytes",
+                  name: "_signature",
+                  type: "bytes",
+                },
+                {
+                  internalType: "uint16",
+                  name: "_proposalId",
+                  type: "uint16",
+                },
+              ],
+              name: "supportMultisigProposal",
               outputs: [],
               stateMutability: "nonpayable",
               type: "function",

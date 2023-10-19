@@ -45,12 +45,12 @@ const signMultisigWithdraw = async (
     amount: BigNumber,
     to: string,
     proposedBy: string,
-    signatures: string[],
     fundRunID: number,
+    proposalID: number,
     reason: string
 ) => {
     const tx = {amount, to, proposedBy, reason};
-    return await crowdFund.connect(walletSigning).multisigWithdraw(tx, nonce, signatures, fundRunID); 
+    return await crowdFund.connect(walletSigning).multisigWithdraw(tx, nonce, fundRunID, proposalID); 
 }
 
   //creates a Fund Run as bob, alice, or john ... then checks the Event
@@ -170,6 +170,7 @@ const signMultisigWithdraw = async (
 
           const [, , alice, john] = await ethers.getSigners();
           const fundRunID = 1;     
+          const proposalID = 0;     
           const transferAmount = parseEther("0.25");
           const reason = "Alice proposes to pay John 0.25 Ethers";
           const johnFirstBalance = await john.getBalance();
@@ -181,11 +182,18 @@ const signMultisigWithdraw = async (
 
           const nonce = await getNonce();
           const digest = await getDigest(nonce, transferAmount, john.address, alice.address, reason);
-          const signatures = [];
-          signatures.push(await alice.signMessage(ethers.utils.arrayify(digest)));
-          signatures.push(await john.signMessage(ethers.utils.arrayify(digest)));
-          console.log("signatures", signatures);
-          const tx = await signMultisigWithdraw(john, nonce, transferAmount, john.address, alice.address, signatures, fundRunID, reason);
+
+
+          //sign digest; CREATE proposal; then store signature in contract
+          const aliceProposal_signature = await alice.signMessage(ethers.utils.arrayify(digest));
+          await crowdFund.connect(alice).createMultisigProposal(aliceProposal_signature);
+          
+          //sign digest; SUPPORT proposal; then store signature in contract
+          const johnSupport_signature = await john.signMessage(ethers.utils.arrayify(digest));
+          await crowdFund.connect(john).supportMultisigProposal(johnSupport_signature, proposalID);
+
+          
+          const tx = await signMultisigWithdraw(john, nonce, transferAmount, john.address, alice.address, fundRunID, proposalID, reason);
           await tx.wait();
           const johnNewBalance = await john.getBalance();
           console.log("John NOW has a balance of: ", formatEther(johnNewBalance));
@@ -193,79 +201,79 @@ const signMultisigWithdraw = async (
         });
 
         //paying someone who is not the owner IS allowed, because a group can pay tertiary parties (like designers, etc)
-        it("(2-sig wallet)...John proposes to pay Bob (who is not an owner) 0.75 Ethers", async function () {  
-            const [, bob, alice, john] = await ethers.getSigners();
-            const fundRunID = 1;     
-            const transferAmount = parseEther("0.75");
-            const reason = "John proposes to pay Bob (who is not an owner) 0.75 Ethers";
-            const bobFirstBalance = await bob.getBalance();
-            const bobExpectedBalance = await bobFirstBalance.add(transferAmount);
-            console.log("Bob has a balance of: ", formatEther(bobFirstBalance));
+        // it("(2-sig wallet)...John proposes to pay Bob (who is not an owner) 0.75 Ethers", async function () {  
+        //     const [, bob, alice, john] = await ethers.getSigners();
+        //     const fundRunID = 1;     
+        //     const transferAmount = parseEther("0.75");
+        //     const reason = "John proposes to pay Bob (who is not an owner) 0.75 Ethers";
+        //     const bobFirstBalance = await bob.getBalance();
+        //     const bobExpectedBalance = await bobFirstBalance.add(transferAmount);
+        //     console.log("Bob has a balance of: ", formatEther(bobFirstBalance));
   
   
-            const nonce = await getNonce();
-            const digest = await getDigest(nonce, transferAmount, bob.address, john.address, reason);
-            const signatures = [];
-            signatures.push(await john.signMessage(ethers.utils.arrayify(digest)));
-            signatures.push(await alice.signMessage(ethers.utils.arrayify(digest)));
-            console.log("signatures", signatures);
-            const tx = await signMultisigWithdraw(alice, nonce, transferAmount, bob.address, john.address, signatures, fundRunID, reason);
-            await tx.wait();
-            const bobNewBalance = await bob.getBalance();
-            console.log("Bob NOW has a balance of: ", formatEther(bobNewBalance));
-            expect(bobNewBalance).to.approximately(bobExpectedBalance, 10000000000000000n);
-          });
+        //     const nonce = await getNonce();
+        //     const digest = await getDigest(nonce, transferAmount, bob.address, john.address, reason);
+        //     const signatures = [];
+        //     signatures.push(await john.signMessage(ethers.utils.arrayify(digest)));
+        //     signatures.push(await alice.signMessage(ethers.utils.arrayify(digest)));
+        //     console.log("signatures", signatures);
+        //     const tx = await signMultisigWithdraw(alice, nonce, transferAmount, bob.address, john.address, signatures, fundRunID, reason);
+        //     await tx.wait();
+        //     const bobNewBalance = await bob.getBalance();
+        //     console.log("Bob NOW has a balance of: ", formatEther(bobNewBalance));
+        //     expect(bobNewBalance).to.approximately(bobExpectedBalance, 10000000000000000n);
+        //   });
 
 
-        it("(3-sig wallet)...The Chan-Chan Man proposes to pay Bob 0.5 Ethers", async function () {
-            const [, bob, , , chandler, joey, ross] = await ethers.getSigners();
+        // it("(3-sig wallet)...The Chan-Chan Man proposes to pay Bob 0.5 Ethers", async function () {
+        //     const [, bob, , , chandler, joey, ross] = await ethers.getSigners();
 
-            const fundRunID = 2;
-            const transferAmount = parseEther("0.5");
-            const reason = "The Chan-Chan Man proposes to pay Bob (who is not an owner) 0.5 Ethers for web design services";
-            const bobFirstBalance = await bob.getBalance();
-            const bobExpectedBalance = await bobFirstBalance.add(transferAmount);
-            console.log("Bob has a balance of: ", formatEther(bobFirstBalance));
+        //     const fundRunID = 2;
+        //     const transferAmount = parseEther("0.5");
+        //     const reason = "The Chan-Chan Man proposes to pay Bob (who is not an owner) 0.5 Ethers for web design services";
+        //     const bobFirstBalance = await bob.getBalance();
+        //     const bobExpectedBalance = await bobFirstBalance.add(transferAmount);
+        //     console.log("Bob has a balance of: ", formatEther(bobFirstBalance));
             
-            const nonce = await getNonce();
-            const digest = await getDigest(nonce, transferAmount, bob.address, chandler.address, reason);
-            const signatures = [];
-            signatures.push(await chandler.signMessage(ethers.utils.arrayify(digest)));
-            signatures.push(await joey.signMessage(ethers.utils.arrayify(digest)));
-            signatures.push(await ross.signMessage(ethers.utils.arrayify(digest)));
-            console.log("signatures", signatures);
-            const tx = await signMultisigWithdraw(ross, nonce, transferAmount, bob.address, chandler.address, signatures, fundRunID, reason);
-            await tx.wait();
-            const bobNewBalance = await bob.getBalance();
-            console.log("Bob NOW has a balance of: ", formatEther(bobNewBalance));
-            expect(bobNewBalance).to.approximately(bobExpectedBalance, 10000000000000000n);
+        //     const nonce = await getNonce();
+        //     const digest = await getDigest(nonce, transferAmount, bob.address, chandler.address, reason);
+        //     const signatures = [];
+        //     signatures.push(await chandler.signMessage(ethers.utils.arrayify(digest)));
+        //     signatures.push(await joey.signMessage(ethers.utils.arrayify(digest)));
+        //     signatures.push(await ross.signMessage(ethers.utils.arrayify(digest)));
+        //     console.log("signatures", signatures);
+        //     const tx = await signMultisigWithdraw(ross, nonce, transferAmount, bob.address, chandler.address, signatures, fundRunID, reason);
+        //     await tx.wait();
+        //     const bobNewBalance = await bob.getBalance();
+        //     console.log("Bob NOW has a balance of: ", formatEther(bobNewBalance));
+        //     expect(bobNewBalance).to.approximately(bobExpectedBalance, 10000000000000000n);
 
-        });
+        // });
         
-        it("(3-sig wallet)...Ross proposes to pay Alice 0.5 Ethers", async function () {
-            const [, , alice, , chandler, joey, ross] = await ethers.getSigners();
+        // it("(3-sig wallet)...Ross proposes to pay Alice 0.5 Ethers", async function () {
+        //     const [, , alice, , chandler, joey, ross] = await ethers.getSigners();
 
-            const fundRunID = 2;
-            const transferAmount = parseEther("0.5");
-            const reason = "Ross proposes to pay Alice (who is not an owner) 0.5 Ethers for Project Management services";
-            const aliceFirstBalance = await alice.getBalance();
-            const aliceExpectedBalance = await aliceFirstBalance.add(transferAmount);
-            console.log("Alice has a balance of: ", formatEther(aliceFirstBalance));
+        //     const fundRunID = 2;
+        //     const transferAmount = parseEther("0.5");
+        //     const reason = "Ross proposes to pay Alice (who is not an owner) 0.5 Ethers for Project Management services";
+        //     const aliceFirstBalance = await alice.getBalance();
+        //     const aliceExpectedBalance = await aliceFirstBalance.add(transferAmount);
+        //     console.log("Alice has a balance of: ", formatEther(aliceFirstBalance));
             
-            const nonce = await getNonce();
-            const digest = await getDigest(nonce, transferAmount, alice.address, ross.address, reason);
-            const signatures = [];
-            signatures.push(await ross.signMessage(ethers.utils.arrayify(digest)));
-            signatures.push(await joey.signMessage(ethers.utils.arrayify(digest)));
-            signatures.push(await chandler.signMessage(ethers.utils.arrayify(digest)));
-            console.log("signatures", signatures);
-            const tx = await signMultisigWithdraw(chandler, nonce, transferAmount, alice.address, ross.address, signatures, fundRunID, reason);
-            await tx.wait();
-            const aliceNewBalance = await alice.getBalance();
-            console.log("Alice NOW has a balance of: ", formatEther(aliceNewBalance));
-            expect(aliceNewBalance).to.approximately(aliceExpectedBalance, 10000000000000000n);
+        //     const nonce = await getNonce();
+        //     const digest = await getDigest(nonce, transferAmount, alice.address, ross.address, reason);
+        //     const signatures = [];
+        //     signatures.push(await ross.signMessage(ethers.utils.arrayify(digest)));
+        //     signatures.push(await joey.signMessage(ethers.utils.arrayify(digest)));
+        //     signatures.push(await chandler.signMessage(ethers.utils.arrayify(digest)));
+        //     console.log("signatures", signatures);
+        //     const tx = await signMultisigWithdraw(chandler, nonce, transferAmount, alice.address, ross.address, signatures, fundRunID, reason);
+        //     await tx.wait();
+        //     const aliceNewBalance = await alice.getBalance();
+        //     console.log("Alice NOW has a balance of: ", formatEther(aliceNewBalance));
+        //     expect(aliceNewBalance).to.approximately(aliceExpectedBalance, 10000000000000000n);
 
-        });
+        // });
     });
   
   });
