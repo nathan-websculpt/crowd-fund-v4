@@ -532,4 +532,8 @@ contract CrowdFund is Ownable {
 		}
 		return false;
 	}
+
+	function getNonce() public view returns (uint256) {
+		return nonce;
+	}
 }

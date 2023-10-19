@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -36,7 +37,8 @@ export const CreateFund = () => {
           "\n  with a target of: ",
           target,
         );
-        //if (address.address == owner) router.push(`/crowdfund/${id}`);
+        if(owners !== undefined)
+          if (address.address == owners[0]) router.push(`/crowdfund/${id}`);
       });
     },
   });
@@ -70,19 +72,20 @@ export const CreateFund = () => {
       return;
     }
 
-    const oList = [];
+    const oList:string[] = [];
+    if(address?.address !== undefined) { 
+    oList.push(address.address);
     if (isMultiSigSelected) {
       if (walletCount === 2) oList.push(additionalAddressOne);
       else if (walletCount === 3) {
         oList.push(additionalAddressOne);
         oList.push(additionalAddressTwo);
       }
-      //^^^changing this
-      //setOwnersList(oList);
-    }
-
-    writeAsync();
-  };
+      setOwnersList(oList);
+    }        
+    writeAsync();  
+  }
+};
 
   const multiSigClickHandler = () => {
     const selection = !isMultiSigSelected;
@@ -157,6 +160,9 @@ export const CreateFund = () => {
               </div>
             </div>
             {/* ^^^ side-by-side on desktop, up-and-down on phone ^^^^ */}
+
+
+
             <label className="text-lg font-bold">Is this a Multisig Fund Run?</label>
             <div className="form-control">
               <label className="cursor-pointer label">
@@ -228,9 +234,15 @@ export const CreateFund = () => {
                 />
               </>
             )}
+
+
+
             <button className="w-10/12 mx-auto md:w-3/5 btn btn-primary" onClick={() => testtest()}>
               TEST
             </button>
+
+
+
             <button
               className="w-10/12 mx-auto md:w-3/5 btn btn-primary"
               onClick={() => validateThenWrite()}

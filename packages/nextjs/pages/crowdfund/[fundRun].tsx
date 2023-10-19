@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -103,7 +104,15 @@ const FundRunPage: NextPage = () => {
                 </div>
 
                 <div className="flex flex-col justify-center gap-8 pt-6 mt-20 mb-5 border-t-4 sm:mt-12 sm:flex-row sm:flex-wrap">
-                  <OwnerWithdrawBtn id={fundRunSingle.id} />
+                  {fundRunSingle.owners.length === 1 ? (
+                    <OwnerWithdrawBtn id={fundRunSingle.id} />
+                  ) :                    
+                    <button
+                      className="w-10/12 mx-auto md:w-3/5 btn btn-primary"
+                      onClick={() => router.push(`/crowdfund/vaults/${fundRunSingle.id}`)}
+                      >View Vault
+                    </button>
+                  }
                   <DonorWithdrawBtn id={fundRunSingle.id} />
                 </div>
               </div>

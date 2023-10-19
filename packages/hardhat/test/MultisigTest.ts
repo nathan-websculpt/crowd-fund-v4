@@ -8,7 +8,6 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { BigNumber } from "ethers";
 import { setTimeout } from "timers/promises";
 import hre from "hardhat";
-import { Address } from "hardhat-deploy/types";
 
 describe("Multisig Test", function () {
   this.timeout(125000); //2-minute timeout, Fund Runs have 1-minute deadlines

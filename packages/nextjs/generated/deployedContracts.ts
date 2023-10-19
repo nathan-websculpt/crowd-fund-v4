@@ -5,7 +5,7 @@ const contracts = {
       name: "localhost",
       contracts: {
         CrowdFund: {
-          address: "0x84eA74d481Ee0A5332c457a4d796187F6Ba67fEB",
+          address: "0x0165878A594ca255338adfa4d48449f69242Eb8F",
           abi: [
             {
               inputs: [
@@ -157,6 +157,56 @@ const contracts = {
               type: "event",
             },
             {
+              anonymous: false,
+              inputs: [
+                {
+                  indexed: false,
+                  internalType: "address",
+                  name: "proposedBy",
+                  type: "address",
+                },
+                {
+                  indexed: false,
+                  internalType: "uint16",
+                  name: "fundRunId",
+                  type: "uint16",
+                },
+                {
+                  indexed: false,
+                  internalType: "uint16",
+                  name: "proposalId",
+                  type: "uint16",
+                },
+              ],
+              name: "ProposalCreated",
+              type: "event",
+            },
+            {
+              anonymous: false,
+              inputs: [
+                {
+                  indexed: false,
+                  internalType: "address",
+                  name: "supportedBy",
+                  type: "address",
+                },
+                {
+                  indexed: false,
+                  internalType: "uint16",
+                  name: "fundRunId",
+                  type: "uint16",
+                },
+                {
+                  indexed: false,
+                  internalType: "uint16",
+                  name: "proposalId",
+                  type: "uint16",
+                },
+              ],
+              name: "ProposalSupported",
+              type: "event",
+            },
+            {
               inputs: [],
               name: "contractOwnerWithdraw",
               outputs: [],
@@ -202,6 +252,11 @@ const contracts = {
                   internalType: "bytes",
                   name: "_signature",
                   type: "bytes",
+                },
+                {
+                  internalType: "uint16",
+                  name: "_fundRunId",
+                  type: "uint16",
                 },
               ],
               name: "createMultisigProposal",
@@ -524,6 +579,19 @@ const contracts = {
               type: "function",
             },
             {
+              inputs: [],
+              name: "getNonce",
+              outputs: [
+                {
+                  internalType: "uint256",
+                  name: "",
+                  type: "uint256",
+                },
+              ],
+              stateMutability: "view",
+              type: "function",
+            },
+            {
               inputs: [
                 {
                   internalType: "uint16",
@@ -705,6 +773,11 @@ const contracts = {
                   internalType: "bytes",
                   name: "_signature",
                   type: "bytes",
+                },
+                {
+                  internalType: "uint16",
+                  name: "_fundRunId",
+                  type: "uint16",
                 },
                 {
                   internalType: "uint16",
