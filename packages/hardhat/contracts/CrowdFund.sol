@@ -55,6 +55,15 @@ contract CrowdFund is Ownable {
 	}
     string constant private MSG_PREFIX = "\x19Ethereum Signed Message:\n32"; //todo:
     uint256 public nonce;
+
+	struct MultiSigSignature {
+		address signer;
+	}
+
+	//list of signatures to fulfill...a request
+	//map a signature to a request
+	//      fundRunId         proposalId...
+	mapping(uint16 => mapping(uint16 => MultiSigSignature[])) signatureList; //todo: something like this? 
 	//END:new
 
 
@@ -150,13 +159,14 @@ contract CrowdFund is Ownable {
 	function multisigWithdraw(
 		MultiSigRequest calldata _tx, 
 		uint256 _nonce, 
-		bytes[] calldata _signatures,
+		bytes[] calldata _signatures, //todo: stored on the contract
 		uint16 _fundRunId 
 	)
 	external
 	///reentrancyGuard //todo:
 	{
 		console.log("HARDHAT CONSOLE__>   multisigWithdraw hit");
+		//TODO: know when it is the first run -- differentiate as the "proposal" (initial) signature
         _verifyMultisigRequest(_tx, _nonce, _signatures, _fundRunId);
         _multisigTransfer(_tx, _fundRunId);
 	}
@@ -164,7 +174,7 @@ contract CrowdFund is Ownable {
     function _verifyMultisigRequest(
         MultiSigRequest calldata _tx,
         uint256 _nonce,
-        bytes[] calldata _signatures,
+        bytes[] calldata _signatures, //todo: stored on the contract
 		uint16 _fundRunId 
     )
     private
