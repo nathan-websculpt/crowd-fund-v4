@@ -172,7 +172,7 @@ contract CrowdFund is Ownable {
 
 	///NEW multisig code
 
-	//user will sign (initial) Message, then send it here...
+	//user will sign (initial) Message, then send the signature here...
 	function createMultisigProposal(
 		bytes calldata _signature,
 		uint16 _fundRunId
@@ -187,7 +187,7 @@ contract CrowdFund is Ownable {
 		numberOfMultisigProposals++;
 	}
 	
-	//users will sign (supporting) Messages, then send them here...
+	//users will sign (supporting) Messages, then send the signature here...
 	function supportMultisigProposal(
 		bytes calldata _signature,
 		uint16 _fundRunId,
@@ -202,7 +202,7 @@ contract CrowdFund is Ownable {
 		emit ProposalSupported(msg.sender, _fundRunId, _proposalId);
 	}
 
-	//final call (when all signers are thought to have signed)
+	//final transfer/call (when all signers are thought to have signed)
 	function multisigWithdraw(
 		MultiSigRequest calldata _tx, 
 		uint256 _nonce, 
