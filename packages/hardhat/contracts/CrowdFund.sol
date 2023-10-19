@@ -196,8 +196,7 @@ contract CrowdFund is Ownable {
 	ownsThisFundRun(_fundRunId, msg.sender, true)
 	///reentrancyGuard //todo:
 	{
-		console.log("HARDHAT CONSOLE__>   multisigWithdraw hit");
-		
+		console.log("HARDHAT CONSOLE__>   multisigWithdraw hit");		
         _verifyMultisigRequest(_tx, _nonce, signatureList[_proposalId], _fundRunId);
         _multisigTransfer(_tx, _fundRunId);
 	}
@@ -212,19 +211,19 @@ contract CrowdFund is Ownable {
     {
 		console.log("HARDHAT CONSOLE__>   _verifyMultisigRequest hit");
         require(_nonce > nonce, "nonce already used");
-		uint256 count = _signatures.length;
-        require(count == fundRuns[_fundRunId].owners.length, "not enough signers");
+		uint256 signaturesCount = _signatures.length;
+        require(signaturesCount == fundRuns[_fundRunId].owners.length, "not enough signers");
         bytes32 digest = _processMultisigRequest(_tx, _nonce);
-		console.log("HARDHAT CONSOLE__>        made it through all the requires of _verifyMultisigRequest w/ nonce:", _nonce, ", signatures count: ", count);
+		console.log("HARDHAT CONSOLE__>        made it through all the requires of _verifyMultisigRequest w/ nonce:", _nonce, ", signatures count: ", signaturesCount);
 
         address initialSigner; 
-        for (uint256 i = 0; i < count; i++)
+        for (uint256 i = 0; i < signaturesCount; i++)
         {
             bytes memory signature = _signatures[i];
             address signer = ECDSA.recover(digest, signature);
+            require(isOwnerOfFundRun(signer, _fundRunId), "not a co-owner of this Fund Run"); //redundancy check
             require(signer != initialSigner, "duplicate signature has been prevented.");
 			console.log("HARDHAT CONSOLE__>        signer Address: ", signer);
-            //require(isSignerValid(signer, proposalId, fundRundId), "not a co-owner of this Fund Run"); //todo:
             initialSigner = signer;
         }
         nonce = _nonce;
