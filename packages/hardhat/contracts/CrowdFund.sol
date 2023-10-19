@@ -181,7 +181,9 @@ contract CrowdFund is Ownable {
     {
 		console.log("HARDHAT CONSOLE__>   _verifyMultisigRequest hit");
         require(_nonce > nonce, "nonce already used");
-        uint256 count = _signatures.length;
+
+
+        uint256 count = _signatures.length; //todo: get the signatures from signatureList ... mapping(uint16 => mapping(uint16 => MultiSigSignature[]))
         require(count == fundRuns[_fundRunId].owners.length, "not enough signers");
         bytes32 digest = _processMultisigRequest(_tx, _nonce);
 		console.log("HARDHAT CONSOLE__>        made it through all the requires of _verifyMultisigRequest w/ nonce:", _nonce, ", signatures count: ", count);
@@ -193,7 +195,7 @@ contract CrowdFund is Ownable {
             address signer = ECDSA.recover(digest, signature);
             require(signer != initialSigner, "duplicate signature has been prevented.");
 			console.log("HARDHAT CONSOLE__>        signer Address: ", signer);
-            //require(isSignerValid(signer), "not a co-owner of this Fund Run"); //todo:
+            //require(isSignerValid(signer, proposalId, fundRundId), "not a co-owner of this Fund Run"); //todo:
             initialSigner = signer;
         }
         nonce = _nonce;
