@@ -14,6 +14,7 @@ describe("Multisig Test", function () {
   this.timeout(125000); //2-minute timeout, Fund Runs have 1-minute deadlines
   let crowdFund: CrowdFund;
   let numberOfFundRuns = 0;
+  let numberOfProposals = 0;
   let totalContractBalance = parseEther("0");
   let aliceJohnsDeadline = BigNumber.from("0");
   let chandlerJoeyRossDeadline = BigNumber.from("0");
@@ -184,13 +185,21 @@ const signMultisigWithdraw = async (
           const digest = await getDigest(nonce, transferAmount, john.address, alice.address, reason);
 
 
-          //sign digest; CREATE proposal; then store signature in contract
+          //sign digest; CREATING proposal; then store signature in contract
           const aliceProposal_signature = await alice.signMessage(ethers.utils.arrayify(digest));
-          await crowdFund.connect(alice).createMultisigProposal(aliceProposal_signature, fundRunID);
-          
-          //sign digest; SUPPORT proposal; then store signature in contract
+          const creationTx = await crowdFund.connect(alice).createMultisigProposal(aliceProposal_signature, fundRunID);
+          await expect(creationTx)
+            .to.emit(crowdFund, "ProposalCreated")
+            .withArgs(alice.address, fundRunID, proposalID)
+            .then(() => {
+                numberOfProposals++;
+            });
+          //sign digest; SUPPORTING proposal; then store signature in contract
           const johnSupport_signature = await john.signMessage(ethers.utils.arrayify(digest));
-          await crowdFund.connect(john).supportMultisigProposal(johnSupport_signature, fundRunID, proposalID);
+          const supportingTxOne = await crowdFund.connect(john).supportMultisigProposal(johnSupport_signature, fundRunID, proposalID);
+          await expect(supportingTxOne)
+            .to.emit(crowdFund, "ProposalSupported")
+            .withArgs(john.address, fundRunID, proposalID);
 
           
           const tx = await signMultisigWithdraw(john, nonce, transferAmount, john.address, alice.address, fundRunID, proposalID, reason);

@@ -87,6 +87,10 @@ contract CrowdFund is Ownable {
 
 	event ContractOwnerWithdrawal(address contractOwner, uint256 amount);
 
+	event ProposalCreated(address proposedBy, uint16 fundRunId, uint16 proposalId);
+
+	event ProposalSupported(address supportedBy, uint16 fundRunId, uint16 proposalId);
+
 	modifier ownsThisFundRun(
 		uint16 id,
 		address sender,
@@ -163,6 +167,7 @@ contract CrowdFund is Ownable {
 	{
 		console.log("HARDHAT CONSOLE__>   createMultiSigProposal hit");
 		signatureList[numberOfMultisigProposals].push(_signature);
+		emit ProposalCreated(msg.sender, _fundRunId, numberOfMultisigProposals);
 		numberOfMultisigProposals++;
 	}
 	
@@ -177,6 +182,7 @@ contract CrowdFund is Ownable {
 	{
 		console.log("HARDHAT CONSOLE__>   supportMultisigProposal hit");
 		signatureList[_proposalId].push(_signature);
+		emit ProposalSupported(msg.sender, _fundRunId, _proposalId);
 	}
 
 
