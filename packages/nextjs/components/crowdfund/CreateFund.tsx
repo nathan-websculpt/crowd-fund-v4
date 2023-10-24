@@ -83,7 +83,7 @@ export const CreateFund = () => {
       }
       setOwnersList(oList);
     }        
-    writeAsync();  
+    //writeAsync();  
   }
 };
 
@@ -95,8 +95,7 @@ export const CreateFund = () => {
   };
 
   const testtest = () => {
-    console.log(additionalAddressOne);
-    console.log(additionalAddressTwo);
+    writeAsync();  
   };
 
   return (
@@ -237,9 +236,6 @@ export const CreateFund = () => {
 
 
 
-            <button className="w-10/12 mx-auto md:w-3/5 btn btn-primary" onClick={() => testtest()}>
-              TEST
-            </button>
 
 
 
@@ -248,7 +244,14 @@ export const CreateFund = () => {
               onClick={() => validateThenWrite()}
               disabled={isLoading}
             >
-              {isLoading ? <span className="loading loading-spinner loading-sm"></span> : <>Start My Fund</>}
+              {isLoading ? <span className="loading loading-spinner loading-sm"></span> : 
+              // <>Start My Fund</>
+              <>First CLick</>
+              }
+            </button>
+            
+            <button className="w-10/12 mx-auto md:w-3/5 btn btn-primary" onClick={() => testtest()}>
+              Second Click
             </button>
           </div>
         </div>
