@@ -6,16 +6,16 @@ import { useScaffoldContractRead, useScaffoldContractWrite, useScaffoldEventSubs
 import { useAccount, useWalletClient } from "wagmi";
 import { SignMessageReturnType, formatEther } from "viem";
 
-
 interface FinalizeProposalProps {
     id: number; //fundrun
     proposalId: number; //not needed?
 }
+
 export const FinalizeProposal = (proposal:FinalizeProposalProps) => {
     const userAddress = useAccount();
     const [transferInput, setTransferInput] = useState<bigint>(BigInt(100000000000000000));
     const [toAddressInput, setToAddressInput] = useState("0xB7F675970703342938e58A6C8E76C6D47fC78FDA");
-    const [proposedByInput, setProposedByInput] = useState("0x3c4F8cb2ea3FFfFD8f9a1BEF9119F3E12ACC95d0");
+    const [proposedByInput, setProposedByInput] = useState("0xC4d53E07a6521EA73759D1541070BEf3C0823809");
     const [reasonInput, setReasonInput] = useState("test proposal");
     const [proposalIdInput, setProposalIdInput] = useState<number>();
     const [nonceInput, setNonceInput] = useState<bigint>();

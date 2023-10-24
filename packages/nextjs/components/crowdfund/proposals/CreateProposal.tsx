@@ -13,8 +13,8 @@ interface CreateProposalProps {
 
 export const CreateProposal = (proposal: CreateProposalProps) => {    
     const userAddress = useAccount();
-    const [transferInput, setTransferInput] = useState("");
-    const [toAddressInput, setToAddressInput] = useState("");
+    const [transferInput, setTransferInput] = useState("0.1");
+    const [toAddressInput, setToAddressInput] = useState("0xB7F675970703342938e58A6C8E76C6D47fC78FDA");
     const [creationSignature, setCreationSignature] = useState<SignMessageReturnType>();
   
   

@@ -17,7 +17,7 @@ export const CreateFund = () => {
   const [errorMsg, setErrorMsg] = useState("");
   const [isMultiSigSelected, setIsMultiSigSelected] = useState(false);
   const [walletCount, setWalletCount] = useState(1);
-  const [additionalAddressOne, setAdditionalAddressOne] = useState("");
+  const [additionalAddressOne, setAdditionalAddressOne] = useState("0xC4d53E07a6521EA73759D1541070BEf3C0823809");
   const [additionalAddressTwo, setAdditionalAddressTwo] = useState("");
   const [ownersList, setOwnersList] = useState<string[]>([]);
 
