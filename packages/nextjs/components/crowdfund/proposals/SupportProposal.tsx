@@ -1,18 +1,17 @@
+/* eslint-disable prettier/prettier */
 import { useState } from "react";
 import { BigNumber } from "ethers";
-import { parseEther, defaultAbiCoder, solidityPack, keccak256, arrayify } from "ethers/lib/utils";
-import { useScaffoldContractRead, useScaffoldContractWrite, useScaffoldEventSubscriber } from "~~/hooks/scaffold-eth";
-import { useAccount, useWalletClient } from "wagmi";
+import { arrayify, defaultAbiCoder, keccak256, parseEther, solidityPack } from "ethers/lib/utils";
 import { SignMessageReturnType } from "viem";
+import { useWalletClient } from "wagmi";
+import { useScaffoldContractRead, useScaffoldContractWrite, useScaffoldEventSubscriber } from "~~/hooks/scaffold-eth";
 
-/* eslint-disable prettier/prettier */
 interface SupportProposalProps {
     id: number; //fundrun
     proposalId: number; //not needed?
 }
 
 export const SupportProposal = (proposal: SupportProposalProps) => {
-    const userAddress = useAccount();
     const [transferInput, setTransferInput] = useState("0.1");
     const [toAddressInput, setToAddressInput] = useState("0xB7F675970703342938e58A6C8E76C6D47fC78FDA");
     const [proposedByAddressInput, setProposedByAddressInput] = useState("0xC4d53E07a6521EA73759D1541070BEf3C0823809");
