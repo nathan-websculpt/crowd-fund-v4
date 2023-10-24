@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { useState } from "react";
 import { BigNumber } from "ethers";
-import { arrayify, defaultAbiCoder, keccak256, parseEther, solidityPack } from "ethers/lib/utils";
+import { arrayify, defaultAbiCoder, keccak256, parseEther, solidityPack } from "ethers/lib/utils"; // todo: full migration to viem?
 import { SignMessageReturnType } from "viem";
 import { useWalletClient } from "wagmi";
 import { useScaffoldContractRead, useScaffoldContractWrite, useScaffoldEventSubscriber } from "~~/hooks/scaffold-eth";
