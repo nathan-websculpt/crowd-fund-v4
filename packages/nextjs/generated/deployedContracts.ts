@@ -5,7 +5,7 @@ const contracts = {
       name: "localhost",
       contracts: {
         CrowdFund: {
-          address: "0x4ed7c70F96B99c776995fB64377f0d4aB3B0e1C1",
+          address: "0x7a2088a1bFc9d81c55368AE168C2C02570cB814F",
           abi: [
             {
               inputs: [
@@ -257,6 +257,33 @@ const contracts = {
                   internalType: "uint16",
                   name: "_fundRunId",
                   type: "uint16",
+                },
+                {
+                  components: [
+                    {
+                      internalType: "uint256",
+                      name: "amount",
+                      type: "uint256",
+                    },
+                    {
+                      internalType: "address",
+                      name: "to",
+                      type: "address",
+                    },
+                    {
+                      internalType: "address",
+                      name: "proposedBy",
+                      type: "address",
+                    },
+                    {
+                      internalType: "string",
+                      name: "reason",
+                      type: "string",
+                    },
+                  ],
+                  internalType: "struct CrowdFund.MultiSigRequest",
+                  name: "_tx",
+                  type: "tuple",
                 },
               ],
               name: "createMultisigProposal",
@@ -613,6 +640,52 @@ const contracts = {
             {
               inputs: [
                 {
+                  internalType: "uint16",
+                  name: "_fundRunId",
+                  type: "uint16",
+                },
+              ],
+              name: "getProposals",
+              outputs: [
+                {
+                  components: [
+                    {
+                      internalType: "uint16",
+                      name: "proposalId",
+                      type: "uint16",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "amount",
+                      type: "uint256",
+                    },
+                    {
+                      internalType: "address",
+                      name: "to",
+                      type: "address",
+                    },
+                    {
+                      internalType: "address",
+                      name: "proposedBy",
+                      type: "address",
+                    },
+                    {
+                      internalType: "string",
+                      name: "reason",
+                      type: "string",
+                    },
+                  ],
+                  internalType: "struct CrowdFund.MultiSigVault[]",
+                  name: "",
+                  type: "tuple[]",
+                },
+              ],
+              stateMutability: "view",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
                   internalType: "address",
                   name: "_addr",
                   type: "address",
@@ -833,6 +906,50 @@ const contracts = {
               name: "transferOwnership",
               outputs: [],
               stateMutability: "nonpayable",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  internalType: "uint16",
+                  name: "",
+                  type: "uint16",
+                },
+                {
+                  internalType: "uint256",
+                  name: "",
+                  type: "uint256",
+                },
+              ],
+              name: "vaults",
+              outputs: [
+                {
+                  internalType: "uint16",
+                  name: "proposalId",
+                  type: "uint16",
+                },
+                {
+                  internalType: "uint256",
+                  name: "amount",
+                  type: "uint256",
+                },
+                {
+                  internalType: "address",
+                  name: "to",
+                  type: "address",
+                },
+                {
+                  internalType: "address",
+                  name: "proposedBy",
+                  type: "address",
+                },
+                {
+                  internalType: "string",
+                  name: "reason",
+                  type: "string",
+                },
+              ],
+              stateMutability: "view",
               type: "function",
             },
           ],

@@ -5,6 +5,7 @@ import { CreateProposal } from "~~/components/crowdfund/proposals/CreateProposal
 import { FinalizeProposal } from "~~/components/crowdfund/proposals/FinalizeProposal";
 import { SupportProposal } from "~~/components/crowdfund/proposals/SupportProposal";
 import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
+import { ListProposals } from "~~/components/crowdfund/proposals/ListProposals";
 
 const VaultPage: NextPage = () => {
   const router = useRouter();
@@ -29,6 +30,10 @@ const VaultPage: NextPage = () => {
           <hr />
 
           <FinalizeProposal id={fundRunSingle.id} proposalId={0} />
+
+          <hr />
+
+          <ListProposals id={fundRunSingle.id} />
         </>
       ) : (
         <>

@@ -47,25 +47,48 @@ contract CrowdFund is Ownable {
 	}
 
 
-	//new
-	struct MultiSigRequest {
+	//new multisig codes
+	struct MultiSigRequest { 
 		uint256 amount;
 		address to;
 		address proposedBy;
 		string reason;
 	}
-    string constant private MSG_PREFIX = "\x19Ethereum Signed Message:\n32"; //todo:
-    uint256 public nonce;
 
+	struct MultiSigVault { //TODO: A:2
+		uint16 proposalId;
+		uint256 amount;
+		address to;
+		address proposedBy;
+		string reason;		
+	}
+	//      fr_Id     
+	mapping(uint16 => MultiSigVault[]) public vaults; //to return to frontend (for a display in list) //TODO: A:2
+
+	/**
+	 * @dev  This ensures that the signature cannot be used for purposes outside of Ethereum: 
+	 * https://medium.com/mycrypto/the-magic-of-digital-signatures-on-ethereum-98fe184dc9c7
+	 * The signature can be notated as {r, s, v}
+	 * 32 bytes for r (integar)
+	 * 32 bytes for s (integar)
+	 * 1  byte  for v (ethereum-specific recover identifier)
+	 */
+    string constant private MSG_PREFIX = "\x19Ethereum Signed Message:\n32"; 
+    uint256 public nonce;
 	
 	//      proposalId...
 	mapping(uint16 => bytes[]) public signatureList;
 	uint16 public numberOfMultisigProposals = 0;
-	//END:new
+
+
+	
+	//END:new multisig codes
 
 
 	mapping(uint256 => FundRun) public fundRuns;
 	mapping(address => DonorsLog) public donorLogs; //a single donor will have all of their logs (across all Fund Runs they donated to) here
+
+
 	uint16 constant private crowdFundCommission = 25; //.25% 
 	uint16 constant private crowdFundDenominator = 10000;
 	uint16 public numberOfFundRuns = 0;
@@ -163,11 +186,7 @@ contract CrowdFund is Ownable {
 	}
 
 	//new multisig vault functionality (brainstorm):
-	//1. add transaction
-	//2. confirm transaction
-	//3. get confirmations count
-	//4. submit transaction
-	//5. execute transaction
+	//1. revoke proposals?
 
 
 	///NEW multisig code
@@ -175,7 +194,8 @@ contract CrowdFund is Ownable {
 	//user will sign (initial) Message, then send the signature here...
 	function createMultisigProposal(
 		bytes calldata _signature,
-		uint16 _fundRunId
+		uint16 _fundRunId,
+		MultiSigRequest calldata _tx
 	)
 	external
 	isMultisig(_fundRunId, true)
@@ -183,6 +203,17 @@ contract CrowdFund is Ownable {
 	{
 		console.log("HARDHAT CONSOLE__>   createMultiSigProposal hit");
 		signatureList[numberOfMultisigProposals].push(_signature);
+
+		//to see details of proposal in frontend
+		MultiSigVault memory vault = MultiSigVault({
+			proposalId: numberOfMultisigProposals,
+			amount: _tx.amount,
+			to: _tx.to,
+			proposedBy: _tx.proposedBy,
+			reason: _tx.reason
+		}); 
+		vaults[_fundRunId].push(vault);
+
 		emit ProposalCreated(msg.sender, _fundRunId, numberOfMultisigProposals);
 		numberOfMultisigProposals++;
 	}
@@ -498,6 +529,23 @@ contract CrowdFund is Ownable {
 			allFundRuns[i - 1] = item;
 		}
 		return allFundRuns;
+	}
+
+	/**
+	 * @dev Returns list of Proposals (from a Fund Run's Vault) in reverse order (latest-first)
+	 */
+	function getProposals(uint16 _fundRunId) public view returns (MultiSigVault[] memory) {
+		// MultiSigVault[] memory allProposals = new MultiSigVault[](vaults[_fundRunId].length);
+
+		// for (uint16 i = 1; i < vaults[_fundRunId].length + 1; i++) {
+		// 	MultiSigVault storage item = vaults[_fundRunId][i - i];
+		// 	allProposals[i - 1] = item;
+		// }
+		// return allProposals;
+
+		//TODO: A:2 
+
+		return vaults[_fundRunId];
 	}
 
 	function getFundRun(uint16 _id) public view returns (FundRun memory) {

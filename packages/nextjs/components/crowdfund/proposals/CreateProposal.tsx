@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { BigNumber } from "ethers";
 import { arrayify, defaultAbiCoder, keccak256, parseEther, solidityPack } from "ethers/lib/utils"; // todo: full migration to viem?
-import { SignMessageReturnType } from "viem";
+import { SignMessageReturnType, formatEther } from "viem";
 import { useAccount, useWalletClient } from "wagmi";
 import { useScaffoldContractRead, useScaffoldContractWrite, useScaffoldEventSubscriber } from "~~/hooks/scaffold-eth";
 
@@ -79,7 +79,11 @@ export const CreateProposal = (proposal: CreateProposalProps) => {
   const { writeAsync, isLoading } = useScaffoldContractWrite({
     contractName: "CrowdFund",
     functionName: "createMultisigProposal",
-    args: [creationSignature, proposal?.id],
+    args: [creationSignature, proposal?.id, {
+      "amount": BigInt(100000000000000000),
+      "to": toAddressInput,
+      "proposedBy": userAddress.address,
+      "reason": "test proposal"}],
     onBlockConfirmation: txnReceipt => {
       console.log("📦 Transaction blockHash", txnReceipt.blockHash);
     },

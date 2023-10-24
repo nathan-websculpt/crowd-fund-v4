@@ -173,6 +173,8 @@ const signMultisigWithdraw = async (
           const proposalID = 0;     
           const transferAmount = parseEther("0.25");
           const reason = "Alice proposes to pay John 0.25 Ethers";
+          const multisigReq = {"amount": transferAmount, "to": john.address, "proposedBy": alice.address, "reason": reason};
+
           const johnFirstBalance = await john.getBalance();
           const johnExpectedBalance = await johnFirstBalance.add(transferAmount);
           console.log("Alice's Address: ", alice.address);
@@ -184,7 +186,7 @@ const signMultisigWithdraw = async (
 
           //sign digest; CREATING proposal; then store signature in contract
           const aliceProposal_signature = await alice.signMessage(ethers.utils.arrayify(digest));
-          const creationTx = await crowdFund.connect(alice).createMultisigProposal(aliceProposal_signature, fundRunID);
+          const creationTx = await crowdFund.connect(alice).createMultisigProposal(aliceProposal_signature, fundRunID, multisigReq);
           await expect(creationTx)
             .to.emit(crowdFund, "ProposalCreated")
             .withArgs(alice.address, fundRunID, proposalID)
@@ -213,6 +215,8 @@ const signMultisigWithdraw = async (
             const proposalID = 1;     
             const transferAmount = parseEther("0.75");
             const reason = "John proposes to pay Bob (who is not an owner) 0.75 Ethers";
+            const multisigReq = {"amount": transferAmount, "to": bob.address, "proposedBy": john.address, "reason": reason};
+  
             const bobFirstBalance = await bob.getBalance();
             const bobExpectedBalance = await bobFirstBalance.add(transferAmount);
             console.log("Bob has a balance of: ", formatEther(bobFirstBalance));  
@@ -222,7 +226,7 @@ const signMultisigWithdraw = async (
 
             //sign digest; CREATING proposal; then store signature in contract
           const johnProposal_signature = await john.signMessage(ethers.utils.arrayify(digest));
-          const creationTx = await crowdFund.connect(john).createMultisigProposal(johnProposal_signature, fundRunID);
+          const creationTx = await crowdFund.connect(john).createMultisigProposal(johnProposal_signature, fundRunID, multisigReq);
           await expect(creationTx)
             .to.emit(crowdFund, "ProposalCreated")
             .withArgs(john.address, fundRunID, proposalID)
@@ -252,6 +256,8 @@ const signMultisigWithdraw = async (
             const proposalID = 2;
             const transferAmount = parseEther("0.5");
             const reason = "The Chan-Chan Man proposes to pay Bob (who is not an owner) 0.5 Ethers for web design services";
+            const multisigReq = {"amount": transferAmount, "to": bob.address, "proposedBy": chandler.address, "reason": reason};
+  
             const bobFirstBalance = await bob.getBalance();
             const bobExpectedBalance = await bobFirstBalance.add(transferAmount);
             console.log("Bob has a balance of: ", formatEther(bobFirstBalance));
@@ -262,7 +268,7 @@ const signMultisigWithdraw = async (
 
             //sign digest; CREATING proposal; then store signature in contract
             const chandlerProposal_signature = await chandler.signMessage(ethers.utils.arrayify(digest));
-            const creationTx = await crowdFund.connect(chandler).createMultisigProposal(chandlerProposal_signature, fundRunID);
+            const creationTx = await crowdFund.connect(chandler).createMultisigProposal(chandlerProposal_signature, fundRunID, multisigReq);
             await expect(creationTx)
               .to.emit(crowdFund, "ProposalCreated")
               .withArgs(chandler.address, fundRunID, proposalID)
@@ -299,6 +305,8 @@ const signMultisigWithdraw = async (
             const proposalID = 3;
             const transferAmount = parseEther("0.5");
             const reason = "Ross proposes to pay Alice (who is not an owner) 0.5 Ethers for Project Management services";
+            const multisigReq = {"amount": transferAmount, "to": alice.address, "proposedBy": ross.address, "reason": reason};
+  
             const aliceFirstBalance = await alice.getBalance();
             const aliceExpectedBalance = await aliceFirstBalance.add(transferAmount);
             console.log("Alice has a balance of: ", formatEther(aliceFirstBalance));
@@ -309,7 +317,7 @@ const signMultisigWithdraw = async (
 
             //sign digest; SUPPORTING proposal; then store signature in contract
             const rossCreate_signature = await ross.signMessage(ethers.utils.arrayify(digest));
-            const creationTx = await crowdFund.connect(ross).createMultisigProposal(rossCreate_signature, fundRunID);
+            const creationTx = await crowdFund.connect(ross).createMultisigProposal(rossCreate_signature, fundRunID, multisigReq);
             await expect(creationTx)
             .to.emit(crowdFund, "ProposalCreated")
             .withArgs(ross.address, fundRunID, proposalID);
