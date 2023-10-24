@@ -18,9 +18,6 @@ export const ListProposals = (frVault: ListProposalProps) => {
     console.log(frVault.id);
   };
 
-
-
-
   if (isListLoading) {
     return (
       <div className="flex flex-col gap-2 p-2 m-4 mx-auto border shadow-xl border-base-300 bg-base-200 sm:rounded-lg">
@@ -36,7 +33,8 @@ export const ListProposals = (frVault: ListProposalProps) => {
             className="flex flex-col gap-2 p-2 m-4 border shadow-xl border-base-300 bg-base-200 sm:rounded-lg"
           >
             <SingleProposal
-              proposalId={BigInt(vp.proposalId)}
+              proposalId={vp.proposalId}
+              fundRunId={frVault.id}
               amount={vp.amount}
               to={vp.to}
               proposedBy={vp.proposedBy}
@@ -45,10 +43,10 @@ export const ListProposals = (frVault: ListProposalProps) => {
           </div>
         ))}
 
-        
-      <button className="w-10/12 mx-auto md:w-3/5 btn btn-primary mt-9" onClick={() => testtest()}>test</button>
+        <button className="w-10/12 mx-auto md:w-3/5 btn btn-primary mt-9" onClick={() => testtest()}>
+          test
+        </button>
       </>
-
     );
   }
 };

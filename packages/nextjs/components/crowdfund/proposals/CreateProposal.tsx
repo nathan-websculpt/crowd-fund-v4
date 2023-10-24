@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { BigNumber } from "ethers";
 import { arrayify, defaultAbiCoder, keccak256, parseEther, solidityPack } from "ethers/lib/utils"; // todo: full migration to viem?
-import { SignMessageReturnType, formatEther } from "viem";
+import { SignMessageReturnType, formatEther, parseUnits } from "viem";
 import { useAccount, useWalletClient } from "wagmi";
 import { useScaffoldContractRead, useScaffoldContractWrite, useScaffoldEventSubscriber } from "~~/hooks/scaffold-eth";
 
@@ -14,6 +14,7 @@ export const CreateProposal = (proposal: CreateProposalProps) => {
   const userAddress = useAccount();
   const [transferInput, setTransferInput] = useState("0.1");
   const [toAddressInput, setToAddressInput] = useState("0xB7F675970703342938e58A6C8E76C6D47fC78FDA");
+  const [reasonInput, setReasonInput] = useState("Test Proposal");
   const [creationSignature, setCreationSignature] = useState<SignMessageReturnType>();
 
   const { data: walletClient } = useWalletClient();
@@ -80,10 +81,10 @@ export const CreateProposal = (proposal: CreateProposalProps) => {
     contractName: "CrowdFund",
     functionName: "createMultisigProposal",
     args: [creationSignature, proposal?.id, {
-      "amount": BigInt(100000000000000000),
+      "amount": parseUnits(transferInput, 18),
       "to": toAddressInput,
       "proposedBy": userAddress.address,
-      "reason": "test proposal"}],
+      "reason": reasonInput}],
     onBlockConfirmation: txnReceipt => {
       console.log("📦 Transaction blockHash", txnReceipt.blockHash);
     },
@@ -105,6 +106,14 @@ export const CreateProposal = (proposal: CreateProposalProps) => {
           className="px-3 py-3 border rounded-lg bg-base-200 border-base-300"
           value={toAddressInput}
           onChange={e => setToAddressInput(e.target.value)}
+        />{" "}
+        <label className="mt-3 text-lg font-bold">Reason</label>
+        <input
+          type="text"
+          placeholder="Reason"
+          className="px-3 py-3 border rounded-lg bg-base-200 border-base-300"
+          value={reasonInput}
+          onChange={e => setReasonInput(e.target.value)}
         />{" "}
         <div className="mt-4 tooltip tooltip-primary" data-tip="Transfer amount in Ether ... like '0.1' or '1'">
           <input

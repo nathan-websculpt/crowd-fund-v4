@@ -2,10 +2,8 @@
 import { useRouter } from "next/router";
 import { NextPage } from "next";
 import { CreateProposal } from "~~/components/crowdfund/proposals/CreateProposal";
-import { FinalizeProposal } from "~~/components/crowdfund/proposals/FinalizeProposal";
-import { SupportProposal } from "~~/components/crowdfund/proposals/SupportProposal";
-import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
 import { ListProposals } from "~~/components/crowdfund/proposals/ListProposals";
+import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
 
 const VaultPage: NextPage = () => {
   const router = useRouter();
@@ -25,11 +23,11 @@ const VaultPage: NextPage = () => {
 
           <hr />
 
-          <SupportProposal id={fundRunSingle.id} proposalId={0} />
+          {/* <SupportProposal id={fundRunSingle.id} proposalId={0} /> */}
 
           <hr />
 
-          <FinalizeProposal id={fundRunSingle.id} proposalId={0} />
+          {/* <FinalizeProposal id={fundRunSingle.id} proposalId={0} /> */}
 
           <hr />
 

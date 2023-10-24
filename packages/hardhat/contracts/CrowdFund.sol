@@ -214,8 +214,8 @@ contract CrowdFund is Ownable {
 		}); 
 		vaults[_fundRunId].push(vault);
 
-		emit ProposalCreated(msg.sender, _fundRunId, numberOfMultisigProposals);
 		numberOfMultisigProposals++;
+		emit ProposalCreated(msg.sender, _fundRunId, vault.proposalId);
 	}
 	
 	//users will sign (supporting) Messages, then send the signature here...

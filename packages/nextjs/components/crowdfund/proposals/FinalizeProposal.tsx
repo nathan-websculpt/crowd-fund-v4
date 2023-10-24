@@ -4,18 +4,17 @@ import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaf
 
 interface FinalizeProposalProps {
   id: number; //fundrun
-  proposalId: number; //not needed?
+  proposalId: number;
+  amount: bigint;
+  to: string;
+  proposedBy: string;
+  reason: string;
 }
 
 export const FinalizeProposal = (proposal: FinalizeProposalProps) => {
-  const [transferInput, setTransferInput] = useState<bigint>(BigInt(100000000000000000));
-  const [toAddressInput, setToAddressInput] = useState("0xB7F675970703342938e58A6C8E76C6D47fC78FDA");
-  const [proposedByInput, setProposedByInput] = useState("0xC4d53E07a6521EA73759D1541070BEf3C0823809");
-  const [reasonInput, setReasonInput] = useState("test proposal");
-  const [proposalIdInput, setProposalIdInput] = useState<number>();
   const [nonceInput, setNonceInput] = useState<bigint>();
 
-  const tx = { amount: transferInput, to: toAddressInput, proposedBy: proposedByInput, reason: reasonInput };
+  const tx = { amount: proposal.amount, to: proposal.to, proposedBy: proposal.proposedBy, reason: proposal.reason };
   //todo: refactor A:1
   const { data: fundRunNonce } = useScaffoldContractRead({
     contractName: "CrowdFund",
@@ -31,13 +30,13 @@ export const FinalizeProposal = (proposal: FinalizeProposalProps) => {
     console.log("nonce: ", nonce);
     console.log("tx: ", tx);
     console.log("fund run id: ", proposal.id);
-    console.log("proposal id: ", proposalIdInput);
+    console.log("proposal id: ", proposal.proposalId);
   };
 
   const { writeAsync, isLoading } = useScaffoldContractWrite({
     contractName: "CrowdFund",
     functionName: "multisigWithdraw",
-    args: [tx, nonceInput, proposal.id, proposalIdInput],
+    args: [tx, nonceInput, proposal.id, proposal.proposalId],
     onBlockConfirmation: txnReceipt => {
       console.log("📦 Transaction blockHash", txnReceipt.blockHash);
     },
@@ -46,15 +45,8 @@ export const FinalizeProposal = (proposal: FinalizeProposalProps) => {
   return (
     <>
       <div className="mt-12">
-        <h1>Finalize A PROPOSAL (FinalizeProposal.tsx)</h1>
-        <label className="mt-3 text-lg font-bold">Proposal Id</label>
-        <input
-          type="number"
-          placeholder="Proposal ID"
-          className="px-3 py-3 border rounded-lg bg-base-200 border-base-300"
-          value={proposalIdInput}
-          onChange={e => setProposalIdInput(parseInt(e.target.value))}
-        />{" "}
+        <h1>Finalize THIS PROPOSAL (FinalizeProposal.tsx)</h1>
+
         <button className="w-10/12 mx-auto md:w-3/5 btn btn-primary mt-9" onClick={() => finishProposal()}>
           First Click
         </button>
