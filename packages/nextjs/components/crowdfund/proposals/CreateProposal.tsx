@@ -64,14 +64,14 @@ export const CreateProposal = (proposal: CreateProposalProps) => {
     return digest;
   }; //todo: refactor A:1
 
-  const createProposal = async () => {
+  const createNewProposal = async () => {
     const nonce = getNewNonce();
     const digest = await getDigest(
       nonce,
       parseEther(transferInput),
       toAddressInput,
       userAddress.address,
-      "test proposal",
+      reasonInput,
     );
     console.log("digest", digest);
     console.log("digest, made w/ wallet client", walletClient?.account);
@@ -140,7 +140,7 @@ export const CreateProposal = (proposal: CreateProposalProps) => {
             onChange={e => setTransferInput(e.target.value)}
           />
         </div>
-        <button className="w-10/12 mx-auto mt-5 md:w-3/5 btn btn-primary" onClick={() => createProposal()}>
+        <button className="w-10/12 mx-auto mt-5 md:w-3/5 btn btn-primary" onClick={() => createNewProposal()}>
           {/* Create a Proposal */}
           First Click
         </button>
