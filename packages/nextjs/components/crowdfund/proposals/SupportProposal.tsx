@@ -7,7 +7,7 @@ import { useWalletClient } from "wagmi";
 import { useScaffoldContractRead, useScaffoldContractWrite, useScaffoldEventSubscriber } from "~~/hooks/scaffold-eth";
 
 interface SupportProposalProps {
-  id: number; //fundrun
+  id: number; //fundrun //todo:
   proposalId: number;
   amount: bigint;
   to: string;

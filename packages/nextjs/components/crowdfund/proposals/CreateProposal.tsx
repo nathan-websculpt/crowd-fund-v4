@@ -8,7 +8,7 @@ import { useAccount, useWalletClient } from "wagmi";
 import { useScaffoldContractRead, useScaffoldContractWrite, useScaffoldEventSubscriber } from "~~/hooks/scaffold-eth";
 
 interface CreateProposalProps {
-  id: number;
+  id: number; //todo:
 }
 
 export const CreateProposal = (proposal: CreateProposalProps) => {

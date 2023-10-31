@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 
 interface FinalizeProposalProps {
-  id: number; //fundrun
+  id: number; //fundrun //todo:
   proposalId: number;
   amount: bigint;
   to: string;
