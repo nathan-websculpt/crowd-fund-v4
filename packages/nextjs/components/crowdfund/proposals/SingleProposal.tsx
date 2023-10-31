@@ -30,7 +30,7 @@ export const SingleProposal = (proposal: DisplayProposalProps) => {
 
         <label className="text-sm font-bold underline">Reason</label>
         <p className="text-md">{proposal.reason}</p>
-        
+
         <SupportProposal
           id={proposal.fundRunId}
           proposalId={proposal.proposalId}

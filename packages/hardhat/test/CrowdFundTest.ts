@@ -23,7 +23,6 @@ describe("CrowdFund", function () {
     commission: BigNumber;
     lessCommission: BigNumber;
   };
-  
 
   const getBlock = async (): Promise<number> => {
     const latestBlock = await hre.ethers.provider.getBlock("latest");
@@ -82,11 +81,11 @@ describe("CrowdFund", function () {
   };
 
   const getExpectedAmts = (beforeContractCommission: number) => {
-    const comm = (0.25 / 100) * beforeContractCommission; //0.25% 
+    const comm = (0.25 / 100) * beforeContractCommission; //0.25%
     const lessCommission = beforeContractCommission - comm;
     const rslt: ExpectedAmounts = {
       commission: parseEther(comm.toString()),
-      lessCommission: parseEther(lessCommission.toString())
+      lessCommission: parseEther(lessCommission.toString()),
     };
     return rslt;
   };
@@ -111,9 +110,15 @@ describe("CrowdFund", function () {
         const [, bob, alice, john] = await ethers.getSigners();
         const deadlineToCreateWith = 1;
 
-        await createFundRun(bob, "Bob's Fund Run", "Bob's Description", parseEther("1"), deadlineToCreateWith, [bob.address]);
-        await createFundRun(alice, "Alice's Fund Run", "Alice's Description", parseEther("2"), deadlineToCreateWith, [alice.address]);
-        await createFundRun(john, "John's Fund Run", "John's Description", parseEther("3"), deadlineToCreateWith, [john.address]);
+        await createFundRun(bob, "Bob's Fund Run", "Bob's Description", parseEther("1"), deadlineToCreateWith, [
+          bob.address,
+        ]);
+        await createFundRun(alice, "Alice's Fund Run", "Alice's Description", parseEther("2"), deadlineToCreateWith, [
+          alice.address,
+        ]);
+        await createFundRun(john, "John's Fund Run", "John's Description", parseEther("3"), deadlineToCreateWith, [
+          john.address,
+        ]);
 
         const bobsFundRun = await crowdFund.getFundRun(bobsId);
         const alicesFundRun = await crowdFund.getFundRun(alicesId);

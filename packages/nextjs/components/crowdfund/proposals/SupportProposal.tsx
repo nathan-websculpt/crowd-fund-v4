@@ -55,7 +55,7 @@ export const SupportProposal = (proposal: SupportProposalProps) => {
 
     const encoded = defaultAbiCoder.encode(
       ["tuple(uint256,address,address,string)"],
-      [[proposal.amount, proposal.to, proposal.proposedBy, proposal.reason]],
+      [[proposal.amount, proposal.to, proposal.proposedBy, proposal.reason]],//todo:
     );
     const encodedWithNonce = solidityPack(["bytes", "uint256"], [encoded, nonce]);
 

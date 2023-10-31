@@ -66,19 +66,12 @@ export const CreateProposal = (proposal: CreateProposalProps) => {
 
   const createNewProposal = async () => {
     const nonce = getNewNonce();
-    const digest = await getDigest(
-      nonce,
-      parseEther(transferInput),
-      toAddressInput,
-      userAddress.address,
-      reasonInput,
-    );
+    const digest = await getDigest(nonce, parseEther(transferInput), toAddressInput, userAddress.address, reasonInput);
     console.log("digest", digest);
     console.log("digest, made w/ wallet client", walletClient?.account);
     console.log("digest, made w/ user addr: ", userAddress.address);
     console.log("digest, made w/ to addr: ", toAddressInput);
     console.log("digest, made w/ amt: ", parseEther(transferInput).toString());
-
 
     const proposalCreationSig: any = await walletClient?.signMessage({
       account: walletClient.account,
