@@ -15,7 +15,7 @@ export const CreateProposal = (proposal: CreateProposalProps) => {
   const userAddress = useAccount();
   const [transferInput, setTransferInput] = useState("0.1");
   const [toAddressInput, setToAddressInput] = useState("0x091897BC27A6D6b1aC216b0B0059C0Fa4ECF5298");
-  const [reasonInput, setReasonInput] = useState("Test Proposal");
+  const [reasonInput, setReasonInput] = useState("test proposal");
   const [creationSignature, setCreationSignature] = useState<SignMessageReturnType>();
 
   const { data: walletClient } = useWalletClient();
