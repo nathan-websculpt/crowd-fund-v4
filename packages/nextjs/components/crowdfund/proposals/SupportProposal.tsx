@@ -47,6 +47,12 @@ export const SupportProposal = (proposal: SupportProposalProps) => {
     return fundRunNonce !== undefined ? fundRunNonce + 1n : 0n;
   }; //todo: refactor
   const getDigest = async (nonce: bigint) => {
+
+    console.log("getDigest amount: ", proposal.amount.toString());
+    console.log("getDigest to: ", proposal.to);
+    console.log("getDigest proposedBy: ", proposal.proposedBy);
+    console.log("getDigest reason: ", proposal.reason);
+
     const encoded = defaultAbiCoder.encode(
       ["tuple(uint256,address,address,string)"],
       [[proposal.amount, proposal.to, proposal.proposedBy, proposal.reason]],
@@ -60,8 +66,11 @@ export const SupportProposal = (proposal: SupportProposalProps) => {
   const supportProposal = async () => {
     const nonce = getNewNonce(); //TODO: get from the proposal and To Address
     const digest = await getDigest(nonce);
+    console.log("nonce: ", nonce);
     console.log("digest", digest);
     console.log("wallet client", walletClient?.account);
+    console.log("digest, made w/ wallet client", walletClient?.account);
+
     const proposalSupportSig: any = await walletClient?.signMessage({
       account: walletClient.account,
       message: { raw: arrayify(digest) },

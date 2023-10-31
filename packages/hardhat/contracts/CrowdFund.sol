@@ -270,7 +270,7 @@ contract CrowdFund is Ownable {
         {
             bytes memory signature = _signatures[i];
             address signer = ECDSA.recover(digest, signature);
-            require(isOwnerOfFundRun(signer, _fundRunId), "not a co-owner of this Fund Run"); //redundancy check
+            require(isOwnerOfFundRun(signer, _fundRunId), "not a co-owner of this Fund Run");
             require(signer != initialSigner, "duplicate signature has been prevented.");
 			console.log("HARDHAT CONSOLE__>        signer Address: ", signer);
             initialSigner = signer;

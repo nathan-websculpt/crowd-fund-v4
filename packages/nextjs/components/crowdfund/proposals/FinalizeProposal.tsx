@@ -13,8 +13,9 @@ interface FinalizeProposalProps {
 
 export const FinalizeProposal = (proposal: FinalizeProposalProps) => {
   const [nonceInput, setNonceInput] = useState<bigint>();
-
+  //const tx = { amount: proposal.amount, to: proposal.to, proposedBy: proposal.proposedBy, reason: proposal.reason };
   const tx = { amount: proposal.amount, to: proposal.to, proposedBy: proposal.proposedBy, reason: proposal.reason };
+
   //todo: refactor A:1
   const { data: fundRunNonce } = useScaffoldContractRead({
     contractName: "CrowdFund",
@@ -28,9 +29,13 @@ export const FinalizeProposal = (proposal: FinalizeProposalProps) => {
     const nonce = getNewNonce();
     setNonceInput(nonce);
     console.log("nonce: ", nonce);
-    console.log("tx: ", tx);
+    //console.log("tx: ", tx);
     console.log("fund run id: ", proposal.id);
     console.log("proposal id: ", proposal.proposalId);
+    console.log("amount: ", proposal.amount.toString());
+    console.log("to: ", proposal.to);
+    console.log("proposedBy: ", proposal.proposedBy);
+    console.log("reason: ", proposal.reason);
   };
 
   const { writeAsync, isLoading } = useScaffoldContractWrite({
