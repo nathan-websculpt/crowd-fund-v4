@@ -1,11 +1,14 @@
 /* eslint-disable prettier/prettier */
 import { useState } from "react";
-import { BigNumber } from "ethers";
-import { arrayify, defaultAbiCoder, keccak256, parseEther, solidityPack } from "ethers/lib/utils";
 // todo: full migration to viem?
-import { SignMessageReturnType, parseUnits } from "viem";
+import { SignMessageReturnType, toBytes, encodePacked, keccak256, parseEther, encodeAbiParameters, parseAbiParameters } from "viem";
 import { useAccount, useWalletClient } from "wagmi";
 import { useScaffoldContractRead, useScaffoldContractWrite, useScaffoldEventSubscriber } from "~~/hooks/scaffold-eth";
+
+// ethers _> viem 
+// arrayify becomes: toBytes
+// abiCoder.encode becomes: encodeAbiParameters
+// solidityPack becomes: encodePacked
 
 interface CreateProposalProps {
   id: number; //todo:
@@ -14,7 +17,7 @@ interface CreateProposalProps {
 export const CreateProposal = (proposal: CreateProposalProps) => {
   const userAddress = useAccount();
   const [transferInput, setTransferInput] = useState("0.1");
-  const [toAddressInput, setToAddressInput] = useState("0x091897BC27A6D6b1aC216b0B0059C0Fa4ECF5298");
+  const [toAddressInput, setToAddressInput] = useState("0xcE62856Bc18E3d0f202e0f13C0B178026B94626F");
   const [reasonInput, setReasonInput] = useState("test proposal");
   const [creationSignature, setCreationSignature] = useState<SignMessageReturnType>();
 
@@ -46,7 +49,7 @@ export const CreateProposal = (proposal: CreateProposalProps) => {
   const getNewNonce = () => {
     return fundRunNonce !== undefined ? fundRunNonce + 1n : 0n;
   }; //todo: refactor
-  const getDigest = async (nonce: bigint, amount: BigNumber, to: string, proposedBy: string, reason: string) => {
+  const getDigest = async (nonce: bigint, amount: bigint, to: string, proposedBy: string, reason: string) => {
     const tx = { amount, to, proposedBy, reason };
 
     console.log("getDigest amount: ", amount.toString());
@@ -54,11 +57,11 @@ export const CreateProposal = (proposal: CreateProposalProps) => {
     console.log("getDigest proposedBy: ", proposedBy);
     console.log("getDigest reason: ", reason);
 
-    const encoded = defaultAbiCoder.encode(
-      ["tuple(uint256,address,address,string)"],
-      [[tx.amount, tx.to, tx.proposedBy, tx.reason]],
+    const encoded = encodeAbiParameters(
+      parseAbiParameters("uint256 amount, address to, address proposedBy, string reason"),
+      [tx.amount, tx.to, tx.proposedBy, tx.reason],
     );
-    const encodedWithNonce = solidityPack(["bytes", "uint256"], [encoded, nonce]);
+    const encodedWithNonce = encodePacked(["bytes", "uint256"], [encoded, nonce]);
 
     const digest = keccak256(encodedWithNonce);
     return digest;
@@ -75,7 +78,7 @@ export const CreateProposal = (proposal: CreateProposalProps) => {
 
     const proposalCreationSig: any = await walletClient?.signMessage({
       account: walletClient.account,
-      message: { raw: arrayify(digest) },
+      message: { raw: toBytes(digest) },
     });
     console.log(proposalCreationSig);
 
@@ -89,7 +92,7 @@ export const CreateProposal = (proposal: CreateProposalProps) => {
       creationSignature,
       proposal?.id,
       {
-        amount: parseUnits(transferInput, 18),
+        amount: parseEther(transferInput),
         to: toAddressInput,
         proposedBy: userAddress.address,
         reason: reasonInput,
@@ -130,6 +133,7 @@ export const CreateProposal = (proposal: CreateProposalProps) => {
             type="number"
             placeholder="Transfer Amount"
             className="max-w-xs input input-bordered input-accent"
+            value={transferInput}
             onChange={e => setTransferInput(e.target.value)}
           />
         </div>

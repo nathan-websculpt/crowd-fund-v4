@@ -1,8 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { useState } from "react";
-import { arrayify, defaultAbiCoder, keccak256, solidityPack } from "ethers/lib/utils";
 // todo: full migration to viem?
-import { SignMessageReturnType } from "viem";
+import { SignMessageReturnType, toBytes, encodePacked, keccak256, encodeAbiParameters, parseAbiParameters } from "viem";
 import { useWalletClient } from "wagmi";
 import { useScaffoldContractRead, useScaffoldContractWrite, useScaffoldEventSubscriber } from "~~/hooks/scaffold-eth";
 
@@ -53,11 +52,11 @@ export const SupportProposal = (proposal: SupportProposalProps) => {
     console.log("getDigest proposedBy: ", proposal.proposedBy);
     console.log("getDigest reason: ", proposal.reason);
 
-    const encoded = defaultAbiCoder.encode(
-      ["tuple(uint256,address,address,string)"],
-      [[proposal.amount, proposal.to, proposal.proposedBy, proposal.reason]],//todo:
+    const encoded = encodeAbiParameters(
+      parseAbiParameters("uint256 amount, address to, address proposedBy, string reason"),
+      [proposal.amount, proposal.to, proposal.proposedBy, proposal.reason],
     );
-    const encodedWithNonce = solidityPack(["bytes", "uint256"], [encoded, nonce]);
+    const encodedWithNonce = encodePacked(["bytes", "uint256"], [encoded, nonce]);
 
     const digest = keccak256(encodedWithNonce);
     return digest;
@@ -73,7 +72,7 @@ export const SupportProposal = (proposal: SupportProposalProps) => {
 
     const proposalSupportSig: any = await walletClient?.signMessage({
       account: walletClient.account,
-      message: { raw: arrayify(digest) },
+      message: { raw: toBytes(digest) },
     });
     console.log(proposalSupportSig);
 
