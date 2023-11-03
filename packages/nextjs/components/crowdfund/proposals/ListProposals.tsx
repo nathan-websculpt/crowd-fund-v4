@@ -22,8 +22,9 @@ export const ListProposals = (frVault: ListProposalProps) => {
   } else {
     return (
       <>
-        <div className="flex justify-center px-4 md:px-0">
+        <div className="flex justify-center w-11/12 mt-9 max-w-11/12 sm:mx-auto">
           <div className="w-full overflow-x-auto shadow-2xl rounded-xl">
+            <h1>Support or Finalize an Existing Proposal</h1>
             <table className="table w-full text-xl bg-base-100 table-zebra md:table-md table-sm">
               <thead>
                 <tr className="text-sm rounded-xl text-base-content">
@@ -39,7 +40,7 @@ export const ListProposals = (frVault: ListProposalProps) => {
               <tbody>
                 {vaultProposals?.map(vp => (
                   <tr
-                    className="h-12 text-sm transition-colors duration-200 bg-base-200 hover:bg-base-300"
+                    className="text-sm hover"
                     key={vp.proposalId.toString()}
                   >
                     <SingleProposal

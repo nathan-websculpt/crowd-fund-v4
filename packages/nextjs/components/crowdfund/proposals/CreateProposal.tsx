@@ -87,6 +87,7 @@ export const CreateProposal = (proposal: CreateProposalProps) => {
   return (
     <>
       <div className="flex flex-col gap-2 sm:gap-5">
+        <h1>Create a New Proposal</h1>
         <label className="text-lg font-bold">To Address</label>
         <input
           type="text"
