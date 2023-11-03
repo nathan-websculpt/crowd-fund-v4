@@ -1,4 +1,5 @@
-// get digest for a multisig proposal (CreateProposal.tsx and SupportProposal.tsx)
+/* eslint-disable prettier/prettier */
+// gets digest for a multisig proposal (CreateProposal.tsx and SupportProposal.tsx)
 import { encodeAbiParameters, encodePacked, keccak256 } from "viem";
 
 // ethers _> viem
@@ -11,26 +12,6 @@ const getDigest = async (nonce: bigint, amount: bigint, to: string, proposedBy: 
   console.log("getDigest to: ", to);
   console.log("getDigest proposedBy: ", proposedBy);
   console.log("getDigest reason: ", reason);
-
-  //sounds great, doesn't work.
-  // const encoded = encodeAbiParameters(
-  //   //parseAbiParameters("uint256 amount, address to, address proposedBy, string reason"),
-  //   [
-  //     { name: "amount", type: "uint256" },
-  //     { name: "to", type: "address" },
-  //     { name: "proposedBy", type: "address" },
-  //     { name: "reason", type: "string" },
-  //   ],
-  //   //[amount, to, proposedBy, reason],
-  //   [
-  //     100000000000000000n,
-  //     "0xcE62856Bc18E3d0f202e0f13C0B178026B94626F",
-  //     "0x24C54f3255C7904e9cE835C055618b0C02650b89",
-  //     "test proposal",
-  //   ],
-  // );
-  //NOTE: DIDN'T WORK THIS WAY^^^^
-
 
   //TODO: get from 
   //     nextjs\generated\deployedcontracts.ts
