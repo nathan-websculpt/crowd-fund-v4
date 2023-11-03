@@ -1,11 +1,17 @@
 /* eslint-disable prettier/prettier */
 import { useState } from "react";
 // todo: full migration to viem?
-import { SignMessageReturnType, toBytes, encodePacked, keccak256, parseEther, encodeAbiParameters, parseAbiParameters } from "viem";
+import {
+  SignMessageReturnType,
+  parseEther,
+  toBytes,
+} from "viem";
 import { useAccount, useWalletClient } from "wagmi";
+import getDigest from "~~/helpers/getDigest";
+import getNonce from "~~/helpers/getNonce";
 import { useScaffoldContractRead, useScaffoldContractWrite, useScaffoldEventSubscriber } from "~~/hooks/scaffold-eth";
 
-// ethers _> viem 
+// ethers _> viem
 // arrayify becomes: toBytes
 // abiCoder.encode becomes: encodeAbiParameters
 // solidityPack becomes: encodePacked
@@ -41,41 +47,16 @@ export const CreateProposal = (proposal: CreateProposalProps) => {
     },
   });
 
-  //todo: refactor A:1
   const { data: fundRunNonce } = useScaffoldContractRead({
     contractName: "CrowdFund",
     functionName: "getNonce",
   });
-  const getNewNonce = () => {
-    return fundRunNonce !== undefined ? fundRunNonce + 1n : 0n;
-  }; //todo: refactor
-  const getDigest = async (nonce: bigint, amount: bigint, to: string, proposedBy: string, reason: string) => {
-    const tx = { amount, to, proposedBy, reason };
-
-    console.log("getDigest amount: ", amount.toString());
-    console.log("getDigest to: ", to);
-    console.log("getDigest proposedBy: ", proposedBy);
-    console.log("getDigest reason: ", reason);
-
-    const encoded = encodeAbiParameters(
-      parseAbiParameters("uint256 amount, address to, address proposedBy, string reason"),
-      [tx.amount, tx.to, tx.proposedBy, tx.reason],
-    );
-    const encodedWithNonce = encodePacked(["bytes", "uint256"], [encoded, nonce]);
-
-    const digest = keccak256(encodedWithNonce);
-    return digest;
-  }; //todo: refactor A:1
 
   const createNewProposal = async () => {
-    const nonce = getNewNonce();
+    const nonce = getNonce(fundRunNonce);
+    console.log("nonce: ", nonce);
     const digest = await getDigest(nonce, parseEther(transferInput), toAddressInput, userAddress.address, reasonInput);
-    console.log("digest", digest);
-    console.log("digest, made w/ wallet client", walletClient?.account);
-    console.log("digest, made w/ user addr: ", userAddress.address);
-    console.log("digest, made w/ to addr: ", toAddressInput);
-    console.log("digest, made w/ amt: ", parseEther(transferInput).toString());
-
+    
     const proposalCreationSig: any = await walletClient?.signMessage({
       account: walletClient.account,
       message: { raw: toBytes(digest) },

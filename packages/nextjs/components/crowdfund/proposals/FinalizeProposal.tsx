@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { useState } from "react";
+import getNonce from "~~/helpers/getNonce";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 
 interface FinalizeProposalProps {
@@ -20,14 +21,11 @@ export const FinalizeProposal = (proposal: FinalizeProposalProps) => {
     contractName: "CrowdFund",
     functionName: "getNonce",
   });
-  const getNewNonce = () => {
-    return fundRunNonce !== undefined ? fundRunNonce + 1n : 0n;
-  };
 
   const finishProposal = () => {
-    const nonce = getNewNonce();
+    const nonce = getNonce(fundRunNonce);
     setNonceInput(nonce);
-    
+
     console.log("nonce: ", nonce);
     console.log("fund run id: ", proposal.id);
     console.log("proposal id: ", proposal.proposalId);

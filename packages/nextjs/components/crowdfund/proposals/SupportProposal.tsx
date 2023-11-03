@@ -1,9 +1,16 @@
 /* eslint-disable prettier/prettier */
 import { useState } from "react";
 // todo: full migration to viem?
-import { SignMessageReturnType, toBytes, encodePacked, keccak256, encodeAbiParameters, parseAbiParameters } from "viem";
+import { SignMessageReturnType, toBytes } from "viem";
 import { useWalletClient } from "wagmi";
+import getDigest from "~~/helpers/getDigest";
+import getNonce from "~~/helpers/getNonce";
 import { useScaffoldContractRead, useScaffoldContractWrite, useScaffoldEventSubscriber } from "~~/hooks/scaffold-eth";
+
+// ethers _> viem
+// arrayify becomes: toBytes
+// abiCoder.encode becomes: encodeAbiParameters
+// solidityPack becomes: encodePacked
 
 interface SupportProposalProps {
   id: number; //fundrun //todo:
@@ -37,39 +44,16 @@ export const SupportProposal = (proposal: SupportProposalProps) => {
     },
   });
 
-  //todo: refactor A:1
   const { data: fundRunNonce } = useScaffoldContractRead({
     contractName: "CrowdFund",
     functionName: "getNonce",
   });
-  const getNewNonce = () => {
-    return fundRunNonce !== undefined ? fundRunNonce + 1n : 0n;
-  }; //todo: refactor
-  const getDigest = async (nonce: bigint) => {
-
-    console.log("getDigest amount: ", proposal.amount.toString());
-    console.log("getDigest to: ", proposal.to);
-    console.log("getDigest proposedBy: ", proposal.proposedBy);
-    console.log("getDigest reason: ", proposal.reason);
-
-    const encoded = encodeAbiParameters(
-      parseAbiParameters("uint256 amount, address to, address proposedBy, string reason"),
-      [proposal.amount, proposal.to, proposal.proposedBy, proposal.reason],
-    );
-    const encodedWithNonce = encodePacked(["bytes", "uint256"], [encoded, nonce]);
-
-    const digest = keccak256(encodedWithNonce);
-    return digest;
-  }; //todo: refactor A:1
 
   const supportProposal = async () => {
-    const nonce = getNewNonce(); //TODO: get from the proposal and To Address
-    const digest = await getDigest(nonce);
+    const nonce = getNonce(fundRunNonce);
     console.log("nonce: ", nonce);
-    console.log("digest", digest);
-    console.log("wallet client", walletClient?.account);
-    console.log("digest, made w/ wallet client", walletClient?.account);
-
+    const digest = await getDigest(nonce, proposal.amount, proposal.to, proposal.proposedBy, proposal.reason);
+    
     const proposalSupportSig: any = await walletClient?.signMessage({
       account: walletClient.account,
       message: { raw: toBytes(digest) },
