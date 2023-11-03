@@ -45,16 +45,16 @@ export const FinalizeProposal = (proposal: FinalizeProposalProps) => {
 
   return (
     <>
-      <div className="mt-12">
-        <h1>Finalize THIS PROPOSAL (FinalizeProposal.tsx)</h1>
-
-        <button className="w-10/12 mx-auto md:w-3/5 btn btn-primary mt-9" onClick={() => finishProposal()}>
+      <td className="w-1/12 md:py-4">
+        <button className="w-4/5 btn btn-primary" onClick={() => finishProposal()}>
           Ready (first)
         </button>
-        <button className="w-10/12 mx-auto md:w-3/5 btn btn-primary mt-9" onClick={() => writeAsync()}>
+      </td>
+      <td className="w-1/12 md:py-4">
+        <button className="w-4/5 btn btn-primary" onClick={() => writeAsync()}>
           Finalize (second)
         </button>
-      </div>
+      </td>
     </>
   );
 };

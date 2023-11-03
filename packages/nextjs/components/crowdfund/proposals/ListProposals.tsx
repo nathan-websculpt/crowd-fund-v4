@@ -22,10 +22,26 @@ export const ListProposals = (frVault: ListProposalProps) => {
   } else {
     return (
       <>
+      <div className="flex justify-center px-4 md:px-0">
+      <div className="w-full overflow-x-auto shadow-2xl rounded-xl">
+        <table className="table w-full text-xl bg-base-100 table-zebra md:table-md table-sm">
+          <thead>
+            <tr className="text-sm rounded-xl text-base-content">
+              <th className="bg-primary">ID</th>
+              <th className="bg-primary">Amount</th>
+              <th className="bg-primary">To</th>
+              <th className="bg-primary">Proposed By</th>
+              <th className="bg-primary">Reason</th>
+              <th className="bg-primary">Co-sign</th>
+              <th className="bg-primary">Submit Support</th>
+              <th className="bg-primary">Finalize (first)</th>
+              <th className="bg-primary">Finalize (second)</th>
+            </tr>
+          </thead>
+<tbody>
         {vaultProposals?.map(vp => (
-          <div
+      <tr className="h-12 text-sm transition-colors duration-200 bg-base-200 hover:bg-base-300"
             key={vp.proposalId.toString()}
-            className="flex flex-col gap-2 p-2 m-4 border shadow-xl border-base-300 bg-base-200 sm:rounded-lg"
           >
             <SingleProposal
               proposalId={vp.proposalId}
@@ -35,8 +51,12 @@ export const ListProposals = (frVault: ListProposalProps) => {
               proposedBy={vp.proposedBy}
               reason={vp.reason}
             />
-          </div>
+          </tr>
         ))}
+        </tbody>
+        </table>
+        </div>
+        </div>
       </>
     );
   }

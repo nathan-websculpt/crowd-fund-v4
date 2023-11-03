@@ -70,16 +70,16 @@ export const SupportProposal = (proposal: SupportProposalProps) => {
 
   return (
     <>
-      <div className="mt-12">
-        <h1>SUPPORT THIS PROPOSAL (SupportProposal.tsx)</h1>
-
-        <button className="w-10/12 mx-auto mt-5 md:w-3/5 btn btn-primary" onClick={() => supportProposal()}>
+      <td className="w-1/12 md:py-4">
+        <button className="w-4/5 btn btn-primary" onClick={() => supportProposal()}>
           Co-Sign (first)
         </button>
-        <button className="w-10/12 mx-auto md:w-3/5 btn btn-primary mt-9" onClick={() => writeAsync()}>
+      </td>
+      <td className="w-1/12 md:py-4">
+        <button className="w-4/5 btn btn-primary" onClick={() => writeAsync()}>
           Support (second)
         </button>
-      </div>
+      </td>
     </>
   );
 };
