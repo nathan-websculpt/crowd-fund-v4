@@ -80,16 +80,16 @@ export const CreateProposal = (proposal: CreateProposalProps) => {
     <>
       <div className="mb-12">
         <h1>CREATE A PROPOSAL (CreateProposal.tsx)</h1>
-        <label className="mt-3 text-lg font-bold">To Address</label>
+        <label className="text-lg font-bold">To Address</label>
         <input
           type="text"
           placeholder="To Address"
-          className="min-w-full px-3 py-3 border rounded-lg bg-base-200 border-base-300"
+          className="px-3 py-3 border rounded-lg bg-base-200 border-base-300"
           value={toAddressInput}
           onChange={e => setToAddressInput(e.target.value)}
         />{" "}
         <br />
-        <label className="mt-3 text-lg font-bold">Reason</label>
+        <label className="text-lg font-bold">Reason</label>
         <input
           type="text"
           placeholder="Reason"
@@ -98,21 +98,21 @@ export const CreateProposal = (proposal: CreateProposalProps) => {
           onChange={e => setReasonInput(e.target.value)}
         />{" "}
         <br />
-        <label className="mt-3 text-lg font-bold">Amount</label>
+        <label className="text-lg font-bold">Amount</label>
         <div className="mt-4 tooltip tooltip-primary" data-tip="Transfer amount in Ether ... like '0.1' or '1'">
           <input
             type="number"
             placeholder="Transfer Amount"
-            className="max-w-xs input input-bordered input-accent"
+            className="px-3 py-3 border rounded-lg bg-base-200 border-base-300"
             value={transferInput}
             onChange={e => setTransferInput(e.target.value)}
           />
         </div>
         <div className="mt-5">
-          <button className="w-1/4 mx-2 md:w-1/6 btn btn-primary" onClick={() => signNewProposal()}>
+          <button className="w-10/12 mx-auto md:w-3/5 btn btn-primary" onClick={() => signNewProposal()}>
             Sign (first)
           </button>
-          <button className="w-1/4 mx-auto md:w-1/6 btn btn-primary" onClick={() => writeAsync()}>
+          <button className="w-10/12 mx-auto md:w-3/5 btn btn-primary" onClick={() => writeAsync()}>
             Create (second)
           </button>
         </div>

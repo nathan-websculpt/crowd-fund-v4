@@ -22,40 +22,41 @@ export const ListProposals = (frVault: ListProposalProps) => {
   } else {
     return (
       <>
-      <div className="flex justify-center px-4 md:px-0">
-      <div className="w-full overflow-x-auto shadow-2xl rounded-xl">
-        <table className="table w-full text-xl bg-base-100 table-zebra md:table-md table-sm">
-          <thead>
-            <tr className="text-sm rounded-xl text-base-content">
-              <th className="bg-primary">ID</th>
-              <th className="bg-primary">Amount</th>
-              <th className="bg-primary">To</th>
-              <th className="bg-primary">Proposed By</th>
-              <th className="bg-primary">Reason</th>
-              <th className="bg-primary">Co-sign</th>
-              <th className="bg-primary">Submit Support</th>
-              <th className="bg-primary">Finalize (first)</th>
-              <th className="bg-primary">Finalize (second)</th>
-            </tr>
-          </thead>
-<tbody>
-        {vaultProposals?.map(vp => (
-      <tr className="h-12 text-sm transition-colors duration-200 bg-base-200 hover:bg-base-300"
-            key={vp.proposalId.toString()}
-          >
-            <SingleProposal
-              proposalId={vp.proposalId}
-              fundRunId={frVault.fundRunId}
-              amount={vp.amount}
-              to={vp.to}
-              proposedBy={vp.proposedBy}
-              reason={vp.reason}
-            />
-          </tr>
-        ))}
-        </tbody>
-        </table>
-        </div>
+        <div className="flex justify-center px-4 md:px-0">
+          <div className="w-full overflow-x-auto shadow-2xl rounded-xl">
+            <table className="table w-full text-xl bg-base-100 table-zebra md:table-md table-sm">
+              <thead>
+                <tr className="text-sm rounded-xl text-base-content">
+                  <th className="bg-primary">ID</th>
+                  <th className="bg-primary">Amount</th>
+                  <th className="bg-primary">To</th>
+                  <th className="bg-primary">Proposed By</th>
+                  <th className="bg-primary">Reason</th>
+                  <th className="bg-primary">Co-sign</th>
+                  <th className="bg-primary">Submit Support</th>
+                  <th className="bg-primary">Finalize (first)</th>
+                  <th className="bg-primary">Finalize (second)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {vaultProposals?.map(vp => (
+                  <tr
+                    className="h-12 text-sm transition-colors duration-200 bg-base-200 hover:bg-base-300"
+                    key={vp.proposalId.toString()}
+                  >
+                    <SingleProposal
+                      proposalId={vp.proposalId}
+                      fundRunId={frVault.fundRunId}
+                      amount={vp.amount}
+                      to={vp.to}
+                      proposedBy={vp.proposedBy}
+                      reason={vp.reason}
+                    />
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </>
     );
