@@ -1,6 +1,5 @@
 /* eslint-disable prettier/prettier */
 import { useState } from "react";
-// todo: full migration to viem?
 import { SignMessageReturnType, toBytes } from "viem";
 import { useWalletClient } from "wagmi";
 import getDigest from "~~/helpers/getDigest";

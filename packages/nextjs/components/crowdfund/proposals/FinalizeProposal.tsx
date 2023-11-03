@@ -14,15 +14,8 @@ interface FinalizeProposalProps {
 
 export const FinalizeProposal = (proposal: FinalizeProposalProps) => {
   const [nonceInput, setNonceInput] = useState<bigint>();
-  // const tx = { amount: proposal.amount, to: proposal.to, proposedBy: proposal.proposedBy, reason: proposal.reason };
-  const tx = { 
-    amount: 100000000000000000n,
-    to: "0xcE62856Bc18E3d0f202e0f13C0B178026B94626F",
-    proposedBy: "0x24C54f3255C7904e9cE835C055618b0C02650b89",
-    reason: "test proposal",
-  };
-
-  //todo: refactor A:1
+  const tx = { amount: proposal.amount, to: proposal.to, proposedBy: proposal.proposedBy, reason: proposal.reason };
+  
   const { data: fundRunNonce } = useScaffoldContractRead({
     contractName: "CrowdFund",
     functionName: "getNonce",
