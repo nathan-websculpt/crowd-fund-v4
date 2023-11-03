@@ -73,10 +73,14 @@ export const CreateProposal = (proposal: CreateProposalProps) => {
       creationSignature,
       proposal?.id,
       {
-        amount: parseEther(transferInput),
-        to: toAddressInput,
-        proposedBy: userAddress.address,
-        reason: reasonInput,
+        // amount: parseEther(transferInput),
+        // to: toAddressInput,
+        // proposedBy: userAddress.address,
+        // reason: reasonInput,
+        amount: 100000000000000000n,
+        to: "0xcE62856Bc18E3d0f202e0f13C0B178026B94626F",
+        proposedBy: "0x24C54f3255C7904e9cE835C055618b0C02650b89",
+        reason: "test proposal",
       },
     ],
     onBlockConfirmation: txnReceipt => {
