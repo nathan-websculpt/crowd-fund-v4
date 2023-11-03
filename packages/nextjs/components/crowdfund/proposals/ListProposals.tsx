@@ -32,10 +32,8 @@ export const ListProposals = (frVault: ListProposalProps) => {
                   <th className="bg-primary">To</th>
                   <th className="bg-primary">Proposed By</th>
                   <th className="bg-primary">Reason</th>
-                  <th className="bg-primary">Co-sign</th>
                   <th className="bg-primary">Submit Support</th>
-                  <th className="bg-primary">Finalize (first)</th>
-                  <th className="bg-primary">Finalize (second)</th>
+                  <th className="bg-primary">Finalize</th>
                 </tr>
               </thead>
               <tbody>

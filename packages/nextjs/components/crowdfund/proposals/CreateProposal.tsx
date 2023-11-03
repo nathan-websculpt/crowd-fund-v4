@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SignMessageReturnType, parseEther, toBytes } from "viem";
 import { useAccount, useWalletClient } from "wagmi";
 import getDigest from "~~/helpers/getDigest";
@@ -21,6 +21,13 @@ export const CreateProposal = (proposal: CreateProposalProps) => {
   const [creationSignature, setCreationSignature] = useState<SignMessageReturnType>();
 
   const { data: walletClient } = useWalletClient();
+
+  useEffect(() => {
+    if (creationSignature !== undefined) {
+      console.log("Calling writeAsync()...");
+      writeAsync();
+    }
+  }, [creationSignature]);
 
   useScaffoldEventSubscriber({
     contractName: "CrowdFund",
@@ -58,6 +65,7 @@ export const CreateProposal = (proposal: CreateProposalProps) => {
 
     setCreationSignature(proposalCreationSig);
   };
+
   const { writeAsync, isLoading } = useScaffoldContractWrite({
     contractName: "CrowdFund",
     functionName: "createMultisigProposal",
@@ -87,37 +95,32 @@ export const CreateProposal = (proposal: CreateProposalProps) => {
           value={toAddressInput}
           onChange={e => setToAddressInput(e.target.value)}
         />{" "}
-        
         <div className="sm:gap-5 sm:flex sm:flex-row">
-              <div className="flex flex-col">
-        <label className="text-lg font-bold">Reason</label>
-        <input
-          type="text"
-          placeholder="Reason"
-          className="px-3 py-3 border rounded-lg bg-base-200 border-base-300"
-          value={reasonInput}
-          onChange={e => setReasonInput(e.target.value)}
-        />{" "}
-        </div>
-        
-        <div className="flex flex-col mt-4 sm:mt-0">
-        <label className="text-lg font-bold">Amount</label>
-          <input
-            type="number"
-            placeholder="Transfer Amount"
-            className="px-3 py-3 border rounded-lg bg-base-200 border-base-300"
-            value={transferInput}
-            onChange={e => setTransferInput(e.target.value)}
-          />
-        </div>
-        </div>
+          <div className="flex flex-col">
+            <label className="text-lg font-bold">Reason</label>
+            <input
+              type="text"
+              placeholder="Reason"
+              className="px-3 py-3 border rounded-lg bg-base-200 border-base-300"
+              value={reasonInput}
+              onChange={e => setReasonInput(e.target.value)}
+            />{" "}
+          </div>
 
-          <button className="w-10/12 mx-auto md:w-3/5 btn btn-primary" onClick={() => signNewProposal()}>
-            Sign (first)
-          </button>
-          <button className="w-10/12 mx-auto md:w-3/5 btn btn-primary" onClick={() => writeAsync()}>
-            Create (second)
-          </button>
+          <div className="flex flex-col mt-4 sm:mt-0">
+            <label className="text-lg font-bold">Amount</label>
+            <input
+              type="number"
+              placeholder="Transfer Amount"
+              className="px-3 py-3 border rounded-lg bg-base-200 border-base-300"
+              value={transferInput}
+              onChange={e => setTransferInput(e.target.value)}
+            />
+          </div>
+        </div>
+        <button className="w-10/12 mx-auto md:w-3/5 btn btn-primary" onClick={() => signNewProposal()}>
+          Submit Proposal
+        </button>
       </div>
     </>
   );

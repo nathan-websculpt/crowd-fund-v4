@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { parseEther } from "viem";
@@ -20,6 +20,13 @@ export const CreateFund = () => {
   const [additionalAddressOne, setAdditionalAddressOne] = useState("0x24C54f3255C7904e9cE835C055618b0C02650b89");
   const [additionalAddressTwo, setAdditionalAddressTwo] = useState("");
   const [ownersList, setOwnersList] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (ownersList.length > 0) {
+      console.log("Calling writeAsync()...");
+      writeAsync();
+    }
+  }, [ownersList]);
 
   useScaffoldEventSubscriber({
     contractName: "CrowdFund",
@@ -82,7 +89,6 @@ export const CreateFund = () => {
         }
         setOwnersList(oList);
       }
-      //writeAsync();
     }
   };
 
@@ -91,10 +97,6 @@ export const CreateFund = () => {
     setIsMultiSigSelected(selection);
     if (selection) setWalletCount(2);
     else setWalletCount(1);
-  };
-
-  const testtest = () => {
-    writeAsync();
   };
 
   return (
@@ -234,15 +236,7 @@ export const CreateFund = () => {
               onClick={() => validateThenWrite()}
               disabled={isLoading}
             >
-              {isLoading ? (
-                <span className="loading loading-spinner loading-sm"></span>
-              ) : (
-                // <>Start My Fund</>
-                <>First CLick</>
-              )}
-            </button>
-            <button className="w-10/12 mx-auto md:w-3/5 btn btn-primary" onClick={() => testtest()}>
-              Second Click
+              {isLoading ? <span className="loading loading-spinner loading-sm"></span> : <>Start My Fund</>}
             </button>
           </div>
         </div>

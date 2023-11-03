@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SignMessageReturnType, toBytes } from "viem";
 import { useWalletClient } from "wagmi";
 import getDigest from "~~/helpers/getDigest";
@@ -22,6 +22,13 @@ export const SupportProposal = (proposal: SupportProposalProps) => {
   const [supportSignature, setSupportSignature] = useState<SignMessageReturnType>();
 
   const { data: walletClient } = useWalletClient();
+
+  useEffect(() => {
+    if (supportSignature !== undefined) {
+      console.log("Calling writeAsync()...");
+      writeAsync();
+    }
+  }, [supportSignature]);
 
   useScaffoldEventSubscriber({
     contractName: "CrowdFund",
@@ -72,12 +79,7 @@ export const SupportProposal = (proposal: SupportProposalProps) => {
     <>
       <td className="w-1/12 md:py-4">
         <button className="w-4/5 btn btn-primary" onClick={() => supportProposal()}>
-          Co-Sign (first)
-        </button>
-      </td>
-      <td className="w-1/12 md:py-4">
-        <button className="w-4/5 btn btn-primary" onClick={() => writeAsync()}>
-          Support (second)
+          Co-Sign
         </button>
       </td>
     </>
