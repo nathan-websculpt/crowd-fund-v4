@@ -78,8 +78,7 @@ export const CreateProposal = (proposal: CreateProposalProps) => {
 
   return (
     <>
-      <div className="mb-12">
-        <h1>CREATE A PROPOSAL (CreateProposal.tsx)</h1>
+      <div className="flex flex-col gap-2 sm:gap-5">
         <label className="text-lg font-bold">To Address</label>
         <input
           type="text"
@@ -88,7 +87,9 @@ export const CreateProposal = (proposal: CreateProposalProps) => {
           value={toAddressInput}
           onChange={e => setToAddressInput(e.target.value)}
         />{" "}
-        <br />
+        
+        <div className="sm:gap-5 sm:flex sm:flex-row">
+              <div className="flex flex-col">
         <label className="text-lg font-bold">Reason</label>
         <input
           type="text"
@@ -97,9 +98,10 @@ export const CreateProposal = (proposal: CreateProposalProps) => {
           value={reasonInput}
           onChange={e => setReasonInput(e.target.value)}
         />{" "}
-        <br />
+        </div>
+        
+        <div className="flex flex-col mt-4 sm:mt-0">
         <label className="text-lg font-bold">Amount</label>
-        <div className="mt-4 tooltip tooltip-primary" data-tip="Transfer amount in Ether ... like '0.1' or '1'">
           <input
             type="number"
             placeholder="Transfer Amount"
@@ -108,14 +110,14 @@ export const CreateProposal = (proposal: CreateProposalProps) => {
             onChange={e => setTransferInput(e.target.value)}
           />
         </div>
-        <div className="mt-5">
+        </div>
+
           <button className="w-10/12 mx-auto md:w-3/5 btn btn-primary" onClick={() => signNewProposal()}>
             Sign (first)
           </button>
           <button className="w-10/12 mx-auto md:w-3/5 btn btn-primary" onClick={() => writeAsync()}>
             Create (second)
           </button>
-        </div>
       </div>
     </>
   );

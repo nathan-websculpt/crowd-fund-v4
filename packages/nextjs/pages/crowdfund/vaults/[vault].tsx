@@ -21,9 +21,7 @@ const VaultPage: NextPage = () => {
         <>
           <div className="px-6 pt-10 pb-8 shadow-xl sm:my-auto bg-secondary sm:mx-auto sm:max-w-11/12 md:w-9/12 sm:rounded-lg sm:px-10">
             <div className="flex items-center justify-center">
-              <div className="flex flex-col gap-2 sm:gap-5">
-                <CreateProposal fundRunId={fundRunSingle.id} />
-              </div>
+              <CreateProposal fundRunId={fundRunSingle.id} />
             </div>
           </div>
 
