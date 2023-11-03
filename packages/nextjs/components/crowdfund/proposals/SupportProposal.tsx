@@ -8,11 +8,9 @@ import { useScaffoldContractRead, useScaffoldContractWrite, useScaffoldEventSubs
 
 // ethers _> viem
 // arrayify becomes: toBytes
-// abiCoder.encode becomes: encodeAbiParameters
-// solidityPack becomes: encodePacked
 
 interface SupportProposalProps {
-  id: number; //fundrun //todo:
+  fundRunId: number;
   proposalId: number;
   amount: bigint;
   to: string;
@@ -52,7 +50,7 @@ export const SupportProposal = (proposal: SupportProposalProps) => {
     const nonce = getNonce(fundRunNonce);
     console.log("nonce: ", nonce);
     const digest = await getDigest(nonce, proposal.amount, proposal.to, proposal.proposedBy, proposal.reason);
-    
+
     const proposalSupportSig: any = await walletClient?.signMessage({
       account: walletClient.account,
       message: { raw: toBytes(digest) },
@@ -64,7 +62,7 @@ export const SupportProposal = (proposal: SupportProposalProps) => {
   const { writeAsync, isLoading } = useScaffoldContractWrite({
     contractName: "CrowdFund",
     functionName: "supportMultisigProposal",
-    args: [supportSignature, proposal?.id, proposal?.proposalId],
+    args: [supportSignature, proposal?.fundRunId, proposal?.proposalId],
     onBlockConfirmation: txnReceipt => {
       console.log("📦 Transaction blockHash", txnReceipt.blockHash);
     },
@@ -76,11 +74,10 @@ export const SupportProposal = (proposal: SupportProposalProps) => {
         <h1>SUPPORT THIS PROPOSAL (SupportProposal.tsx)</h1>
 
         <button className="w-10/12 mx-auto mt-5 md:w-3/5 btn btn-primary" onClick={() => supportProposal()}>
-          {/* Create a Proposal */}
-          First Click
+          Co-Sign (first)
         </button>
         <button className="w-10/12 mx-auto md:w-3/5 btn btn-primary mt-9" onClick={() => writeAsync()}>
-          Second Click
+          Support (second)
         </button>
       </div>
     </>

@@ -4,19 +4,14 @@ import { Spinner } from "~~/components/Spinner";
 import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
 
 interface ListProposalProps {
-  id: number; //fundrun
+  fundRunId: number; //fundrun
 }
 export const ListProposals = (frVault: ListProposalProps) => {
   const { data: vaultProposals, isLoading: isListLoading } = useScaffoldContractRead({
     contractName: "CrowdFund",
     functionName: "getProposals",
-    args: [frVault.id],
+    args: [frVault.fundRunId],
   });
-
-  const testtest = () => {
-    console.log(vaultProposals);
-    console.log(frVault.id);
-  };
 
   if (isListLoading) {
     return (
@@ -34,7 +29,7 @@ export const ListProposals = (frVault: ListProposalProps) => {
           >
             <SingleProposal
               proposalId={vp.proposalId}
-              fundRunId={frVault.id}
+              fundRunId={frVault.fundRunId}
               amount={vp.amount}
               to={vp.to}
               proposedBy={vp.proposedBy}
@@ -42,10 +37,6 @@ export const ListProposals = (frVault: ListProposalProps) => {
             />
           </div>
         ))}
-
-        <button className="w-10/12 mx-auto md:w-3/5 btn btn-primary mt-9" onClick={() => testtest()}>
-          test
-        </button>
       </>
     );
   }

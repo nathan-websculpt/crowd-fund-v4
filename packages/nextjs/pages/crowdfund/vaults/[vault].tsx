@@ -12,26 +12,18 @@ const VaultPage: NextPage = () => {
   const { data: fundRunSingle } = useScaffoldContractRead({
     contractName: "CrowdFund",
     functionName: "getFundRun",
-    args: vault, //fundRunId from query
+    args: vault, //fundRunId from query //todo: rename?
   });
 
   return (
     <>
       {fundRunSingle ? (
         <>
-          <CreateProposal id={fundRunSingle.id} />
+          <CreateProposal fundRunId={fundRunSingle.id} />
 
           <hr />
 
-          {/* <SupportProposal id={fundRunSingle.id} proposalId={0} /> */}
-
-          <hr />
-
-          {/* <FinalizeProposal id={fundRunSingle.id} proposalId={0} /> */}
-
-          <hr />
-
-          <ListProposals id={fundRunSingle.id} />
+          <ListProposals fundRunId={fundRunSingle.id} />
         </>
       ) : (
         <>

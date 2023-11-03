@@ -15,6 +15,8 @@ const getDigest = async (nonce: bigint, amount: bigint, to: string, proposedBy: 
 
   //TODO: get from 
   //     nextjs\generated\deployedcontracts.ts
+  // ... not sure where this abi snippet should come from? 
+  // ... the only way this worked was this way (wasn't needed when using Ethers)
   const abi_struct = [
     {
       //name: "staticStruct",
@@ -50,13 +52,15 @@ const getDigest = async (nonce: bigint, amount: bigint, to: string, proposedBy: 
     },
   ];
 
-  const encoded = encodeAbiParameters(abi_struct[0].inputs, [
-    {
-      amount: amount,
-      to: to,
-      proposedBy: proposedBy,
-      reason: reason,
-    },
+  const encoded = encodeAbiParameters(
+    abi_struct[0].inputs, 
+    [
+      {
+        amount: amount,
+        to: to,
+        proposedBy: proposedBy,
+        reason: reason,
+      },
   ]);
 
   const encodedWithNonce = encodePacked(["bytes", "uint256"], [encoded, nonce]);

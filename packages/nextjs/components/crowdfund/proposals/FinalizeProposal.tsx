@@ -4,7 +4,7 @@ import getNonce from "~~/helpers/getNonce";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 
 interface FinalizeProposalProps {
-  id: number; //fundrun //todo:
+  fundRunId: number;
   proposalId: number;
   amount: bigint;
   to: string;
@@ -15,7 +15,7 @@ interface FinalizeProposalProps {
 export const FinalizeProposal = (proposal: FinalizeProposalProps) => {
   const [nonceInput, setNonceInput] = useState<bigint>();
   const tx = { amount: proposal.amount, to: proposal.to, proposedBy: proposal.proposedBy, reason: proposal.reason };
-  
+
   const { data: fundRunNonce } = useScaffoldContractRead({
     contractName: "CrowdFund",
     functionName: "getNonce",
@@ -26,7 +26,7 @@ export const FinalizeProposal = (proposal: FinalizeProposalProps) => {
     setNonceInput(nonce);
 
     console.log("nonce: ", nonce);
-    console.log("fund run id: ", proposal.id);
+    console.log("fund run id: ", proposal.fundRunId);
     console.log("proposal id: ", proposal.proposalId);
     console.log("amount: ", proposal.amount.toString());
     console.log("to: ", proposal.to);
@@ -37,7 +37,7 @@ export const FinalizeProposal = (proposal: FinalizeProposalProps) => {
   const { writeAsync, isLoading } = useScaffoldContractWrite({
     contractName: "CrowdFund",
     functionName: "multisigWithdraw",
-    args: [tx, nonceInput, proposal.id, proposal.proposalId],
+    args: [tx, nonceInput, proposal.fundRunId, proposal.proposalId],
     onBlockConfirmation: txnReceipt => {
       console.log("📦 Transaction blockHash", txnReceipt.blockHash);
     },
@@ -49,10 +49,10 @@ export const FinalizeProposal = (proposal: FinalizeProposalProps) => {
         <h1>Finalize THIS PROPOSAL (FinalizeProposal.tsx)</h1>
 
         <button className="w-10/12 mx-auto md:w-3/5 btn btn-primary mt-9" onClick={() => finishProposal()}>
-          First Click
+          Ready (first)
         </button>
         <button className="w-10/12 mx-auto md:w-3/5 btn btn-primary mt-9" onClick={() => writeAsync()}>
-          Second Click
+          Finalize (second)
         </button>
       </div>
     </>

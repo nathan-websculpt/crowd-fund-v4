@@ -32,7 +32,7 @@ export const SingleProposal = (proposal: DisplayProposalProps) => {
         <p className="text-md">{proposal.reason}</p>
 
         <SupportProposal
-          id={proposal.fundRunId}
+          fundRunId={proposal.fundRunId}
           proposalId={proposal.proposalId}
           amount={proposal.amount}
           to={proposal.to}
@@ -41,7 +41,7 @@ export const SingleProposal = (proposal: DisplayProposalProps) => {
         />
 
         <FinalizeProposal
-          id={proposal.fundRunId}
+          fundRunId={proposal.fundRunId}
           proposalId={proposal.proposalId}
           amount={proposal.amount}
           to={proposal.to}
