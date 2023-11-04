@@ -287,15 +287,42 @@ contract CrowdFund is Ownable {
 		FundRun storage fundRun = fundRuns[_fundRunId];
 		console.log("HARDHAT CONSOLE__>   _multisigTransfer hit");
 		console.log("HARDHAT CONSOLE__>        fund run id: ", fundRun.id, ", title: ", fundRun.title);
-		require(fundRun.amountWithdrawn + _tx.amount <= fundRun.amountCollected, "Fund Run does not have this much Ether");
-		fundRun.amountWithdrawn += _tx.amount;
-        (bool success, ) = payable(_tx.to).call{ value: _tx.amount }(
+
+		require(fundRun.amountCollected > 0, "There is nothing to withdraw");
+		require(
+			fundRun.amountCollected > fundRun.amountWithdrawn,
+			"This Fund Run is empty -- withdrawals may have already occurred."
+		);
+		require(
+			_tx.amount > 0,
+			"The proposed transaction withdrawal amount is 0." 
+		);
+		require(fundRun.amountWithdrawn + _tx.amount <= fundRun.amountCollected, 
+			"This Fund Run is hereby prevented from being over-drawn."
+		);
+		
+
+
+		//contract takes its cut
+		uint256 fundsMinusCommission = (_tx.amount *
+			crowdFundCommission) / crowdFundDenominator; //0.25%
+		uint256 netWithdrawAmount = _tx.amount - fundsMinusCommission;
+		
+		fundRun.amountWithdrawn = fundRun.amountWithdrawn + netWithdrawAmount;
+		//update profit amount
+		commissionPayout = commissionPayout + fundsMinusCommission;
+
+		if (fundRun.isActive) fundRun.isActive = false;
+
+        (bool success, ) = payable(_tx.to).call{ value: netWithdrawAmount }(
 			""
 		);
 		console.log("HARDHAT CONSOLE__>         tx success: ", success, ", to address: ", _tx.to);
 		console.log("HARDHAT CONSOLE__>              for the amount of: ", _tx.amount);
 		console.log("HARDHAT CONSOLE__>              REASON BEING: ", _tx.reason);
         require(success, "Transfer not fulfilled");
+
+		//todo: emit event
     }
 
     function _processMultisigRequest(

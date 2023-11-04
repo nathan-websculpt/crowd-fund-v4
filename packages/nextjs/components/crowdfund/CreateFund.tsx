@@ -87,8 +87,8 @@ export const CreateFund = () => {
           oList.push(additionalAddressOne);
           oList.push(additionalAddressTwo);
         }
-        setOwnersList(oList);
       }
+      setOwnersList(oList);
     }
   };
 
