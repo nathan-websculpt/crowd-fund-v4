@@ -201,7 +201,20 @@ contract CrowdFund is Ownable {
 	isMultisig(_fundRunId, true)
 	ownsThisFundRun(_fundRunId, msg.sender, true)
 	{
-		console.log("HARDHAT CONSOLE__>   createMultiSigProposal hit");
+		FundRun storage fundRun = fundRuns[_fundRunId];
+		require(fundRun.amountCollected > 0, "There is nothing left to withdraw");
+		require(
+			fundRun.amountCollected > fundRun.amountWithdrawn,
+			"This Fund Run is empty -- withdrawals may have already occurred."
+		);
+		require(
+			_tx.amount > 0,
+			"The proposed transaction withdrawal amount must be greater than 0." 
+		);
+		require(fundRun.amountWithdrawn + _tx.amount <= fundRun.amountCollected, 
+			"This proposal would overdraw this Fund Run."
+		);
+
 		signatureList[numberOfMultisigProposals].push(_signature);
 
 		//to see details of proposal in frontend
