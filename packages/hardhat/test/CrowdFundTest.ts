@@ -188,7 +188,7 @@ describe("CrowdFund", function () {
 
         const alicesFundRun = await crowdFund.getFundRun(alicesId);
         expect(alicesFundRun.amountCollected).to.equal(expectedAmount.add(expectedCommission));
-        expect(alicesFundRun.amountWithdrawn).to.equal(expectedAmount);
+        expect(alicesFundRun.amountWithdrawn).to.equal(expectedAmount.add(expectedCommission));
       });
 
       it("Should allow for Bob to do a 'Donor Withdrawal' from John's Fund Run", async function () {

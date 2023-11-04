@@ -308,7 +308,7 @@ contract CrowdFund is Ownable {
 			crowdFundCommission) / crowdFundDenominator; //0.25%
 		uint256 netWithdrawAmount = _tx.amount - fundsMinusCommission;
 		
-		fundRun.amountWithdrawn = fundRun.amountWithdrawn + netWithdrawAmount;
+		fundRun.amountWithdrawn = fundRun.amountWithdrawn + _tx.amount;
 		//update profit amount
 		commissionPayout = commissionPayout + fundsMinusCommission;
 
@@ -463,7 +463,7 @@ contract CrowdFund is Ownable {
 			crowdFundCommission) / crowdFundDenominator; //0.25%
 		uint256 netWithdrawAmount = grossWithdrawAmount - fundsMinusCommission;
 
-		fundRun.amountWithdrawn = fundRun.amountWithdrawn + netWithdrawAmount;
+		fundRun.amountWithdrawn = fundRun.amountWithdrawn + grossWithdrawAmount;
 
 		//update profit amount
 		commissionPayout = commissionPayout + fundsMinusCommission;
