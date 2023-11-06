@@ -207,6 +207,27 @@ contract CrowdFund is Ownable {
 
 	///NEW multisig code
 
+	/**
+	 * @dev  Only the user who created a proposal can revoke it
+	 */
+	function revokeMultisigProposal(
+		uint16 _fundRunId,
+		uint16 _proposalId
+	)
+	external
+	isMultisig(_fundRunId, true)
+	ownsThisFundRun(_fundRunId, msg.sender, true)
+	createdProposal(_proposalId, _fundRunId, msg.sender, true)
+	{
+		MultiSigVault[] storage vaultsList = vaults[_fundRunId];
+		for(uint16 i = 0; i < vaultsList.length; i++) {
+			if(vaultsList[i].proposalId == _proposalId) {
+				delete vaults[_fundRunId][i]; //todo: emit event
+				break;
+			}
+		}
+	}
+
 	//user will sign (initial) Message, then send the signature here...
 	function createMultisigProposal(
 		bytes calldata _signature,

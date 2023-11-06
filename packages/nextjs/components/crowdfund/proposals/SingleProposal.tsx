@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { FinalizeProposal } from "./FinalizeProposal";
+import { RevokeProposal } from "./RevokeProposal";
 import { SupportProposal } from "./SupportProposal";
 import { formatEther } from "viem";
 
@@ -19,6 +20,7 @@ export const SingleProposal = (proposal: DisplayProposalProps) => {
       <td className="w-1/12 md:py-4">{proposal.to}</td>
       <td className="w-1/12 md:py-4">{proposal.proposedBy}</td>
       <td className="w-1/12 md:py-4">{proposal.reason}</td>
+      
       <SupportProposal
         fundRunId={proposal.fundRunId}
         proposalId={proposal.proposalId}
@@ -36,6 +38,9 @@ export const SingleProposal = (proposal: DisplayProposalProps) => {
         proposedBy={proposal.proposedBy}
         reason={proposal.reason}
       />
+
+      <RevokeProposal fundRunId={proposal.fundRunId} proposalId={proposal.proposalId} />
+      
     </>
   );
 };

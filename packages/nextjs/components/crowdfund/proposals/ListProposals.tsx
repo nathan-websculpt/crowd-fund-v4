@@ -35,10 +35,14 @@ export const ListProposals = (frVault: ListProposalProps) => {
                   <th className="bg-primary">Reason</th>
                   <th className="bg-primary">Submit Support</th>
                   <th className="bg-primary">Finalize</th>
+                  <th className="bg-primary">Revoke</th>
                 </tr>
               </thead>
               <tbody>
                 {vaultProposals?.map(vp => (
+                  vp.to !== "0x0000000000000000000000000000000000000000"
+                  && vp.proposedBy !== "0x0000000000000000000000000000000000000000"
+                  ? (
                   <tr
                     className="text-sm hover"
                     key={vp.proposalId.toString()}
@@ -52,6 +56,7 @@ export const ListProposals = (frVault: ListProposalProps) => {
                       reason={vp.reason}
                     />
                   </tr>
+                ): null 
                 ))}
               </tbody>
             </table>

@@ -5,7 +5,7 @@ const contracts = {
       name: "localhost",
       contracts: {
         CrowdFund: {
-          address: "0x5eb3Bc0a489C5A8288765d2336659EbCA68FCd00",
+          address: "0x809d550fca64d94Bd9F66E60752A544199cfAC3D",
           abi: [
             {
               inputs: [
@@ -812,6 +812,24 @@ const contracts = {
             {
               inputs: [],
               name: "renounceOwnership",
+              outputs: [],
+              stateMutability: "nonpayable",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  internalType: "uint16",
+                  name: "_fundRunId",
+                  type: "uint16",
+                },
+                {
+                  internalType: "uint16",
+                  name: "_proposalId",
+                  type: "uint16",
+                },
+              ],
+              name: "revokeMultisigProposal",
               outputs: [],
               stateMutability: "nonpayable",
               type: "function",
