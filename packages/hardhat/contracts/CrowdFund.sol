@@ -181,6 +181,22 @@ contract CrowdFund is Ownable {
 		_;
 	}
 
+	modifier createdProposal(uint16 _proposalId, uint16 _fundRunId, address signer, bool mustBeProposer)
+	{
+		MultiSigVault[] storage vaultsList = vaults[_fundRunId];
+		for(uint16 i = 0; i < vaultsList.length; i++) {
+			if(vaultsList[i].proposalId == _proposalId) {
+				if(mustBeProposer) {
+					require(vaultsList[i].proposedBy == signer, "The address is NOT the creator of this proposal -- action not allowed.");
+					_;
+				} else {
+					require(vaultsList[i].proposedBy != signer, "The address is the creator of this proposal -- creators of proposals can not support them -- action not allowed.");
+					_;
+				}
+			}
+		}
+	}
+
 	constructor(address _contractOwner) {
 		_transferOwnership(_contractOwner);
 	}
@@ -240,6 +256,7 @@ contract CrowdFund is Ownable {
 	external
 	isMultisig(_fundRunId, true)
 	ownsThisFundRun(_fundRunId, msg.sender, true)
+	createdProposal(_proposalId, _fundRunId, msg.sender, false)
 	{
 		console.log("HARDHAT CONSOLE__>   supportMultisigProposal hit");
 		signatureList[_proposalId].push(_signature);
