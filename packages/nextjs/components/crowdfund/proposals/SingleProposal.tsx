@@ -27,27 +27,35 @@ export const SingleProposal = (proposal: DisplayProposalProps) => {
       <td className="w-1/12 md:py-4">{proposal.to}</td>
       <td className="w-1/12 md:py-4">{proposal.proposedBy}</td>
       <td className="w-1/12 md:py-4">{proposal.reason}</td>
-      
-      <SupportProposal
-        fundRunId={proposal.fundRunId}
-        proposalId={proposal.proposalId}
-        amount={proposal.amount}
-        to={proposal.to}
-        proposedBy={proposal.proposedBy}
-        reason={proposal.reason}
-      />
+      {proposal.status !== 2 ? (
+        <>
+          <SupportProposal
+            fundRunId={proposal.fundRunId}
+            proposalId={proposal.proposalId}
+            amount={proposal.amount}
+            to={proposal.to}
+            proposedBy={proposal.proposedBy}
+            reason={proposal.reason}
+          />
 
-      <FinalizeProposal
-        fundRunId={proposal.fundRunId}
-        proposalId={proposal.proposalId}
-        amount={proposal.amount}
-        to={proposal.to}
-        proposedBy={proposal.proposedBy}
-        reason={proposal.reason}
-      />
+          <FinalizeProposal
+            fundRunId={proposal.fundRunId}
+            proposalId={proposal.proposalId}
+            amount={proposal.amount}
+            to={proposal.to}
+            proposedBy={proposal.proposedBy}
+            reason={proposal.reason}
+          />
 
-      <RevokeProposal fundRunId={proposal.fundRunId} proposalId={proposal.proposalId} />
-      
+          <RevokeProposal fundRunId={proposal.fundRunId} proposalId={proposal.proposalId} />
+        </>
+      ): (
+        <>
+          <td className="w-1/12 md:py-4"></td>
+          <td className="w-1/12 md:py-4"></td>
+          <td className="w-1/12 md:py-4"></td>
+        </>
+      )}
     </>
   );
 };

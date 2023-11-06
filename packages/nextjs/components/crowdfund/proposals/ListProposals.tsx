@@ -28,7 +28,7 @@ export const ListProposals = (frVault: ListProposalProps) => {
             <p>😄 - Created</p>
             <p>🤝 - Supported</p>
             <p>✅ - Tx Sent</p>
-            <table className="table w-full text-xl bg-base-100 table-zebra md:table-md table-sm">
+            <table className="table w-full text-xl bg-base-100 md:table-md table-sm">
               <thead>
                 <tr className="text-sm rounded-xl text-base-content">
                   <th className="bg-primary">Status</th>
@@ -48,7 +48,8 @@ export const ListProposals = (frVault: ListProposalProps) => {
                   && vp.proposedBy !== "0x0000000000000000000000000000000000000000"
                   ? (
                   <tr
-                    className={`text-sm hover ${vp.status == 1 ? "bg-base-200":""} ${vp.status == 2 ? "bg-neutral text-primary":""}`}
+                    // className={`text-sm ${vp.status == 1 ? "bg-accent":""} ${vp.status == 2 ? "bg-neutral text-primary":""}`}
+                    className={`text-sm ${vp.status == 1 ? "bg-accent":""} ${vp.status == 2 ? "bg-base-300":""}`}
                     key={vp.proposalId.toString()}
                   >
                     <SingleProposal
