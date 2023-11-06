@@ -27,7 +27,18 @@ A multisig “Crowdfunding” dApp.
   - The fund failed to raise its target capital
 - An owner can get their new donations **IF**:
   - The deadline has passed
-  - The fund’s donations are greater-than/equal-to the *target money goal* 
+  - The fund’s donations are greater-than/equal-to the *target money goal*
+
+###  📜 *The 'rules-of-use' for Multisig "Fund Runs":*
+- The mindset of a multisig vault is that payments made (from it) are more granular 
+- If a user wants to get all of their funds at once, a Single-Wallet "Fund Run" is a better choice
+- A Multisig Fund Run is good for users who want to show their donors a set of record-logs for payments coming out of their vault
+  - Examples: 
+    - "We want to **pay *0x0123*** 0.4 Ether for *'Web Design Services'*" 
+    - "We want to **pay *0x0456*** 0.1 Ether for *'Telegram Mod Services'*"
+    - "We want to **pay *0x0789*** 0.7 Ether for *'Coding like the wind'*"
+- A Multisig Vault is intended to be safer, since it takes multiple approvals for any funds to transfer
+- These Vaults offer donors a granular view of where their funds ended up
 
 ### 🔗 *CrowdFund.sol*
 - Contract now takes 0.25% profit of all withdrawals out of successful Fund Runs
@@ -35,6 +46,7 @@ A multisig “Crowdfunding” dApp.
 - The **FundRun** *struct* will hold the Fund Run's data
   - While a second *struct* (**DonorsLog**) maintains a mapping of *fundRunId* =>   *donationAmount*
     - Therefore, a user's (a donor's) address will then map to their **DonorsLog** (which - itself - is keeping all of the user's donations [to various Fund Runs] separated)
+- More notes on Contract to come...
 
 ## 🧐 Before You Start
 
