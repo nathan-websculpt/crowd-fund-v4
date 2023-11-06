@@ -30,9 +30,8 @@ A multisig “Crowdfunding” dApp.
   - The fund’s donations are greater-than/equal-to the *target money goal* 
 
 ### 🔗 *CrowdFund.sol*
-- The smart contract only works with (Sepolia) Ether
-- It does not do any profit-taking
-  - therefore has no owner
+- Contract now takes 0.25% profit of all withdrawals out of successful Fund Runs
+  - (does not take from donors)
 - The **FundRun** *struct* will hold the Fund Run's data
   - While a second *struct* (**DonorsLog**) maintains a mapping of *fundRunId* =>   *donationAmount*
     - Therefore, a user's (a donor's) address will then map to their **DonorsLog** (which - itself - is keeping all of the user's donations [to various Fund Runs] separated)
