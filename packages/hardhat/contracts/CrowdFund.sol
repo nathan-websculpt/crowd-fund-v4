@@ -216,9 +216,11 @@ contract CrowdFund is Ownable {
 	external
 	isMultisig(_fundRunId, true)
 	ownsThisFundRun(_fundRunId, msg.sender, true)
+	fundRunCompleted(_fundRunId, true)
+	fundRunSucceeded(_fundRunId, true)
 	{
 		FundRun storage fundRun = fundRuns[_fundRunId];
-		require(fundRun.amountCollected > 0, "There is nothing left to withdraw");
+		require(fundRun.amountCollected > 0, "There is nothing to withdraw");
 		require(
 			fundRun.amountCollected > fundRun.amountWithdrawn,
 			"This Fund Run is empty -- withdrawals may have already occurred."
