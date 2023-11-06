@@ -223,10 +223,21 @@ contract CrowdFund is Ownable {
 		for(uint16 i = 0; i < vaultsList.length; i++) {
 			if(vaultsList[i].proposalId == _proposalId) {
 				delete vaults[_fundRunId][i]; //todo: emit event
+				//TODO: remove from vaults[_fundRunId] while preserving order A:3
 				break;
 			}
 		}
 	}
+	//TODO: A:3
+	// function removeProposalByIndex(uint16 _index, uint16 _fundRunId) private returns (MultiSigVault[] memory) {
+	// 	uint16 lastIndex = vaults[_fundRunId].length - 1;
+	// 	MultiSigVault storage lastProposal = vaults[_fundRunId][lastIndex];
+	// 	vaults[_fundRunId][_index] = lastProposal;
+	// 	vaults[_fundRunId].pop();
+	// 	return vaults[_fundRunId];
+
+	// 	///^^^just moves last item into the spot of the item deleted (won't preserve order)
+	// }
 
 	//user will sign (initial) Message, then send the signature here...
 	function createMultisigProposal(

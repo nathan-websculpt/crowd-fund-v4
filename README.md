@@ -6,6 +6,16 @@ A barebones proof-of-concept for a “Crowdfunding” app.
 ⚙️ Built with [Scaffold-ETH 2](#Contents), using NextJS, RainbowKit, Hardhat, Wagmi, and Typescript.
 
 ## Overview
+
+### 🔎🔎🔎 *NEW Multisig Vaults:*
+
+- Crowd Funds can now be created with **multiple owners** 🔐
+- Unlike Single-Owner Vaults, transactions from a Multisig Vault must be approved by **all of the Vault's Owners**
+- Multisig Vaults can be made for 2 or 3 owners
+- Proposals can be viewed/created/supported/revoked from *'/crowdfund/vaults/{FundRunId}'*
+- New Proposals can only be revoked by the CREATOR of the Proposal
+- Frontend is now completely migrated to [Viem](https://viem.sh/docs/ethers-migration.html)
+
 ### 📜 *The 'rules-of-use' are simplistic and standard:*
 
 - Crowd Fund is a way for users to create **“Fund Runs”** that other users can donate to.
