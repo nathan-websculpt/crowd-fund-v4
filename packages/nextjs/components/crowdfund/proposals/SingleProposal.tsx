@@ -7,6 +7,7 @@ import { formatEther } from "viem";
 interface DisplayProposalProps {
   fundRunId: number;
   proposalId: number;
+  status: number;
   amount: bigint;
   to: string;
   proposedBy: string;
@@ -15,6 +16,12 @@ interface DisplayProposalProps {
 export const SingleProposal = (proposal: DisplayProposalProps) => {
   return (
     <>
+      <td className="w-1/12 md:py-4">
+        {proposal.status == 0 && <>😄</>}
+        {proposal.status == 1 && <>🤝</>}
+        {proposal.status == 2 && <>✅</>}
+      </td>
+
       <td className="w-1/12 md:py-4">{proposal.proposalId.toString()}</td>
       <td className="w-1/12 md:py-4">{formatEther(proposal.amount)}</td>
       <td className="w-1/12 md:py-4">{proposal.to}</td>

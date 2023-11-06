@@ -16,7 +16,7 @@ import { ECDSA } from "../node_modules/@openzeppelin/contracts/utils/cryptograph
  * 		- contract profit-taking (probably 0.25% of each Donation or each Owner Withdrawal)
  * 		- only owner(s) can take profit
  * 		- only owner(s) can clean up de-activated/emptied Fund Runs ... or at least move them into an Archived state
- * 		- multi-sig functionality (thinking multi-sig Fund Runs is a cool end-goal for this project)
+ * 		- multisig functionality (thinking multisig Fund Runs is a cool end-goal for this project)
  */
 contract CrowdFund is Ownable {
 	struct FundRun {
@@ -51,6 +51,12 @@ contract CrowdFund is Ownable {
 		string reason;
 	}
 
+	enum ProposalStatus {
+		Created,
+		Supported,
+		TxSent
+	}
+
 	struct MultiSigVault {
 		//TODO: A:2
 		uint16 proposalId;
@@ -58,6 +64,7 @@ contract CrowdFund is Ownable {
 		address to;
 		address proposedBy;
 		string reason;
+		ProposalStatus status;
 	}
 	//      fr_Id
 	mapping(uint16 => MultiSigVault[]) public vaults; //to return to frontend (for a display in list) //TODO: A:2
@@ -252,7 +259,8 @@ contract CrowdFund is Ownable {
 			amount: _tx.amount,
 			to: _tx.to,
 			proposedBy: _tx.proposedBy,
-			reason: _tx.reason
+			reason: _tx.reason,
+			status: ProposalStatus(0)
 		});
 		vaults[_fundRunId].push(vault);
 
@@ -271,6 +279,7 @@ contract CrowdFund is Ownable {
 		ownsThisFundRun(_fundRunId, msg.sender, true)
 		createdProposal(_proposalId, _fundRunId, msg.sender, false)
 	{
+		vaults[_fundRunId][_proposalId].status = ProposalStatus(1);
 		signatureList[_proposalId].push(_signature);
 		emit ProposalSupported(msg.sender, _fundRunId, _proposalId);
 	}
@@ -293,7 +302,7 @@ contract CrowdFund is Ownable {
 			signatureList[_proposalId],
 			_fundRunId
 		);
-		_multisigTransfer(_tx, _fundRunId);
+		_multisigTransfer(_tx, _fundRunId, _proposalId);
 	}
 
 	function _verifyMultisigRequest(
@@ -329,7 +338,8 @@ contract CrowdFund is Ownable {
 
 	function _multisigTransfer(
 		MultiSigRequest calldata _tx,
-		uint16 _fundRunId
+		uint16 _fundRunId,
+		uint16 _proposalId
 	) private {
 		FundRun storage fundRun = fundRuns[_fundRunId];
 		require(fundRun.amountCollected > 0, "There is nothing to withdraw");
@@ -358,6 +368,7 @@ contract CrowdFund is Ownable {
 		if (fundRun.isActive) fundRun.isActive = false;
 
 		(bool success, ) = payable(_tx.to).call{ value: netWithdrawAmount }("");
+		vaults[_fundRunId][_proposalId].status = ProposalStatus(2);
 
 		require(success, "Transfer not fulfilled");
 

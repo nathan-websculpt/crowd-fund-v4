@@ -5,7 +5,7 @@ const contracts = {
       name: "localhost",
       contracts: {
         CrowdFund: {
-          address: "0x4c5859f0F772848b2D91F1D83E2Fe57935348029",
+          address: "0xCD8a1C3ba11CF5ECfa6267617243239504a98d90",
           abi: [
             {
               inputs: [
@@ -674,6 +674,11 @@ const contracts = {
                       name: "reason",
                       type: "string",
                     },
+                    {
+                      internalType: "enum CrowdFund.ProposalStatus",
+                      name: "status",
+                      type: "uint8",
+                    },
                   ],
                   internalType: "struct CrowdFund.MultiSigVault[]",
                   name: "",
@@ -965,6 +970,11 @@ const contracts = {
                   internalType: "string",
                   name: "reason",
                   type: "string",
+                },
+                {
+                  internalType: "enum CrowdFund.ProposalStatus",
+                  name: "status",
+                  type: "uint8",
                 },
               ],
               stateMutability: "view",

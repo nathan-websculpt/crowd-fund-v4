@@ -25,9 +25,13 @@ export const ListProposals = (frVault: ListProposalProps) => {
         <div className="flex justify-center w-11/12 mt-9 max-w-11/12 sm:mx-auto">
           <div className="w-full overflow-x-auto shadow-2xl rounded-xl">
             <h1>Support or Finalize an Existing Proposal</h1>
+            <p>😄 - Created</p>
+            <p>🤝 - Supported</p>
+            <p>✅ - Tx Sent</p>
             <table className="table w-full text-xl bg-base-100 table-zebra md:table-md table-sm">
               <thead>
                 <tr className="text-sm rounded-xl text-base-content">
+                  <th className="bg-primary">Status</th>
                   <th className="bg-primary">ID</th>
                   <th className="bg-primary">Amount</th>
                   <th className="bg-primary">To</th>
@@ -44,12 +48,13 @@ export const ListProposals = (frVault: ListProposalProps) => {
                   && vp.proposedBy !== "0x0000000000000000000000000000000000000000"
                   ? (
                   <tr
-                    className="text-sm hover"
+                    className={`text-sm hover ${vp.status == 1 ? "bg-base-200":""} ${vp.status == 2 ? "bg-neutral text-primary":""}`}
                     key={vp.proposalId.toString()}
                   >
                     <SingleProposal
                       proposalId={vp.proposalId}
                       fundRunId={frVault.fundRunId}
+                      status={vp.status}
                       amount={vp.amount}
                       to={vp.to}
                       proposedBy={vp.proposedBy}
