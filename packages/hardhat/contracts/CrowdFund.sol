@@ -1,16 +1,13 @@
 //SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0 <0.9.0;
 
-////TODO: contractOwnerWithdraw has no profits taken from multisig vaults.
-
 import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
-import {ECDSA} from "../node_modules/@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
-import "hardhat/console.sol";
+import { ECDSA } from "../node_modules/@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
 /**
  * @dev NOT PRODUCTION-READY ... FOR LEARNING PURPOSES ONLY
  * In progress, may break, check out V1 instead: https://github.com/nathan-websculpt/crowd-fund
- * CrowdFund.sol is a barebones POC of a multi-user "Crowd Fund Creator"
+ * CrowdFund.sol is a POC Multisig "Crowd Fund Creator"
  * known issues/enhancements saved for V2 --
  * - Fund Runs that receive 0 donations will never be de-activated
  * - FundRun struct has some bloat, but these values are handy for testing
@@ -46,53 +43,49 @@ contract CrowdFund is Ownable {
 		mapping(uint256 => uint256) donorMoneyLog; //mapping(fundRunId => donationAmount)
 	}
 
-
 	//new multisig codes
-	struct MultiSigRequest { 
+	struct MultiSigRequest {
 		uint256 amount;
 		address to;
 		address proposedBy;
 		string reason;
 	}
 
-	struct MultiSigVault { //TODO: A:2
+	struct MultiSigVault {
+		//TODO: A:2
 		uint16 proposalId;
 		uint256 amount;
 		address to;
 		address proposedBy;
-		string reason;		
+		string reason;
 	}
-	//      fr_Id     
+	//      fr_Id
 	mapping(uint16 => MultiSigVault[]) public vaults; //to return to frontend (for a display in list) //TODO: A:2
 
 	/**
-	 * @dev  This ensures that the signature cannot be used for purposes outside of Ethereum: 
+	 * @dev  This ensures that the signature cannot be used for purposes outside of Ethereum:
 	 * https://medium.com/mycrypto/the-magic-of-digital-signatures-on-ethereum-98fe184dc9c7
 	 * The signature can be notated as {r, s, v}
 	 * 32 bytes for r (integar)
 	 * 32 bytes for s (integar)
 	 * 1  byte  for v (ethereum-specific recover identifier)
 	 */
-    string constant private MSG_PREFIX = "\x19Ethereum Signed Message:\n32"; 
-    uint256 public nonce;
-	
+	string private constant MSG_PREFIX = "\x19Ethereum Signed Message:\n32";
+	uint256 public nonce;
+
 	//      proposalId...
 	mapping(uint16 => bytes[]) public signatureList;
 	uint16 public numberOfMultisigProposals = 0;
 
-
-	
 	//END:new multisig codes
-
 
 	mapping(uint256 => FundRun) public fundRuns;
 	mapping(address => DonorsLog) public donorLogs; //a single donor will have all of their logs (across all Fund Runs they donated to) here
 
-
-	uint16 constant private crowdFundCommission = 25; //.25% 
-	uint16 constant private crowdFundDenominator = 10000;
+	uint16 private constant crowdFundCommission = 25; //.25%
+	uint16 private constant crowdFundDenominator = 10000;
 	uint16 public numberOfFundRuns = 0;
-	uint256 private commissionPayout = 0; 
+	uint256 private commissionPayout = 0;
 	uint256 public totalProfitsTaken = 0;
 	address[] public fundRunOwners;
 
@@ -111,9 +104,17 @@ contract CrowdFund is Ownable {
 
 	event ContractOwnerWithdrawal(address contractOwner, uint256 amount);
 
-	event ProposalCreated(address proposedBy, uint16 fundRunId, uint16 proposalId);
+	event ProposalCreated(
+		address proposedBy,
+		uint16 fundRunId,
+		uint16 proposalId
+	);
 
-	event ProposalSupported(address supportedBy, uint16 fundRunId, uint16 proposalId);
+	event ProposalSupported(
+		address supportedBy,
+		uint16 fundRunId,
+		uint16 proposalId
+	);
 
 	modifier ownsThisFundRun(
 		uint16 id,
@@ -167,30 +168,42 @@ contract CrowdFund is Ownable {
 		_;
 	}
 
-	modifier isMultisig(
-		uint16 id, bool mustBeMultisig
-	)
-	{
+	modifier isMultisig(uint16 id, bool mustBeMultisig) {
 		FundRun storage fundRun = fundRuns[id];
-		if(mustBeMultisig){
-			require(fundRun.owners.length > 1, "This is NOT a multisig Fund Run - Operation not allowed.");
-		}
-		else {
-			require(fundRun.owners.length == 1, "This IS a multisig Fund Run - Operation not allowed.");
+		if (mustBeMultisig) {
+			require(
+				fundRun.owners.length > 1,
+				"This is NOT a multisig Fund Run - Operation not allowed."
+			);
+		} else {
+			require(
+				fundRun.owners.length == 1,
+				"This IS a multisig Fund Run - Operation not allowed."
+			);
 		}
 		_;
 	}
 
-	modifier createdProposal(uint16 _proposalId, uint16 _fundRunId, address signer, bool mustBeProposer)
-	{
+	modifier createdProposal(
+		uint16 _proposalId,
+		uint16 _fundRunId,
+		address signer,
+		bool mustBeProposer
+	) {
 		MultiSigVault[] storage vaultsList = vaults[_fundRunId];
-		for(uint16 i = 0; i < vaultsList.length; i++) {
-			if(vaultsList[i].proposalId == _proposalId) {
-				if(mustBeProposer) {
-					require(vaultsList[i].proposedBy == signer, "The address is NOT the creator of this proposal -- action not allowed.");
+		for (uint16 i = 0; i < vaultsList.length; i++) {
+			if (vaultsList[i].proposalId == _proposalId) {
+				if (mustBeProposer) {
+					require(
+						vaultsList[i].proposedBy == signer,
+						"The address is NOT the creator of this proposal -- action not allowed."
+					);
 					_;
 				} else {
-					require(vaultsList[i].proposedBy != signer, "The address is the creator of this proposal -- creators of proposals can not support them -- action not allowed.");
+					require(
+						vaultsList[i].proposedBy != signer,
+						"The address is the creator of this proposal -- creators of proposals can not support them -- action not allowed."
+					);
 					_;
 				}
 			}
@@ -201,43 +214,8 @@ contract CrowdFund is Ownable {
 		_transferOwnership(_contractOwner);
 	}
 
-	//new multisig vault functionality (brainstorm):
-	//1. revoke proposals?
-
-
 	///NEW multisig code
 
-	/**
-	 * @dev  Only the user who created a proposal can revoke it
-	 */
-	function revokeMultisigProposal(
-		uint16 _fundRunId,
-		uint16 _proposalId
-	)
-	external
-	isMultisig(_fundRunId, true)
-	ownsThisFundRun(_fundRunId, msg.sender, true)
-	createdProposal(_proposalId, _fundRunId, msg.sender, true)
-	{
-		MultiSigVault[] storage vaultsList = vaults[_fundRunId];
-		for(uint16 i = 0; i < vaultsList.length; i++) {
-			if(vaultsList[i].proposalId == _proposalId) {
-				delete vaults[_fundRunId][i]; //todo: emit event
-				//TODO: remove from vaults[_fundRunId] while preserving order A:3
-				break;
-			}
-		}
-	}
-	//TODO: A:3
-	// function removeProposalByIndex(uint16 _index, uint16 _fundRunId) private returns (MultiSigVault[] memory) {
-	// 	uint16 lastIndex = vaults[_fundRunId].length - 1;
-	// 	MultiSigVault storage lastProposal = vaults[_fundRunId][lastIndex];
-	// 	vaults[_fundRunId][_index] = lastProposal;
-	// 	vaults[_fundRunId].pop();
-	// 	return vaults[_fundRunId];
-
-	// 	///^^^just moves last item into the spot of the item deleted (won't preserve order)
-	// }
 
 	//user will sign (initial) Message, then send the signature here...
 	function createMultisigProposal(
@@ -245,11 +223,11 @@ contract CrowdFund is Ownable {
 		uint16 _fundRunId,
 		MultiSigRequest calldata _tx
 	)
-	external
-	isMultisig(_fundRunId, true)
-	ownsThisFundRun(_fundRunId, msg.sender, true)
-	fundRunCompleted(_fundRunId, true)
-	fundRunSucceeded(_fundRunId, true)
+		external
+		isMultisig(_fundRunId, true)
+		ownsThisFundRun(_fundRunId, msg.sender, true)
+		fundRunCompleted(_fundRunId, true)
+		fundRunSucceeded(_fundRunId, true)
 	{
 		FundRun storage fundRun = fundRuns[_fundRunId];
 		require(fundRun.amountCollected > 0, "There is nothing to withdraw");
@@ -259,9 +237,10 @@ contract CrowdFund is Ownable {
 		);
 		require(
 			_tx.amount > 0,
-			"The proposed transaction withdrawal amount must be greater than 0." 
+			"The proposed transaction withdrawal amount must be greater than 0."
 		);
-		require(fundRun.amountWithdrawn + _tx.amount <= fundRun.amountCollected, 
+		require(
+			fundRun.amountWithdrawn + _tx.amount <= fundRun.amountCollected,
 			"This proposal would overdraw this Fund Run."
 		);
 
@@ -274,84 +253,85 @@ contract CrowdFund is Ownable {
 			to: _tx.to,
 			proposedBy: _tx.proposedBy,
 			reason: _tx.reason
-		}); 
+		});
 		vaults[_fundRunId].push(vault);
 
 		numberOfMultisigProposals++;
 		emit ProposalCreated(msg.sender, _fundRunId, vault.proposalId);
 	}
-	
+
 	//users will sign (supporting) Messages, then send the signature here...
 	function supportMultisigProposal(
 		bytes calldata _signature,
 		uint16 _fundRunId,
 		uint16 _proposalId
 	)
-	external
-	isMultisig(_fundRunId, true)
-	ownsThisFundRun(_fundRunId, msg.sender, true)
-	createdProposal(_proposalId, _fundRunId, msg.sender, false)
+		external
+		isMultisig(_fundRunId, true)
+		ownsThisFundRun(_fundRunId, msg.sender, true)
+		createdProposal(_proposalId, _fundRunId, msg.sender, false)
 	{
-		console.log("HARDHAT CONSOLE__>   supportMultisigProposal hit");
 		signatureList[_proposalId].push(_signature);
 		emit ProposalSupported(msg.sender, _fundRunId, _proposalId);
 	}
 
 	//final transfer/call (when all signers are thought to have signed)
 	function multisigWithdraw(
-		MultiSigRequest calldata _tx, 
-		uint256 _nonce, 
+		MultiSigRequest calldata _tx,
+		uint256 _nonce,
 		uint16 _fundRunId,
 		uint16 _proposalId
 	)
-	external
-	isMultisig(_fundRunId, true)
-	ownsThisFundRun(_fundRunId, msg.sender, true)
+		external
+		isMultisig(_fundRunId, true)
+		ownsThisFundRun(_fundRunId, msg.sender, true)
 	///reentrancyGuard //todo:
 	{
-		console.log("HARDHAT CONSOLE__>   multisigWithdraw hit");		
-        _verifyMultisigRequest(_tx, _nonce, signatureList[_proposalId], _fundRunId);
-        _multisigTransfer(_tx, _fundRunId);
+		_verifyMultisigRequest(
+			_tx,
+			_nonce,
+			signatureList[_proposalId],
+			_fundRunId
+		);
+		_multisigTransfer(_tx, _fundRunId);
 	}
 
-    function _verifyMultisigRequest(
-        MultiSigRequest calldata _tx,
-        uint256 _nonce,
-        bytes[] storage _signatures,
-		uint16 _fundRunId 
-    )
-    private
-    {
-		console.log("HARDHAT CONSOLE__>   _verifyMultisigRequest hit");
-        require(_nonce > nonce, "nonce already used");
+	function _verifyMultisigRequest(
+		MultiSigRequest calldata _tx,
+		uint256 _nonce,
+		bytes[] storage _signatures,
+		uint16 _fundRunId
+	) private {
+		require(_nonce > nonce, "nonce already used");
 		uint256 signaturesCount = _signatures.length;
-        require(signaturesCount == fundRuns[_fundRunId].owners.length, "not enough signers");
-        bytes32 digest = _processMultisigRequest(_tx, _nonce);
-		console.log("HARDHAT CONSOLE__>        made it through all the requires of _verifyMultisigRequest w/ nonce:", _nonce, ", signatures count: ", signaturesCount);
+		require(
+			signaturesCount == fundRuns[_fundRunId].owners.length,
+			"not enough signers"
+		);
+		bytes32 digest = _processMultisigRequest(_tx, _nonce);
 
-        address initialSigner; 
-        for (uint256 i = 0; i < signaturesCount; i++)
-        {
-            bytes memory signature = _signatures[i];
-            address signer = ECDSA.recover(digest, signature);
-            require(isOwnerOfFundRun(signer, _fundRunId), "Possible Issues: Proposal completed, problem with signature, or you are not a co-owner of this Fund Run.");
-            require(signer != initialSigner, "duplicate signature has been prevented.");
-			console.log("HARDHAT CONSOLE__>        signer Address: ", signer);
-            initialSigner = signer;
-        }
-        nonce = _nonce;
-    }
-	
-    function _multisigTransfer (
-        MultiSigRequest calldata _tx,
-		uint16 _fundRunId 
-    )
-    private
-    {
+		address initialSigner;
+		for (uint256 i = 0; i < signaturesCount; i++) {
+			bytes memory signature = _signatures[i];
+			address signer = ECDSA.recover(digest, signature);
+			require(
+				isOwnerOfFundRun(signer, _fundRunId),
+				"Possible Issues: Proposal completed, problem with signature, or you are not a co-owner of this Fund Run."
+			);
+			require(
+				signer != initialSigner,
+				"duplicate signature has been prevented."
+			);
+			initialSigner = signer;
+		}
+		nonce = _nonce;
+	}
+
+	function _multisigTransfer(
+		MultiSigRequest calldata _tx,
+		uint16 _fundRunId
+	) private {
 		FundRun storage fundRun = fundRuns[_fundRunId];
-		console.log("HARDHAT CONSOLE__>   _multisigTransfer hit");
-		console.log("HARDHAT CONSOLE__>        fund run id: ", fundRun.id, ", title: ", fundRun.title);
-
 		require(fundRun.amountCollected > 0, "There is nothing to withdraw");
 		require(
 			fundRun.amountCollected > fundRun.amountWithdrawn,
@@ -359,58 +339,76 @@ contract CrowdFund is Ownable {
 		);
 		require(
 			_tx.amount > 0,
-			"The proposed transaction withdrawal amount is 0." 
+			"The proposed transaction withdrawal amount is 0."
 		);
-		require(fundRun.amountWithdrawn + _tx.amount <= fundRun.amountCollected, 
+		require(
+			fundRun.amountWithdrawn + _tx.amount <= fundRun.amountCollected,
 			"This Fund Run is hereby prevented from being over-drawn."
 		);
-		
-
 
 		//contract takes its cut
-		uint256 fundsMinusCommission = (_tx.amount *
-			crowdFundCommission) / crowdFundDenominator; //0.25%
+		uint256 fundsMinusCommission = (_tx.amount * crowdFundCommission) /
+			crowdFundDenominator; //0.25%
 		uint256 netWithdrawAmount = _tx.amount - fundsMinusCommission;
-		
+
 		fundRun.amountWithdrawn = fundRun.amountWithdrawn + _tx.amount;
 		//update profit amount
 		commissionPayout = commissionPayout + fundsMinusCommission;
 
 		if (fundRun.isActive) fundRun.isActive = false;
 
-        (bool success, ) = payable(_tx.to).call{ value: netWithdrawAmount }(
-			""
-		);
-		console.log("HARDHAT CONSOLE__>         tx success: ", success, ", to address: ", _tx.to);
-		console.log("HARDHAT CONSOLE__>              for the amount of: ", _tx.amount);
-		console.log("HARDHAT CONSOLE__>              REASON BEING: ", _tx.reason);
-        require(success, "Transfer not fulfilled");
+		(bool success, ) = payable(_tx.to).call{ value: netWithdrawAmount }("");
+
+		require(success, "Transfer not fulfilled");
 
 		//todo: emit event
-    }
+	}
 
-    function _processMultisigRequest(
-        MultiSigRequest calldata _tx,
-        uint256 _nonce 
-    )
-    private 
-    pure
-    returns(bytes32 _digest)
-    {
-        bytes memory encoded = abi.encode(_tx);
-        _digest = keccak256(abi.encodePacked(encoded, _nonce));
-        _digest = keccak256(abi.encodePacked(MSG_PREFIX, _digest));
-    }
+	function _processMultisigRequest(
+		MultiSigRequest calldata _tx,
+		uint256 _nonce
+	) private pure returns (bytes32 _digest) {
+		bytes memory encoded = abi.encode(_tx);
+		_digest = keccak256(abi.encodePacked(encoded, _nonce));
+		_digest = keccak256(abi.encodePacked(MSG_PREFIX, _digest));
+	}
+	
+	/**
+	 * @dev  Only the user who created a proposal can revoke it
+	 */
+	function revokeMultisigProposal(
+		uint16 _fundRunId,
+		uint16 _proposalId
+	)
+		external
+		isMultisig(_fundRunId, true)
+		ownsThisFundRun(_fundRunId, msg.sender, true)
+		createdProposal(_proposalId, _fundRunId, msg.sender, true)
+	{
+		MultiSigVault[] storage vaultsList = vaults[_fundRunId];
+		for (uint16 i = 0; i < vaultsList.length; i++) {
+			if (vaultsList[i].proposalId == _proposalId) {
+				delete vaults[_fundRunId][i]; //todo: emit event
+				//TODO: remove from vaults[_fundRunId] while preserving order A:3
+				//currently 0s out data, but doesn't mess up the array (order)
+				//so, the frontend just ignores these...
+				break;
+			}
+		}
+	}
+
+	//TODO: A:3
+	// function _removeProposalByIndex(uint16 _index, uint16 _fundRunId) private returns (MultiSigVault[] memory) {
+	// 	uint16 lastIndex = vaults[_fundRunId].length - 1;
+	// 	MultiSigVault storage lastProposal = vaults[_fundRunId][lastIndex];
+	// 	vaults[_fundRunId][_index] = lastProposal;
+	// 	vaults[_fundRunId].pop();
+	// 	return vaults[_fundRunId];
+
+	// 	///^^^just moves last item into the spot of the item deleted (won't preserve order)
+	// }
+
 	///END: NEW multisig code
-
-
-
-
-
-
-
-
-
 
 	function createFundRun(
 		string memory _title,
@@ -443,7 +441,7 @@ contract CrowdFund is Ownable {
 		fundRun.amountCollected = 0;
 		fundRun.amountWithdrawn = 0;
 		fundRun.isActive = true;
-		
+
 		fundRunOwners.push(msg.sender); //todo: rename to fundRunCreators???
 		numberOfFundRuns++;
 		emit FundRunCreated(
@@ -625,7 +623,9 @@ contract CrowdFund is Ownable {
 	/**
 	 * @dev Returns list of Proposals (from a Fund Run's Vault) in reverse order (latest-first)
 	 */
-	function getProposals(uint16 _fundRunId) public view returns (MultiSigVault[] memory) {
+	function getProposals(
+		uint16 _fundRunId
+	) public view returns (MultiSigVault[] memory) {
 		// MultiSigVault[] memory allProposals = new MultiSigVault[](vaults[_fundRunId].length);
 
 		// for (uint16 i = 1; i < vaults[_fundRunId].length + 1; i++) {
@@ -634,7 +634,7 @@ contract CrowdFund is Ownable {
 		// }
 		// return allProposals;
 
-		//TODO: A:2 
+		//TODO: A:2
 
 		return vaults[_fundRunId];
 	}
@@ -658,16 +658,20 @@ contract CrowdFund is Ownable {
 		return address(this).balance;
 	}
 
-	function getOwnersOfFundRun(uint16 _id) public view returns (address[] memory) {
+	function getOwnersOfFundRun(
+		uint16 _id
+	) public view returns (address[] memory) {
 		FundRun storage fr = fundRuns[_id];
 		return fr.owners;
 	}
 
-	function isOwnerOfFundRun(address _addr, uint16 _id) public view returns (bool) {
+	function isOwnerOfFundRun(
+		address _addr,
+		uint16 _id
+	) public view returns (bool) {
 		FundRun storage thisFundRun = fundRuns[_id];
-		for(uint16 i = 0; i < thisFundRun.owners.length; i++) {
-			if(thisFundRun.owners[i] == _addr)
-				return true;
+		for (uint16 i = 0; i < thisFundRun.owners.length; i++) {
+			if (thisFundRun.owners[i] == _addr) return true;
 		}
 		return false;
 	}
