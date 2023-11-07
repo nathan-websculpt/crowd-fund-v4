@@ -58,7 +58,7 @@ describe("CrowdFund", function () {
     console.log("\nwallet balance PRE-donation:  ", formatEther(await walletSigning.getBalance()));
     const tx = await crowdFund.connect(walletSigning).donateToFundRun(fundRunId, { value: donationAmount });
     await expect(tx)
-      .to.emit(crowdFund, "DonationHappened")
+      .to.emit(crowdFund, "DonationOccurred")
       .withArgs([fundRunOwnerAddress.address], walletSigning.address, donationAmount); //owner, donor, amount
     console.log("wallet balance POST-donation: ", formatEther(await walletSigning.getBalance()));
 
@@ -179,7 +179,7 @@ describe("CrowdFund", function () {
         const expectedCommission = expected.commission;
         console.log("\nALICE'S wallet balance PRE-withdrawal:  ", formatEther(await alice.getBalance()));
         const tx = await crowdFund.connect(alice).fundRunOwnerWithdraw(alicesId);
-        await expect(tx).to.emit(crowdFund, "OwnerWithdrawal").withArgs([alice.address], expectedAmount);
+        await expect(tx).to.emit(crowdFund, "FundRunOwnerWithdrawal").withArgs([alice.address], expectedAmount);
         console.log("ALICE'S wallet balance POST-withdrawal: ", formatEther(await alice.getBalance()));
 
         totalContractBalance = totalContractBalance.sub(expectedAmount);

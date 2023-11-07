@@ -1,7 +1,8 @@
 /* eslint-disable prettier/prettier */
 import { useEffect, useState } from "react";
+import { formatEther } from "viem";
 import getNonce from "~~/helpers/getNonce";
-import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
+import { useScaffoldContractRead, useScaffoldContractWrite, useScaffoldEventSubscriber } from "~~/hooks/scaffold-eth";
 
 interface FinalizeProposalProps {
   fundRunId: number;
@@ -22,6 +23,26 @@ export const FinalizeProposal = (proposal: FinalizeProposalProps) => {
       writeAsync();
     }
   }, [nonce]);
+  
+  useScaffoldEventSubscriber({
+    contractName: "CrowdFund",
+    eventName: "MultisigTransferCompleted",
+    listener: logs => {
+      logs.map(log => {
+        const { fundRunId, proposalId, to, amount } = log.args;
+        console.log(
+          "📡 New Multisig-Transfer-Completed Event \nFund Run Id:",
+          fundRunId,
+          "Proposal Id: ",
+          proposalId,
+          "\nTo: ",
+          to,
+          "\nAmount: ",
+          formatEther(amount),
+        );
+      });
+    },
+  });
 
   const { data: fundRunNonce } = useScaffoldContractRead({
     contractName: "CrowdFund",
@@ -44,7 +65,7 @@ export const FinalizeProposal = (proposal: FinalizeProposalProps) => {
 
   return (
     <>
-      <td className="w-1/12 md:py-4 text-center">
+      <td className="w-1/12 text-center md:py-4">
         <div className="tooltip tooltip-primary tooltip-top" data-tip="Done co-signing? Send the transaction.">
           <button className="w-full btn" onClick={() => finishProposal()}>
             Finalize

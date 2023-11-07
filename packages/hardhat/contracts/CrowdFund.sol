@@ -100,9 +100,9 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		uint256 target
 	);
 
-	event DonationHappened(address[] owners, address donor, uint256 amount); //todo: rename to Donation
+	event DonationOccurred(address[] owners, address donor, uint256 amount);
 
-	event OwnerWithdrawal(address[] owners, uint256 amount); //todo: rename to FundRunOwnerWithdrawal (because now we will have a contract owner withdrawal)
+	event FundRunOwnerWithdrawal(address[] owners, uint256 amount);
 
 	event DonorWithdrawal(address[] owners, address donor, uint256 amount);
 
@@ -118,6 +118,20 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		address supportedBy,
 		uint16 fundRunId,
 		uint16 proposalId
+	);
+
+	event ProposalRevoked(
+		uint16 fundRunId,
+		uint16 proposalId,
+		address to,
+		string reason
+	);
+
+	event MultisigTransferCompleted(
+		uint16 fundRunId,
+		uint16 proposalId,
+		address to,
+		uint256 amount
 	);
 
 	modifier ownsThisFundRun(
@@ -271,7 +285,8 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		ownsThisFundRun(_fundRunId, msg.sender, true)
 		createdProposal(_proposalId, _fundRunId, msg.sender, false)
 	{
-		vaults[_fundRunId][_proposalId].status = ProposalStatus(1);
+		if (vaults[_fundRunId][_proposalId].status != ProposalStatus(1))
+			vaults[_fundRunId][_proposalId].status = ProposalStatus(1);
 		signatureList[_proposalId].push(_signature);
 		emit ProposalSupported(msg.sender, _fundRunId, _proposalId);
 	}
@@ -284,7 +299,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		uint16 _proposalId
 	)
 		external
-	    nonReentrant() 
+		nonReentrant
 		isMultisig(_fundRunId, true)
 		ownsThisFundRun(_fundRunId, msg.sender, true)
 	{
@@ -312,7 +327,13 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		MultiSigVault[] storage vaultsList = vaults[_fundRunId];
 		for (uint16 i = 0; i < vaultsList.length; i++) {
 			if (vaultsList[i].proposalId == _proposalId) {
-				delete vaults[_fundRunId][i]; //todo: emit event
+				emit ProposalRevoked(
+					_fundRunId,
+					_proposalId,
+					vaults[_fundRunId][i].to,
+					vaults[_fundRunId][i].reason
+				);
+				delete vaults[_fundRunId][i];
 				break;
 			}
 		}
@@ -390,14 +411,14 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		uint256 newAmountCollected = fundRun.amountCollected + amount;
 		fundRun.amountCollected = newAmountCollected;
 
-		emit DonationHappened(fundRun.owners, msg.sender, amount);
+		emit DonationOccurred(fundRun.owners, msg.sender, amount);
 	}
 
 	function fundRunOwnerWithdraw(
 		uint16 _id
 	)
 		public
-	    nonReentrant()
+		nonReentrant
 		isMultisig(_id, false) ///owner withdrawals not allowed for multisigs -- they will behave like a vault
 		ownsThisFundRun(_id, msg.sender, true)
 		fundRunCompleted(_id, true)
@@ -446,7 +467,8 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		);
 
 		require(success, "Withdrawal reverted.");
-		if (success) emit OwnerWithdrawal(fundRun.owners, netWithdrawAmount);
+		if (success)
+			emit FundRunOwnerWithdrawal(fundRun.owners, netWithdrawAmount);
 		//TODO: Handle else. Not done yet, because how this works will change
 	}
 
@@ -454,7 +476,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		uint16 _id
 	)
 		public
-	    nonReentrant()
+		nonReentrant
 		ownsThisFundRun(_id, msg.sender, false)
 		fundRunCompleted(_id, true)
 		fundRunSucceeded(_id, false)
@@ -493,8 +515,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 	/**
 	 * @dev  (OnlyOwner can) Withdraw the profits this contract has made
 	 */
-	function contractOwnerWithdraw() public onlyOwner 
-	    nonReentrant() {
+	function contractOwnerWithdraw() public onlyOwner nonReentrant {
 		require(commissionPayout > 0, "Nothing to withdraw");
 
 		uint256 amountToWithdraw = commissionPayout;
@@ -585,7 +606,12 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 
 		require(success, "Transfer not fulfilled");
 
-		//todo: emit event
+		emit MultisigTransferCompleted(
+			_fundRunId,
+			_proposalId,
+			_tx.to,
+			netWithdrawAmount
+		);
 	}
 
 	/**

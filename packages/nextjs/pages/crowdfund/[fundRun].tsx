@@ -16,7 +16,7 @@ const FundRunPage: NextPage = () => {
 
   useScaffoldEventSubscriber({
     contractName: "CrowdFund",
-    eventName: "DonationHappened",
+    eventName: "DonationOccurred",
     listener: logs => {
       logs.map(log => {
         const { owners, donor, amount } = log.args;

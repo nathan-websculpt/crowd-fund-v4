@@ -5,7 +5,7 @@ const contracts = {
       name: "localhost",
       contracts: {
         CrowdFund: {
-          address: "0x2bdCC0de6bE1f7D2ee689a0342D76F52E8EFABa3",
+          address: "0x922D6956C99E12DFeB3224DEA977D0939758A1Fe",
           abi: [
             {
               inputs: [
@@ -59,7 +59,7 @@ const contracts = {
                   type: "uint256",
                 },
               ],
-              name: "DonationHappened",
+              name: "DonationOccurred",
               type: "event",
             },
             {
@@ -134,7 +134,38 @@ const contracts = {
                   type: "uint256",
                 },
               ],
-              name: "OwnerWithdrawal",
+              name: "FundRunOwnerWithdrawal",
+              type: "event",
+            },
+            {
+              anonymous: false,
+              inputs: [
+                {
+                  indexed: false,
+                  internalType: "uint16",
+                  name: "fundRunId",
+                  type: "uint16",
+                },
+                {
+                  indexed: false,
+                  internalType: "uint16",
+                  name: "proposalId",
+                  type: "uint16",
+                },
+                {
+                  indexed: false,
+                  internalType: "address",
+                  name: "to",
+                  type: "address",
+                },
+                {
+                  indexed: false,
+                  internalType: "uint256",
+                  name: "amount",
+                  type: "uint256",
+                },
+              ],
+              name: "MultisigTransferCompleted",
               type: "event",
             },
             {
@@ -179,6 +210,37 @@ const contracts = {
                 },
               ],
               name: "ProposalCreated",
+              type: "event",
+            },
+            {
+              anonymous: false,
+              inputs: [
+                {
+                  indexed: false,
+                  internalType: "uint16",
+                  name: "fundRunId",
+                  type: "uint16",
+                },
+                {
+                  indexed: false,
+                  internalType: "uint16",
+                  name: "proposalId",
+                  type: "uint16",
+                },
+                {
+                  indexed: false,
+                  internalType: "address",
+                  name: "to",
+                  type: "address",
+                },
+                {
+                  indexed: false,
+                  internalType: "string",
+                  name: "reason",
+                  type: "string",
+                },
+              ],
+              name: "ProposalRevoked",
               type: "event",
             },
             {

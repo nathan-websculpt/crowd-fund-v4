@@ -1,4 +1,4 @@
-import { useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
+import { useScaffoldContractWrite, useScaffoldEventSubscriber } from "~~/hooks/scaffold-eth";
 
 interface RevokeProposalProps {
   fundRunId: number;
@@ -6,6 +6,26 @@ interface RevokeProposalProps {
 }
 
 export const RevokeProposal = (proposal: RevokeProposalProps) => {
+  useScaffoldEventSubscriber({
+    contractName: "CrowdFund",
+    eventName: "ProposalRevoked",
+    listener: logs => {
+      logs.map(log => {
+        const { fundRunId, proposalId, to, reason } = log.args;
+        console.log(
+          "📡 New Proposal REVOKED Event \nFund Run Id:",
+          fundRunId,
+          "Proposal Id: ",
+          proposalId,
+          "\nTo: ",
+          to,
+          "\nReason: ",
+          reason,
+        );
+      });
+    },
+  });
+
   const { writeAsync, isLoading } = useScaffoldContractWrite({
     contractName: "CrowdFund",
     functionName: "revokeMultisigProposal",
