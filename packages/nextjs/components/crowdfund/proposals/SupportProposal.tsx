@@ -77,10 +77,12 @@ export const SupportProposal = (proposal: SupportProposalProps) => {
 
   return (
     <>
-      <td className="w-1/12 md:py-4">
-        <button className="w-4/5 btn btn-primary" onClick={() => supportProposal()}>
-          Co-Sign
-        </button>
+      <td className="w-1/12 md:py-4 text-center">
+        <div className="tooltip tooltip-primary tooltip-right" data-tip="Support this proposal before finalizing.">
+          <button className="w-full btn" onClick={() => supportProposal()}>
+            Support
+          </button>
+        </div>
       </td>
     </>
   );

@@ -17,10 +17,12 @@ export const RevokeProposal = (proposal: RevokeProposalProps) => {
 
   return (
     <>
-      <td className="w-1/12 md:py-4">
-        <button className="w-4/5 btn btn-primary" onClick={() => writeAsync()}>
-          Revoke (only creator)
-        </button>
+      <td className="w-1/12 text-center md:py-4">
+        <div className="tooltip tooltip-primary tooltip-left" data-tip="Only creator of proposal can revoke.">
+          <button className="w-full btn btn-primary" onClick={() => writeAsync()}>
+            Revoke
+          </button>
+        </div>
       </td>
     </>
   );

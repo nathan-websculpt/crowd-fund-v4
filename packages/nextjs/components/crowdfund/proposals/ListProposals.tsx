@@ -23,7 +23,7 @@ export const ListProposals = (frVault: ListProposalProps) => {
     return (
       <>
         <div className="flex justify-center w-11/12 mt-9 max-w-11/12 sm:mx-auto">
-          <div className="w-full overflow-x-auto shadow-2xl rounded-xl">
+          <div className="w-full overflow-x-auto">
             <h1>Support or Finalize an Existing Proposal</h1>
             <p>😄 - Created</p>
             <p>🤝 - Supported</p>
@@ -37,9 +37,9 @@ export const ListProposals = (frVault: ListProposalProps) => {
                   <th className="bg-primary">To</th>
                   <th className="bg-primary">Proposed By</th>
                   <th className="bg-primary">Reason</th>
-                  <th className="bg-primary">Submit Support</th>
-                  <th className="bg-primary">Finalize</th>
-                  <th className="bg-primary">Revoke</th>
+                  <th className="text-center bg-primary">Submit Support</th>
+                  <th className="text-center bg-primary">Finalize</th>
+                  <th className="text-center bg-primary">Revoke</th>
                 </tr>
               </thead>
               <tbody>
@@ -48,8 +48,7 @@ export const ListProposals = (frVault: ListProposalProps) => {
                   && vp.proposedBy !== "0x0000000000000000000000000000000000000000"
                   ? (
                   <tr
-                    // className={`text-sm ${vp.status == 1 ? "bg-accent":""} ${vp.status == 2 ? "bg-neutral text-primary":""}`}
-                    className={`text-sm ${vp.status == 1 ? "bg-accent":""} ${vp.status == 2 ? "bg-base-300":""}`}
+                    className={`text-sm ${vp.status == 0 ? "bg-secondary border-secondary":""}  ${vp.status == 1 ? "bg-accent border-accent":""} ${vp.status == 2 ? "bg-neutral border-neutral text-primary":""}`}
                     key={vp.proposalId.toString()}
                   >
                     <SingleProposal

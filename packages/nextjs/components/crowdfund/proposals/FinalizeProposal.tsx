@@ -44,10 +44,12 @@ export const FinalizeProposal = (proposal: FinalizeProposalProps) => {
 
   return (
     <>
-      <td className="w-1/12 md:py-4">
-        <button className="w-4/5 btn btn-primary" onClick={() => finishProposal()}>
-          Finalize
-        </button>
+      <td className="w-1/12 md:py-4 text-center">
+        <div className="tooltip tooltip-primary tooltip-top" data-tip="Done co-signing? Send the transaction.">
+          <button className="w-full btn" onClick={() => finishProposal()}>
+            Finalize
+          </button>
+        </div>
       </td>
     </>
   );
