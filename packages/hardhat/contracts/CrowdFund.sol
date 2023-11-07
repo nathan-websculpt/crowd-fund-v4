@@ -2,6 +2,7 @@
 pragma solidity >=0.8.0 <0.9.0;
 
 import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
+import "../node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import { ECDSA } from "../node_modules/@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
 /**
@@ -18,7 +19,7 @@ import { ECDSA } from "../node_modules/@openzeppelin/contracts/utils/cryptograph
  * 		- only owner(s) can clean up de-activated/emptied Fund Runs ... or at least move them into an Archived state
  * 		- multisig functionality (thinking multisig Fund Runs is a cool end-goal for this project)
  */
-contract CrowdFund is Ownable {
+contract CrowdFund is Ownable, ReentrancyGuard {
 	struct FundRun {
 		uint16 id; //not large enough in a prod scenario
 		address[] owners;
@@ -283,9 +284,9 @@ contract CrowdFund is Ownable {
 		uint16 _proposalId
 	)
 		external
+	    nonReentrant() 
 		isMultisig(_fundRunId, true)
 		ownsThisFundRun(_fundRunId, msg.sender, true)
-	///reentrancyGuard //todo:
 	{
 		_verifyMultisigRequest(
 			_tx,
@@ -396,6 +397,7 @@ contract CrowdFund is Ownable {
 		uint16 _id
 	)
 		public
+	    nonReentrant()
 		isMultisig(_id, false) ///owner withdrawals not allowed for multisigs -- they will behave like a vault
 		ownsThisFundRun(_id, msg.sender, true)
 		fundRunCompleted(_id, true)
@@ -452,6 +454,7 @@ contract CrowdFund is Ownable {
 		uint16 _id
 	)
 		public
+	    nonReentrant()
 		ownsThisFundRun(_id, msg.sender, false)
 		fundRunCompleted(_id, true)
 		fundRunSucceeded(_id, false)
@@ -490,7 +493,8 @@ contract CrowdFund is Ownable {
 	/**
 	 * @dev  (OnlyOwner can) Withdraw the profits this contract has made
 	 */
-	function contractOwnerWithdraw() public onlyOwner {
+	function contractOwnerWithdraw() public onlyOwner 
+	    nonReentrant() {
 		require(commissionPayout > 0, "Nothing to withdraw");
 
 		uint256 amountToWithdraw = commissionPayout;

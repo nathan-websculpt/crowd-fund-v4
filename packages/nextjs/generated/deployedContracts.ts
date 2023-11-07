@@ -5,7 +5,7 @@ const contracts = {
       name: "localhost",
       contracts: {
         CrowdFund: {
-          address: "0xCD8a1C3ba11CF5ECfa6267617243239504a98d90",
+          address: "0x2bdCC0de6bE1f7D2ee689a0342D76F52E8EFABa3",
           abi: [
             {
               inputs: [
