@@ -25,9 +25,18 @@ export const ListProposals = (frVault: ListProposalProps) => {
         <div className="flex justify-center w-11/12 mt-9 max-w-11/12 sm:mx-auto">
           <div className="w-full overflow-x-auto">
             <h1>Support or Finalize an Existing Proposal</h1>
-            <p>😄 - Created</p>
+            <div className="flex items-center justified-center">
+              <p>😄 - Created</p>
+              <div className="w-24 h-6 ml-4 bg-secondary"></div>
+            </div>
+            <div className="flex items-center justified-center">
             <p>🤝 - Supported</p>
+              <div className="w-24 h-6 ml-4 bg-accent"></div>
+            </div>
+            <div className="flex items-center justified-center">
             <p>✅ - Tx Sent</p>
+              <div className="w-24 h-6 ml-4 bg-neutral"></div>
+            </div>
             <table className="table w-full text-xl bg-base-100 md:table-md table-sm">
               <thead>
                 <tr className="text-sm rounded-xl text-base-content">
@@ -43,26 +52,27 @@ export const ListProposals = (frVault: ListProposalProps) => {
                 </tr>
               </thead>
               <tbody>
-                {vaultProposals?.map(vp => (
-                  vp.to !== "0x0000000000000000000000000000000000000000"
-                  && vp.proposedBy !== "0x0000000000000000000000000000000000000000"
-                  ? (
-                  <tr
-                    className={`text-sm ${vp.status == 0 ? "bg-secondary border-secondary":""}  ${vp.status == 1 ? "bg-accent border-accent":""} ${vp.status == 2 ? "bg-neutral border-neutral text-primary":""}`}
-                    key={vp.proposalId.toString()}
-                  >
-                    <SingleProposal
-                      proposalId={vp.proposalId}
-                      fundRunId={frVault.fundRunId}
-                      status={vp.status}
-                      amount={vp.amount}
-                      to={vp.to}
-                      proposedBy={vp.proposedBy}
-                      reason={vp.reason}
-                    />
-                  </tr>
-                ): null 
-                ))}
+                {vaultProposals?.map(vp =>
+                  vp.to !== "0x0000000000000000000000000000000000000000" &&
+                  vp.proposedBy !== "0x0000000000000000000000000000000000000000" ? (
+                    <tr
+                      className={`text-sm ${vp.status == 0 ? "bg-secondary border-secondary" : ""}  ${
+                        vp.status == 1 ? "bg-accent border-accent" : ""
+                      } ${vp.status == 2 ? "bg-neutral border-neutral text-primary" : ""}`}
+                      key={vp.proposalId.toString()}
+                    >
+                      <SingleProposal
+                        proposalId={vp.proposalId}
+                        fundRunId={frVault.fundRunId}
+                        status={vp.status}
+                        amount={vp.amount}
+                        to={vp.to}
+                        proposedBy={vp.proposedBy}
+                        reason={vp.reason}
+                      />
+                    </tr>
+                  ) : null,
+                )}
               </tbody>
             </table>
           </div>
