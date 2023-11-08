@@ -1,7 +1,7 @@
-# 🚀 🌑 Crowd Fund
+# 🚀 🌑 Multisig Crowd Funds
 Note: In progress, you may want to [use Crowd Fund V1 instead](https://github.com/nathan-websculpt/crowd-fund)
 
-A multisig “Crowdfunding” dApp.
+A multisig “Crowdfunding” dApp; [V1](https://github.com/nathan-websculpt/crowd-fund) provides Single-Wallet Crowd Funding
 
 ⚙️ Built with [Scaffold-ETH 2](#Contents), using NextJS, RainbowKit, Hardhat, Wagmi, and Typescript.
 
