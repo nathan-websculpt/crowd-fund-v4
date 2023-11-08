@@ -14,12 +14,11 @@ import { ECDSA } from "../node_modules/@openzeppelin/contracts/utils/cryptograph
  * known issues/enhancements saved for V2 --
  * - Fund Runs that receive 0 donations will never be de-activated
  * - FundRun struct has some bloat, but these values are handy for testing
- * - want an Enum to handle the state a FundRun is in
+ * - want an Enum to handle the state a FundRun is in																	[done]
  * - V2 needs CrowdFund.sol to be ownable, with:
- * 		- contract profit-taking (probably 0.25% of each Donation or each Owner Withdrawal)
- * 		- only owner(s) can take profit
+ * 		- contract profit-taking (probably 0.25% of each Donation or each Owner Withdrawal)								[done]
+ * 		- only owner(s) can take profit																					[done]
  * 		- only owner(s) can clean up de-activated/emptied Fund Runs ... or at least move them into an Archived state
- * 		- multisig functionality (thinking multisig Fund Runs is a cool end-goal for this project)
  */
 contract CrowdFund is Ownable, ReentrancyGuard {
 	struct FundRun {
@@ -69,10 +68,10 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 	}
 
 	enum FundRunStatus {
-		Created, 					//failure
-		DeadlineMetMoneyGoalNotMet, //failure
-		MoneyGoalMetDeadlineNotMet, //(soon-to-be) success
-		FullSuccess					//success
+		Created,
+		DeadlineMetMoneyGoalNotMet,
+		MoneyGoalMetDeadlineNotMet,
+		FullSuccess
 	}
 
 	//      fr_Id
@@ -419,8 +418,10 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		uint256 newAmountCollected = fundRun.amountCollected + amount;
 		fundRun.amountCollected = newAmountCollected;
 
-		if(fundRun.amountCollected >= fundRun.target && fundRun.status != FundRunStatus(2))
-			fundRun.status = FundRunStatus(2);
+		if (
+			fundRun.amountCollected >= fundRun.target &&
+			fundRun.status != FundRunStatus(2)
+		) fundRun.status = FundRunStatus(2);
 
 		emit DonationOccurred(fundRun.owners, msg.sender, amount);
 	}
@@ -471,7 +472,8 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		//update profit amount
 		commissionPayout = commissionPayout + fundsMinusCommission;
 
-		if (fundRun.status != FundRunStatus(3)) fundRun.status = FundRunStatus(3);
+		if (fundRun.status != FundRunStatus(3))
+			fundRun.status = FundRunStatus(3);
 
 		(bool success, ) = payable(msg.sender).call{ value: netWithdrawAmount }(
 			""
@@ -510,7 +512,8 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 
 		donorLog.donorMoneyLog[fundRun.id] = 0;
 
-		if (fundRun.status != FundRunStatus(1)) fundRun.status = FundRunStatus(1);
+		if (fundRun.status != FundRunStatus(1))
+			fundRun.status = FundRunStatus(1);
 		fundRun.amountWithdrawn = fundRun.amountWithdrawn + amountToWithdraw;
 
 		(bool success, ) = payable(msg.sender).call{ value: amountToWithdraw }(
@@ -609,8 +612,9 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		fundRun.amountWithdrawn = fundRun.amountWithdrawn + _tx.amount;
 		//update profit amount
 		commissionPayout = commissionPayout + fundsMinusCommission;
-		
-		if (fundRun.status != FundRunStatus(3)) fundRun.status = FundRunStatus(3);
+
+		if (fundRun.status != FundRunStatus(3))
+			fundRun.status = FundRunStatus(3);
 
 		(bool success, ) = payable(_tx.to).call{ value: netWithdrawAmount }("");
 		changeProposalStatus(_fundRunId, _proposalId, 2);
