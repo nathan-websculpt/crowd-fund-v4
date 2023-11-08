@@ -50,6 +50,7 @@ export const SupportProposal = (proposal: SupportProposalProps) => {
   const { data: fundRunNonce } = useScaffoldContractRead({
     contractName: "CrowdFund",
     functionName: "getNonce",
+    args: [proposal.fundRunId]
   });
 
   const supportProposal = async () => {

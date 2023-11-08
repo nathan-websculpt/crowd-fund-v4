@@ -23,7 +23,7 @@ describe("Multisig Test", function () {
     return latestBlock.timestamp;
   };
 
-  const getNonce = async () => (await crowdFund.nonce()).add(1);
+  const getNonce = async (fundRunID: number) => (await crowdFund.getNonce(fundRunID)).add(1);
 
   const getDigest = async (nonce: BigNumber, amount: BigNumber, to: string, proposedBy: string, reason: string) => {
     const tx = { amount, to, proposedBy, reason };
@@ -202,7 +202,7 @@ describe("Multisig Test", function () {
         console.log("John's Address: ", john.address);
         console.log("John has a balance of: ", formatEther(johnFirstBalance));
 
-        const nonce = await getNonce();
+        const nonce = await getNonce(fundRunID);
         console.log("\n\nNONCE: ", nonce.toString());
         const digest = await getDigest(nonce, transferAmount, john.address, alice.address, reason);
 
@@ -255,7 +255,7 @@ describe("Multisig Test", function () {
         const bobExpectedBalance = await bobFirstBalance.add(transferAmount);
         console.log("Bob has a balance of: ", formatEther(bobFirstBalance));
 
-        const nonce = await getNonce();
+        const nonce = await getNonce(fundRunID);
         console.log("\n\nNONCE: ", nonce.toString());
         const digest = await getDigest(nonce, transferAmount, bob.address, john.address, reason);
 
@@ -308,7 +308,7 @@ describe("Multisig Test", function () {
         const bobExpectedBalance = await bobFirstBalance.add(transferAmount);
         console.log("Bob has a balance of: ", formatEther(bobFirstBalance));
 
-        const nonce = await getNonce();
+        const nonce = await getNonce(fundRunID);
         console.log("\n\nNONCE: ", nonce.toString());
         const digest = await getDigest(nonce, transferAmount, bob.address, chandler.address, reason);
 
@@ -369,7 +369,7 @@ describe("Multisig Test", function () {
         const aliceExpectedBalance = await aliceFirstBalance.add(transferAmount);
         console.log("Alice has a balance of: ", formatEther(aliceFirstBalance));
 
-        const nonce = await getNonce();
+        const nonce = await getNonce(fundRunID);
         console.log("\n\nNONCE: ", nonce.toString());
         const digest = await getDigest(nonce, transferAmount, alice.address, ross.address, reason);
 
@@ -417,8 +417,3 @@ describe("Multisig Test", function () {
     });
   });
 });
-
-//TODO:
-//users log reason for proposals
-//test locking vault
-//reentrancy

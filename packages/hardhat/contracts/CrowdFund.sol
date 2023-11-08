@@ -74,11 +74,11 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 	mapping(uint16 => bytes[]) public signatureList;
 	mapping(uint256 => FundRun) public fundRuns;
 	mapping(address => DonorsLog) public donorLogs; //a single donor will have all of their logs (across all Fund Runs they donated to) here
+	mapping(uint16 => uint256) public vaultNonces; //fundRunId => Nonce
 
 	uint16 public numberOfFundRuns = 0;
 	uint16 public numberOfMultisigProposals = 0;
 	uint256 public totalProfitsTaken = 0;
-	uint256 public nonce;
 	address[] public fundRunOwners;
 
 	uint16 private constant crowdFundCommission = 25; //.25%
@@ -537,7 +537,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		bytes[] storage _signatures,
 		uint16 _fundRunId
 	) private {
-		require(_nonce > nonce, "nonce already used");
+		require(_nonce > vaultNonces[_fundRunId], "nonce already used");
 		uint256 signaturesCount = _signatures.length;
 		require(
 			signaturesCount == fundRuns[_fundRunId].owners.length,
@@ -559,7 +559,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 			);
 			initialSigner = signer;
 		}
-		nonce = _nonce;
+		vaultNonces[_fundRunId] = _nonce;
 	}
 
 	function _processMultisigRequest(
@@ -707,7 +707,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		return false;
 	}
 
-	function getNonce() public view returns (uint256) {
-		return nonce;
+	function getNonce(uint16 _fundRunId) public view returns (uint256) {
+		return vaultNonces[_fundRunId];
 	}
 }

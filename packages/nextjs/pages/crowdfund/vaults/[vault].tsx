@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { useRouter } from "next/router";
 import { NextPage } from "next";
+import { Spinner } from "~~/components/Spinner";
 import { CreateProposal } from "~~/components/crowdfund/proposals/CreateProposal";
 import { ListProposals } from "~~/components/crowdfund/proposals/ListProposals";
 import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
@@ -29,7 +30,9 @@ const VaultPage: NextPage = () => {
         </>
       ) : (
         <>
-          <h1>No Fund Run Vault available</h1>
+          <div className="flex flex-col gap-2 p-2 m-4 mx-auto border shadow-xl border-base-300 bg-base-200 sm:rounded-lg">
+            <Spinner width="150px" height="150px" />
+          </div>
         </>
       )}
     </>

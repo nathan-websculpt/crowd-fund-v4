@@ -49,6 +49,7 @@ export const CreateProposal = (proposal: CreateProposalProps) => {
   const { data: fundRunNonce } = useScaffoldContractRead({
     contractName: "CrowdFund",
     functionName: "getNonce",
+    args: [proposal.fundRunId],
   });
 
   const signNewProposal = async () => {
@@ -84,6 +85,11 @@ export const CreateProposal = (proposal: CreateProposalProps) => {
     <>
       <div className="flex flex-col gap-2 sm:gap-5">
         <h1>Create a New Proposal</h1>
+        <h4 className="text-lg">
+          Note: You have to handle proposals in order. If one proposal is not finalized before another is
+          created, the nonce will be off (for the unfinished proposal); however, each of these vaults has its own nonce, so they do not interfere with
+          each other.
+        </h4>
         <label className="text-lg font-bold">To Address</label>
         <input
           type="text"

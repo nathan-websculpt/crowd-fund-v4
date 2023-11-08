@@ -46,6 +46,7 @@ export const FinalizeProposal = (proposal: FinalizeProposalProps) => {
   const { data: fundRunNonce } = useScaffoldContractRead({
     contractName: "CrowdFund",
     functionName: "getNonce",
+    args: [proposal.fundRunId]
   });
 
   const finishProposal = () => {
