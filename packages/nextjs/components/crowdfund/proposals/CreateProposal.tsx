@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { useEffect, useState } from "react";
 import { SignMessageReturnType, parseEther, toBytes } from "viem";
 import { useAccount, useWalletClient } from "wagmi";

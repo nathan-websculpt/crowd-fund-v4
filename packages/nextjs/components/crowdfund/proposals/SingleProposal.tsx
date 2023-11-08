@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { FinalizeProposal } from "./FinalizeProposal";
 import { RevokeProposal } from "./RevokeProposal";
 import { SupportProposal } from "./SupportProposal";
@@ -46,7 +45,9 @@ export const SingleProposal = (proposal: DisplayProposalProps) => {
               proposedBy={proposal.proposedBy}
               reason={proposal.reason}
             />
-          ):<td className="w-1/12 md:py-4"></td>}
+          ) : (
+            <td className="w-1/12 md:py-4"></td>
+          )}
 
           <RevokeProposal fundRunId={proposal.fundRunId} proposalId={proposal.proposalId} />
         </>

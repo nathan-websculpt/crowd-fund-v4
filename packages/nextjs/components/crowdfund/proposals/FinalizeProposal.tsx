@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { useEffect, useState } from "react";
 import { formatEther } from "viem";
 import getNonce from "~~/helpers/getNonce";
@@ -22,7 +21,7 @@ export const FinalizeProposal = (proposal: FinalizeProposalProps) => {
       writeAsync();
     }
   }, [nonce]);
-  
+
   useScaffoldEventSubscriber({
     contractName: "CrowdFund",
     eventName: "MultisigTransferCompleted",
@@ -46,7 +45,7 @@ export const FinalizeProposal = (proposal: FinalizeProposalProps) => {
   const { data: fundRunNonce } = useScaffoldContractRead({
     contractName: "CrowdFund",
     functionName: "getNonce",
-    args: [proposal.fundRunId]
+    args: [proposal.fundRunId],
   });
 
   const finishProposal = () => {

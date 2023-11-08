@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { useEffect, useState } from "react";
 import { SignMessageReturnType, toBytes } from "viem";
 import { useWalletClient } from "wagmi";
@@ -50,7 +49,7 @@ export const SupportProposal = (proposal: SupportProposalProps) => {
   const { data: fundRunNonce } = useScaffoldContractRead({
     contractName: "CrowdFund",
     functionName: "getNonce",
-    args: [proposal.fundRunId]
+    args: [proposal.fundRunId],
   });
 
   const supportProposal = async () => {

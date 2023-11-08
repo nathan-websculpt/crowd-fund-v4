@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { SingleProposal } from "./SingleProposal";
 import { Spinner } from "~~/components/Spinner";
 import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
@@ -30,11 +29,11 @@ export const ListProposals = (frVault: ListProposalProps) => {
               <div className="w-24 h-6 ml-4 bg-secondary"></div>
             </div>
             <div className="flex items-center justified-center">
-            <p>🤝 - Supported</p>
+              <p>🤝 - Supported</p>
               <div className="w-24 h-6 ml-4 bg-accent"></div>
             </div>
             <div className="flex items-center justified-center">
-            <p>✅ - Tx Sent</p>
+              <p>✅ - Tx Sent</p>
               <div className="w-24 h-6 ml-4 bg-neutral"></div>
             </div>
             <table className="table w-full text-xl bg-base-100 md:table-md table-sm">

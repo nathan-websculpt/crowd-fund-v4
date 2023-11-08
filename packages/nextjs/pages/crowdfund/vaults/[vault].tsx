@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { useRouter } from "next/router";
 import { NextPage } from "next";
 import { Spinner } from "~~/components/Spinner";
