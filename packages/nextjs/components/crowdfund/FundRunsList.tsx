@@ -1,4 +1,5 @@
 import Link from "next/link";
+import router from "next/router";
 import { Spinner } from "../Spinner";
 import { FundRun } from "./FundRun";
 import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
@@ -32,13 +33,23 @@ export const FundRunsList = () => {
               amountWithdrawn={fund.amountWithdrawn}
               isActive={fund.isActive}
             />
+            <div className="flex justify-between">
+              <div>
+                {fund.owners.length > 1 && (
+                  <button className="btn btn-primary" onClick={() => router.push(`/crowdfund/vaults/${fund.id}`)}>
+                    View Vault
+                  </button>
+                )}
+              </div>
 
-            <div className="justify-end card-actions">
-              <Link href={`/crowdfund/${fund.id}`} passHref className="link">
-                <div className="tooltip tooltip-primary" data-tip="donate...">
-                  <button className="btn btn-primary">View Fund Run</button>
-                </div>
-              </Link>
+              <div>
+                <Link href={`/crowdfund/${fund.id}`} passHref className="link">
+                  <div className="tooltip tooltip-primary" data-tip="donate...">
+                    <button className="btn btn-primary">View Fund Run</button>
+                  </div>
+                </Link>
+                {/* todo: Link vs. router.push ??? */}
+              </div>
             </div>
           </div>
         ))}

@@ -19,7 +19,6 @@ export const FinalizeProposal = (proposal: FinalizeProposalProps) => {
 
   useEffect(() => {
     if (nonce !== undefined) {
-      console.log("FINALIZING");
       writeAsync();
     }
   }, [nonce]);

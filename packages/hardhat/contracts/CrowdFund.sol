@@ -285,8 +285,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		ownsThisFundRun(_fundRunId, msg.sender, true)
 		createdProposal(_proposalId, _fundRunId, msg.sender, false)
 	{
-		if (vaults[_fundRunId][_proposalId].status != ProposalStatus(1))
-			vaults[_fundRunId][_proposalId].status = ProposalStatus(1);
+		changeProposalStatus(_fundRunId, _proposalId, 1);
 		signatureList[_proposalId].push(_signature);
 		emit ProposalSupported(msg.sender, _fundRunId, _proposalId);
 	}
@@ -602,7 +601,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		if (fundRun.isActive) fundRun.isActive = false;
 
 		(bool success, ) = payable(_tx.to).call{ value: netWithdrawAmount }("");
-		vaults[_fundRunId][_proposalId].status = ProposalStatus(2);
+		changeProposalStatus(_fundRunId, _proposalId, 2);
 
 		require(success, "Transfer not fulfilled");
 
@@ -612,6 +611,20 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 			_tx.to,
 			netWithdrawAmount
 		);
+	}
+
+	function changeProposalStatus(
+		uint16 _fundRunId,
+		uint16 _proposalId,
+		uint16 _newStatus
+	) private {
+		for (uint16 i = 0; i < vaults[_fundRunId].length; i++) {
+			if (vaults[_fundRunId][i].proposalId == _proposalId) {
+				if (vaults[_fundRunId][i].status != ProposalStatus(_newStatus))
+					vaults[_fundRunId][i].status = ProposalStatus(_newStatus);
+				break;
+			}
+		}
 	}
 
 	/**

@@ -25,7 +25,6 @@ export const SupportProposal = (proposal: SupportProposalProps) => {
 
   useEffect(() => {
     if (supportSignature !== undefined) {
-      console.log("Calling writeAsync()...");
       writeAsync();
     }
   }, [supportSignature]);
@@ -55,15 +54,12 @@ export const SupportProposal = (proposal: SupportProposalProps) => {
 
   const supportProposal = async () => {
     const nonce = getNonce(fundRunNonce);
-    console.log("nonce: ", nonce);
     const digest = await getDigest(nonce, proposal.amount, proposal.to, proposal.proposedBy, proposal.reason);
 
     const proposalSupportSig: any = await walletClient?.signMessage({
       account: walletClient.account,
       message: { raw: toBytes(digest) },
     });
-    console.log(proposalSupportSig);
-
     setSupportSignature(proposalSupportSig);
   };
   const { writeAsync, isLoading } = useScaffoldContractWrite({
@@ -77,7 +73,7 @@ export const SupportProposal = (proposal: SupportProposalProps) => {
 
   return (
     <>
-      <td className="w-1/12 md:py-4 text-center">
+      <td className="w-1/12 text-center md:py-4">
         <div className="tooltip tooltip-primary tooltip-right" data-tip="Support this proposal before finalizing.">
           <button className="w-full btn" onClick={() => supportProposal()}>
             Support

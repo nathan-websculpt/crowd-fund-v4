@@ -17,13 +17,12 @@ export const CreateFund = () => {
   const [errorMsg, setErrorMsg] = useState("");
   const [isMultiSigSelected, setIsMultiSigSelected] = useState(false);
   const [walletCount, setWalletCount] = useState(1);
-  const [additionalAddressOne, setAdditionalAddressOne] = useState("0x24C54f3255C7904e9cE835C055618b0C02650b89");
+  const [additionalAddressOne, setAdditionalAddressOne] = useState("0xF9784aC0d78915827ba1B3D908c01b55f5039E28");
   const [additionalAddressTwo, setAdditionalAddressTwo] = useState("");
   const [ownersList, setOwnersList] = useState<string[]>([]);
 
   useEffect(() => {
     if (ownersList.length > 0) {
-      console.log("Calling writeAsync()...");
       writeAsync();
     }
   }, [ownersList]);
@@ -55,9 +54,6 @@ export const CreateFund = () => {
     args: [titleInput, descInput, targetInput, deadlineInput, ownersList],
     onBlockConfirmation: txnReceipt => {
       console.log("📦 Transaction blockHash", txnReceipt.blockHash);
-      if (txnReceipt.status === "success") {
-        console.log(txnReceipt);
-      }
     },
   });
 

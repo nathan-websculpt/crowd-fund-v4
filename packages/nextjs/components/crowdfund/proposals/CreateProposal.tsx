@@ -16,7 +16,7 @@ interface CreateProposalProps {
 export const CreateProposal = (proposal: CreateProposalProps) => {
   const userAddress = useAccount();
   const [transferInput, setTransferInput] = useState("0.1");
-  const [toAddressInput, setToAddressInput] = useState("0xcE62856Bc18E3d0f202e0f13C0B178026B94626F");
+  const [toAddressInput, setToAddressInput] = useState("0xd6119D0a6aaFE3a2aDF7733523126CF73C1C073C");
   const [reasonInput, setReasonInput] = useState("test proposal");
   const [creationSignature, setCreationSignature] = useState<SignMessageReturnType>();
 
@@ -24,7 +24,6 @@ export const CreateProposal = (proposal: CreateProposalProps) => {
 
   useEffect(() => {
     if (creationSignature !== undefined) {
-      console.log("Calling writeAsync()...");
       writeAsync();
     }
   }, [creationSignature]);
@@ -54,15 +53,12 @@ export const CreateProposal = (proposal: CreateProposalProps) => {
 
   const signNewProposal = async () => {
     const nonce = getNonce(fundRunNonce);
-    console.log("nonce: ", nonce);
     const digest = await getDigest(nonce, parseEther(transferInput), toAddressInput, userAddress.address, reasonInput);
 
     const proposalCreationSig: any = await walletClient?.signMessage({
       account: walletClient.account,
       message: { raw: toBytes(digest) },
     });
-    console.log(proposalCreationSig);
-
     setCreationSignature(proposalCreationSig);
   };
 

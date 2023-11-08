@@ -8,6 +8,7 @@ import { DonorWithdrawBtn } from "~~/components/crowdfund/DonorWithdrawBtn";
 import { FundRun } from "~~/components/crowdfund/FundRun";
 import { OwnerWithdrawBtn } from "~~/components/crowdfund/OwnerWithdrawBtn";
 import { useScaffoldContractRead, useScaffoldContractWrite, useScaffoldEventSubscriber } from "~~/hooks/scaffold-eth";
+import { formatEther } from "viem";
 
 const FundRunPage: NextPage = () => {
   const router = useRouter();
@@ -26,7 +27,7 @@ const FundRunPage: NextPage = () => {
           "\nDonor: ",
           donor,
           "\nDonation amount: ",
-          amount,
+          formatEther(amount),
         );
       });
     },

@@ -11,7 +11,6 @@ const getDigest = async (nonce: bigint, amount: bigint, to: string, proposedBy: 
   console.log("getDigest amount: ", amount.toString());
   console.log("getDigest to: ", to);
   console.log("getDigest proposedBy: ", proposedBy);
-  console.log("getDigest reason: ", reason);
 
   //TODO: get from 
   //     nextjs\generated\deployedcontracts.ts
@@ -66,7 +65,6 @@ const getDigest = async (nonce: bigint, amount: bigint, to: string, proposedBy: 
   const encodedWithNonce = encodePacked(["bytes", "uint256"], [encoded, nonce]);
 
   const digest = keccak256(encodedWithNonce);
-  console.log("digest", digest);
   return digest;
 };
 
