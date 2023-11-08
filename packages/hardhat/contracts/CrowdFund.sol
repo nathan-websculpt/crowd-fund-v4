@@ -33,7 +33,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		uint256 amountWithdrawn;
 		address[] donors;
 		uint256[] donations;
-		bool isActive;
+		FundRunStatus status;
 	}
 
 	/**
@@ -66,6 +66,13 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		Created,
 		Supported,
 		TxSent
+	}
+
+	enum FundRunStatus {
+		Created, 					//failure
+		DeadlineMetMoneyGoalNotMet, //failure
+		MoneyGoalMetDeadlineNotMet, //(soon-to-be) success
+		FullSuccess					//success
 	}
 
 	//      fr_Id
@@ -370,7 +377,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		fundRun.deadline = fundRunDeadline;
 		fundRun.amountCollected = 0;
 		fundRun.amountWithdrawn = 0;
-		fundRun.isActive = true;
+		fundRun.status = FundRunStatus(0);
 
 		fundRunOwners.push(msg.sender); //todo: rename to fundRunCreators???
 		numberOfFundRuns++;
@@ -411,6 +418,9 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		donorLog.donorMoneyLog[fundRun.id] = amount + previouslyDonated;
 		uint256 newAmountCollected = fundRun.amountCollected + amount;
 		fundRun.amountCollected = newAmountCollected;
+
+		if(fundRun.amountCollected >= fundRun.target && fundRun.status != FundRunStatus(2))
+			fundRun.status = FundRunStatus(2);
 
 		emit DonationOccurred(fundRun.owners, msg.sender, amount);
 	}
@@ -461,7 +471,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		//update profit amount
 		commissionPayout = commissionPayout + fundsMinusCommission;
 
-		if (fundRun.isActive) fundRun.isActive = false;
+		if (fundRun.status != FundRunStatus(3)) fundRun.status = FundRunStatus(3);
 
 		(bool success, ) = payable(msg.sender).call{ value: netWithdrawAmount }(
 			""
@@ -500,7 +510,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 
 		donorLog.donorMoneyLog[fundRun.id] = 0;
 
-		if (fundRun.isActive) fundRun.isActive = false;
+		if (fundRun.status != FundRunStatus(1)) fundRun.status = FundRunStatus(1);
 		fundRun.amountWithdrawn = fundRun.amountWithdrawn + amountToWithdraw;
 
 		(bool success, ) = payable(msg.sender).call{ value: amountToWithdraw }(
@@ -599,8 +609,8 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		fundRun.amountWithdrawn = fundRun.amountWithdrawn + _tx.amount;
 		//update profit amount
 		commissionPayout = commissionPayout + fundsMinusCommission;
-
-		if (fundRun.isActive) fundRun.isActive = false;
+		
+		if (fundRun.status != FundRunStatus(3)) fundRun.status = FundRunStatus(3);
 
 		(bool success, ) = payable(_tx.to).call{ value: netWithdrawAmount }("");
 		changeProposalStatus(_fundRunId, _proposalId, 2);

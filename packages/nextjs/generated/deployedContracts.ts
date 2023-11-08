@@ -5,7 +5,7 @@ const contracts = {
       name: "localhost",
       contracts: {
         CrowdFund: {
-          address: "0xc5a5C42992dECbae36851359345FE25997F5C42d",
+          address: "0x1613beB3B2C4f22Ee086B2b38C1476A3cE7f78E8",
           abi: [
             {
               inputs: [
@@ -476,9 +476,9 @@ const contracts = {
                   type: "uint256",
                 },
                 {
-                  internalType: "bool",
-                  name: "isActive",
-                  type: "bool",
+                  internalType: "enum CrowdFund.FundRunStatus",
+                  name: "status",
+                  type: "uint8",
                 },
               ],
               stateMutability: "view",
@@ -584,9 +584,9 @@ const contracts = {
                       type: "uint256[]",
                     },
                     {
-                      internalType: "bool",
-                      name: "isActive",
-                      type: "bool",
+                      internalType: "enum CrowdFund.FundRunStatus",
+                      name: "status",
+                      type: "uint8",
                     },
                   ],
                   internalType: "struct CrowdFund.FundRun",
@@ -654,9 +654,9 @@ const contracts = {
                       type: "uint256[]",
                     },
                     {
-                      internalType: "bool",
-                      name: "isActive",
-                      type: "bool",
+                      internalType: "enum CrowdFund.FundRunStatus",
+                      name: "status",
+                      type: "uint8",
                     },
                   ],
                   internalType: "struct CrowdFund.FundRun[]",

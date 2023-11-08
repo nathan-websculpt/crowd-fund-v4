@@ -82,7 +82,7 @@ const FundRunPage: NextPage = () => {
                   deadline={fundRunSingle.deadline.toString()}
                   amountCollected={fundRunSingle.amountCollected}
                   amountWithdrawn={fundRunSingle.amountWithdrawn}
-                  isActive={fundRunSingle.isActive}
+                  status={fundRunSingle.status}
                 />
 
                 <div className="tooltip tooltip-primary" data-tip="Donation Amount in Ether ... like '0.1' or '1'">

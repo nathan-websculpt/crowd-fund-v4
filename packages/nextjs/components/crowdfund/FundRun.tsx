@@ -1,5 +1,5 @@
+import { FundRunStatus } from "./FundRunStatus";
 import { formatEther } from "viem";
-import { LockClosedIcon, LockOpenIcon } from "@heroicons/react/24/outline";
 
 interface DisplayFundRunProps {
   title: string;
@@ -8,7 +8,7 @@ interface DisplayFundRunProps {
   deadline: string;
   amountCollected: bigint;
   amountWithdrawn: bigint;
-  isActive: boolean;
+  status: number;
 }
 
 export const FundRun = (fund: DisplayFundRunProps) => {
@@ -39,17 +39,7 @@ export const FundRun = (fund: DisplayFundRunProps) => {
           <p className="break-all text-md">{formatEther(fund.amountWithdrawn)}</p>
         </div>
 
-        <div className="flex flex-col p-2">
-          {fund.isActive ? (
-            <div className="tooltip tooltip-primary" data-tip="This fund is still open.">
-              <LockOpenIcon className="float-right w-6 h-6" />
-            </div>
-          ) : (
-            <div className="tooltip tooltip-primary" data-tip="SORRY! This fund is closed.">
-              <LockClosedIcon className="float-right w-6 h-6" />
-            </div>
-          )}
-        </div>
+        <FundRunStatus status={fund.status} />
       </div>
     </>
   );
