@@ -5,6 +5,8 @@ import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 import "../node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import { ECDSA } from "../node_modules/@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
+///TODO: stay under 24.576 KB
+
 /**
  * @dev NOT PRODUCTION-READY ... FOR LEARNING PURPOSES ONLY
  * In progress, may break, check out V1 instead: https://github.com/nathan-websculpt/crowd-fund
