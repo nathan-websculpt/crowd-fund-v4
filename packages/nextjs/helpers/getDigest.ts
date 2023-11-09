@@ -1,24 +1,17 @@
-/* eslint-disable prettier/prettier */
 // gets digest for a multisig proposal (CreateProposal.tsx and SupportProposal.tsx)
 import { encodeAbiParameters, encodePacked, keccak256 } from "viem";
-
-// ethers _> viem
-// arrayify becomes: toBytes
-// abiCoder.encode becomes: encodeAbiParameters
-// solidityPack becomes: encodePacked
 
 const getDigest = async (nonce: bigint, amount: bigint, to: string, proposedBy: string, reason: string) => {
   console.log("getDigest amount: ", amount.toString());
   console.log("getDigest to: ", to);
   console.log("getDigest proposedBy: ", proposedBy);
 
-  //TODO: get from 
+  //TODO: get from
   //     nextjs\generated\deployedcontracts.ts
-  // ... not sure where this abi snippet should come from? 
+  // ... not sure where this abi snippet should come from?
   // ... the only way this worked was this way (wasn't needed when using Ethers)
   const abi_struct = [
     {
-      //name: "staticStruct",
       inputs: [
         {
           components: [
@@ -51,19 +44,15 @@ const getDigest = async (nonce: bigint, amount: bigint, to: string, proposedBy: 
     },
   ];
 
-  const encoded = encodeAbiParameters(
-    abi_struct[0].inputs, 
-    [
-      {
-        amount: amount,
-        to: to,
-        proposedBy: proposedBy,
-        reason: reason,
-      },
+  const encoded = encodeAbiParameters(abi_struct[0].inputs, [
+    {
+      amount: amount,
+      to: to,
+      proposedBy: proposedBy,
+      reason: reason,
+    },
   ]);
-
   const encodedWithNonce = encodePacked(["bytes", "uint256"], [encoded, nonce]);
-
   const digest = keccak256(encodedWithNonce);
   return digest;
 };

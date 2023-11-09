@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useRouter } from "next/router";
+import Link from "next/link";
 import { DonorWithdrawBtn } from "./DonorWithdrawBtn";
 import { OwnerWithdrawBtn } from "./OwnerWithdrawBtn";
 import { formatEther } from "viem";
@@ -11,7 +11,6 @@ interface FundRunProps {
 }
 
 export const FundRunDonate = (fundRun: FundRunProps) => {
-  const router = useRouter();
   const [donationInput, setDonationInput] = useState("");
 
   useScaffoldEventSubscriber({
@@ -47,7 +46,6 @@ export const FundRunDonate = (fundRun: FundRunProps) => {
       alert("Please input a donation amount.");
       return;
     }
-
     writeAsync();
   };
 
@@ -72,12 +70,11 @@ export const FundRunDonate = (fundRun: FundRunProps) => {
         {fundRun.owners.length === 1 ? (
           <OwnerWithdrawBtn fundRunId={fundRun.id} />
         ) : (
-          <button
-            className="w-10/12 mx-auto md:w-3/5 btn btn-primary"
-            onClick={() => router.push(`/crowdfund/vaults/${fundRun.id}`)}
-          >
-            View Vault
-          </button>
+          <Link href={`/crowdfund/vaults/${fundRun.id}`} passHref className="link">
+            <div className="tooltip tooltip-primary" data-tip="View Proposals in the Vault">
+              <button className="w-10/12 mx-auto md:w-3/5 btn btn-primary">View Vault</button>
+            </div>
+          </Link>
         )}
         <DonorWithdrawBtn fundRunId={fundRun.id} />
       </div>
