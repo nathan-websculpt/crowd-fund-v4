@@ -9,7 +9,6 @@ import { ECDSA } from "../node_modules/@openzeppelin/contracts/utils/cryptograph
 
 /**
  * @dev NOT PRODUCTION-READY ... FOR LEARNING PURPOSES ONLY
- * In progress, may break, check out V1 instead: https://github.com/nathan-websculpt/crowd-fund
  * CrowdFund.sol is a POC Multisig "Crowd Fund Creator"
  * known issues/enhancements saved for V2 --
  * - Fund Runs that receive 0 donations will never be de-activated
