@@ -131,10 +131,10 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 	modifier ownsThisFundRun(
 		uint16 id,
 		address sender,
-		bool senderOwnsThisFundRun
+		bool mustOwnThisFundRun
 	) {
 		FundRun storage fundRun = fundRuns[id];
-		if (senderOwnsThisFundRun) {
+		if (mustOwnThisFundRun) {
 			require(
 				isOwnerOfFundRun(sender, id),
 				"You are not the owner of this Fund Run."
@@ -148,9 +148,9 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		_;
 	}
 
-	modifier fundRunCompleted(uint16 id, bool fundRunHasCompleted) {
+	modifier fundRunCompleted(uint16 id, bool mustBeCompleted) {
 		FundRun storage fundRun = fundRuns[id];
-		if (fundRunHasCompleted) {
+		if (mustBeCompleted) {
 			require(
 				fundRun.deadline < block.timestamp,
 				"This Fund Run is not complete."
@@ -164,9 +164,9 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		_;
 	}
 
-	modifier fundRunSucceeded(uint16 id, bool fundRunHasSucceeded) {
+	modifier fundRunSucceeded(uint16 id, bool mustHaveSucceeded) {
 		FundRun storage fundRun = fundRuns[id];
-		if (fundRunHasSucceeded) {
+		if (mustHaveSucceeded) {
 			require(
 				fundRun.amountCollected >= fundRun.target,
 				"This Fund Run has not yet met its monetary goal."
