@@ -2,7 +2,7 @@ import { formatEther } from "viem";
 import { useScaffoldContractWrite, useScaffoldEventSubscriber } from "~~/hooks/scaffold-eth";
 
 interface OwnerProps {
-  id: number;
+  fundRunId: number;
 }
 
 export const OwnerWithdrawBtn = (owner: OwnerProps) => {
@@ -25,7 +25,7 @@ export const OwnerWithdrawBtn = (owner: OwnerProps) => {
   const { writeAsync, isLoading } = useScaffoldContractWrite({
     contractName: "CrowdFund",
     functionName: "fundRunOwnerWithdraw",
-    args: [owner.id],
+    args: [owner.fundRunId],
     onBlockConfirmation: txnReceipt => {
       console.log("📦 Transaction blockHash", txnReceipt.blockHash);
     },

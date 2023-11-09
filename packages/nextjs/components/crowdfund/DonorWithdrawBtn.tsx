@@ -1,7 +1,7 @@
 import { useScaffoldContractWrite, useScaffoldEventSubscriber } from "~~/hooks/scaffold-eth";
 
 interface OwnerProps {
-  id: number;
+  fundRunId: number;
 }
 
 export const DonorWithdrawBtn = (owner: OwnerProps) => {
@@ -26,7 +26,7 @@ export const DonorWithdrawBtn = (owner: OwnerProps) => {
   const { writeAsync, isLoading } = useScaffoldContractWrite({
     contractName: "CrowdFund",
     functionName: "fundRunDonorWithdraw",
-    args: [owner.id],
+    args: [owner.fundRunId],
     onBlockConfirmation: txnReceipt => {
       console.log("📦 Transaction blockHash", txnReceipt.blockHash);
     },

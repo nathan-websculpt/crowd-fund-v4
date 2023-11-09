@@ -1,7 +1,7 @@
 import Link from "next/link";
 import router from "next/router";
 import { Spinner } from "../Spinner";
-import { FundRun } from "./FundRun";
+import { FundRunDisplay } from "./FundRunDisplay";
 import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
 
 export const FundRunsList = () => {
@@ -24,7 +24,7 @@ export const FundRunsList = () => {
             key={fund.id.toString()}
             className="flex flex-col gap-2 p-2 m-4 border shadow-xl border-base-300 bg-base-200 sm:rounded-lg"
           >
-            <FundRun
+            <FundRunDisplay
               title={fund.title}
               description={fund.description}
               target={fund.target}

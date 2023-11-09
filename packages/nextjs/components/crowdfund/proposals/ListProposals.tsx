@@ -3,8 +3,9 @@ import { Spinner } from "~~/components/Spinner";
 import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
 
 interface ListProposalProps {
-  fundRunId: number; //fundrun
+  fundRunId: number;
 }
+
 export const ListProposals = (frVault: ListProposalProps) => {
   const { data: vaultProposals, isLoading: isListLoading } = useScaffoldContractRead({
     contractName: "CrowdFund",

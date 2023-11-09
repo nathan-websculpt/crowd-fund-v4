@@ -5,9 +5,6 @@ import getDigest from "~~/helpers/getDigest";
 import getNonce from "~~/helpers/getNonce";
 import { useScaffoldContractRead, useScaffoldContractWrite, useScaffoldEventSubscriber } from "~~/hooks/scaffold-eth";
 
-// ethers _> viem
-// arrayify becomes: toBytes
-
 interface SupportProposalProps {
   fundRunId: number;
   proposalId: number;
@@ -62,6 +59,7 @@ export const SupportProposal = (proposal: SupportProposalProps) => {
     });
     setSupportSignature(proposalSupportSig);
   };
+
   const { writeAsync, isLoading } = useScaffoldContractWrite({
     contractName: "CrowdFund",
     functionName: "supportMultisigProposal",
@@ -75,8 +73,8 @@ export const SupportProposal = (proposal: SupportProposalProps) => {
     <>
       <td className="w-1/12 text-center md:py-4">
         <div className="tooltip tooltip-primary tooltip-right" data-tip="Support this proposal before finalizing.">
-          <button className="w-full btn" onClick={() => supportProposal()}>
-            Support
+          <button className="w-full btn" onClick={() => supportProposal()} disabled={isLoading}>
+            {isLoading ? <span className="loading loading-spinner loading-sm"></span> : <>Support</>}
           </button>
         </div>
       </td>

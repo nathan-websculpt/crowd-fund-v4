@@ -5,11 +5,8 @@ import getDigest from "~~/helpers/getDigest";
 import getNonce from "~~/helpers/getNonce";
 import { useScaffoldContractRead, useScaffoldContractWrite, useScaffoldEventSubscriber } from "~~/hooks/scaffold-eth";
 
-// ethers _> viem
-// arrayify becomes: toBytes
-
 interface CreateProposalProps {
-  fundRunId: number; //todo:
+  fundRunId: number;
 }
 
 export const CreateProposal = (proposal: CreateProposalProps) => {
@@ -85,9 +82,9 @@ export const CreateProposal = (proposal: CreateProposalProps) => {
       <div className="flex flex-col gap-2 sm:gap-5">
         <h1>Create a New Proposal</h1>
         <h4 className="text-lg">
-          Note: You have to handle proposals in order. If one proposal is not finalized before another is
-          created, the nonce will be off (for the unfinished proposal); however, each of these vaults has its own nonce, so they do not interfere with
-          each other.
+          Note: You have to handle proposals in order. If one proposal is not finalized before another is created, the
+          nonce will be off (for the unfinished proposal); however, each of these vaults has its own nonce, so they do
+          not interfere with each other.
         </h4>
         <label className="text-lg font-bold">To Address</label>
         <input
@@ -120,8 +117,12 @@ export const CreateProposal = (proposal: CreateProposalProps) => {
             />
           </div>
         </div>
-        <button className="w-10/12 mx-auto md:w-3/5 btn btn-primary" onClick={() => signNewProposal()}>
-          Submit Proposal
+        <button
+          className="w-10/12 mx-auto md:w-3/5 btn btn-primary"
+          onClick={() => signNewProposal()}
+          disabled={isLoading}
+        >
+          {isLoading ? <span className="loading loading-spinner loading-sm"></span> : <>Submit Proposal</>}
         </button>
       </div>
     </>

@@ -16,9 +16,9 @@ export const SingleProposal = (proposal: DisplayProposalProps) => {
   return (
     <>
       <td className="w-1/12 md:py-4">
-        {proposal.status == 0 && <>😄</>}
-        {proposal.status == 1 && <>🤝</>}
-        {proposal.status == 2 && <>✅</>}
+        {proposal.status === 0 && <>😄</>}
+        {proposal.status === 1 && <>🤝</>}
+        {proposal.status === 2 && <>✅</>}
       </td>
 
       <td className="w-1/12 md:py-4">{proposal.proposalId.toString()}</td>

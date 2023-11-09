@@ -4,12 +4,12 @@ interface FundRunStatusProps {
   status: number;
 }
 
-export const FundRunStatus = (fund: FundRunStatusProps) => {
+export const FundRunStatus = (fundRun: FundRunStatusProps) => {
   return (
     <>
       {/* deadline not met; money goal not met */}
       <div className="flex flex-col p-2">
-        {fund.status == 0 && (
+        {fundRun.status === 0 && (
           <div>
             <div className="tooltip tooltip-primary" data-tip="This fund is still open.">
               <LockOpenIcon className="float-right w-6 h-6 mx-2" />
@@ -20,7 +20,7 @@ export const FundRunStatus = (fund: FundRunStatusProps) => {
           </div>
         )}
         {/* deadline met; money goal not met */}
-        {fund.status == 1 && (
+        {fundRun.status === 1 && (
           <div>
             <div className="tooltip tooltip-primary" data-tip="This fund is closed.">
               <LockClosedIcon className="float-right w-6 h-6 mx-2" />
@@ -31,7 +31,7 @@ export const FundRunStatus = (fund: FundRunStatusProps) => {
           </div>
         )}
         {/* money goal met; deadline not met */}
-        {fund.status == 2 && (
+        {fundRun.status === 2 && (
           <div>
             <div className="tooltip tooltip-primary" data-tip="This fund is still open.">
               <LockOpenIcon className="float-right w-6 h-6 mx-2" />
@@ -42,7 +42,7 @@ export const FundRunStatus = (fund: FundRunStatusProps) => {
           </div>
         )}
         {/* money goal AND deadline met */}
-        {fund.status == 3 && (
+        {fundRun.status === 3 && (
           <div>
             <div className="tooltip tooltip-primary" data-tip="This fund is closed.">
               <LockClosedIcon className="float-right w-6 h-6 mx-2" />

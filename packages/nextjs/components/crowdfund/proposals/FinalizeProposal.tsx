@@ -66,8 +66,8 @@ export const FinalizeProposal = (proposal: FinalizeProposalProps) => {
     <>
       <td className="w-1/12 text-center md:py-4">
         <div className="tooltip tooltip-primary tooltip-top" data-tip="Done co-signing? Send the transaction.">
-          <button className="w-full btn" onClick={() => finishProposal()}>
-            Finalize
+          <button className="w-full btn" onClick={() => finishProposal()} disabled={isLoading}>
+            {isLoading ? <span className="loading loading-spinner loading-sm"></span> : <>Finalize</>}
           </button>
         </div>
       </td>

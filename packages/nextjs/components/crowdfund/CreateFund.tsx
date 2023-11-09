@@ -42,7 +42,7 @@ export const CreateFund = () => {
           "\n  with a target of: ",
           target,
         );
-        if (owners !== undefined) if (address.address == owners[0]) router.push(`/crowdfund/${id}`);
+        if (owners !== undefined) if (address.address === owners[0]) router.push(`/crowdfund/${id}`);
       });
     },
   });
@@ -193,7 +193,7 @@ export const CreateFund = () => {
                 </div>
               </>
             )}
-            {walletCount === 2 && (
+            {walletCount > 1 && (
               <>
                 <label className="text-lg font-bold">Extra Address One</label>
                 <input
@@ -203,27 +203,18 @@ export const CreateFund = () => {
                   value={additionalAddressOne}
                   onChange={e => setAdditionalAddressOne(e.target.value)}
                 />
-              </>
-            )}
-            {walletCount === 3 && (
-              <>
-                <label className="text-lg font-bold">Extra Address One</label>
-                <input
-                  type="text"
-                  placeholder="First Additional Address"
-                  className="px-3 py-3 border rounded-lg bg-base-200 border-base-300"
-                  value={additionalAddressOne}
-                  onChange={e => setAdditionalAddressOne(e.target.value)}
-                />
-
-                <label className="text-lg font-bold">Extra Address Two</label>
-                <input
-                  type="text"
-                  placeholder="Second Additional Address"
-                  className="px-3 py-3 border rounded-lg bg-base-200 border-base-300"
-                  value={additionalAddressTwo}
-                  onChange={e => setAdditionalAddressTwo(e.target.value)}
-                />
+                {walletCount > 2 && (
+                  <>
+                    <label className="text-lg font-bold">Extra Address Two</label>
+                    <input
+                      type="text"
+                      placeholder="Second Additional Address"
+                      className="px-3 py-3 border rounded-lg bg-base-200 border-base-300"
+                      value={additionalAddressTwo}
+                      onChange={e => setAdditionalAddressTwo(e.target.value)}
+                    />
+                  </>
+                )}
               </>
             )}
             <button

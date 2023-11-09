@@ -12,7 +12,7 @@ const VaultPage: NextPage = () => {
   const { data: fundRunSingle } = useScaffoldContractRead({
     contractName: "CrowdFund",
     functionName: "getFundRun",
-    args: vault, //fundRunId from query //todo: rename?
+    args: vault,
   });
 
   return (
