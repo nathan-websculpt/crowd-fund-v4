@@ -34,6 +34,7 @@ const FundRunPage: NextPage = () => {
             {fundRunSingle ? (
               <div>
                 <FundRunDisplay
+                  id={fundRunSingle.id}
                   title={fundRunSingle.title}
                   description={fundRunSingle.description}
                   target={fundRunSingle.target}

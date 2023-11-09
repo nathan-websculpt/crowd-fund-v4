@@ -1,7 +1,9 @@
+import { UpdateFundRunStatus } from "../UpdateFundRunStatus";
 import { FundRunStatus } from "./FundRunStatus";
 import { formatEther } from "viem";
 
 interface FundRunDisplayProps {
+  id: number;
   title: string;
   description: string;
   target: bigint;
@@ -14,6 +16,8 @@ interface FundRunDisplayProps {
 export const FundRunDisplay = (fundRun: FundRunDisplayProps) => {
   return (
     <>
+      <UpdateFundRunStatus fundRunId={fundRun.id} />
+
       <label className="text-sm font-bold underline">Title</label>
       <p className="text-md">{fundRun.title}</p>
 

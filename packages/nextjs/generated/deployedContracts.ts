@@ -5,7 +5,7 @@ const contracts = {
       name: "localhost",
       contracts: {
         CrowdFund: {
-          address: "0x851356ae760d987E095750cCeb3bC6014560891C",
+          address: "0x8f86403A4DE0BB5791fa46B8e795C547942fE4Cf",
           abi: [
             {
               inputs: [
@@ -982,6 +982,19 @@ const contracts = {
                 },
               ],
               name: "transferOwnership",
+              outputs: [],
+              stateMutability: "nonpayable",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  internalType: "uint16",
+                  name: "_fundRunId",
+                  type: "uint16",
+                },
+              ],
+              name: "updateFundRunStatus",
               outputs: [],
               stateMutability: "nonpayable",
               type: "function",

@@ -24,6 +24,7 @@ export const FundRunsList = () => {
             className="flex flex-col gap-2 p-2 m-4 border shadow-xl border-base-300 bg-base-200 sm:rounded-lg"
           >
             <FundRunDisplay
+              id={fund.id}
               title={fund.title}
               description={fund.description}
               target={fund.target}

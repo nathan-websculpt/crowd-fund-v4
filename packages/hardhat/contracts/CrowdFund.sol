@@ -10,14 +10,10 @@ import { ECDSA } from "../node_modules/@openzeppelin/contracts/utils/cryptograph
 /**
  * @dev NOT PRODUCTION-READY ... FOR LEARNING PURPOSES ONLY
  * CrowdFund.sol is a POC Multisig "Crowd Fund Creator"
- * known issues/enhancements saved for V2 --
- * - Fund Runs that receive 0 donations will never be de-activated
- * - FundRun struct has some bloat, but these values are handy for testing
- * - want an Enum to handle the state a FundRun is in																	[done]
- * - V2 needs CrowdFund.sol to be ownable, with:
- * 		- contract profit-taking (probably 0.25% of each Donation or each Owner Withdrawal)								[done]
- * 		- only owner(s) can take profit																					[done]
- * 		- only owner(s) can clean up de-activated/emptied Fund Runs ... or at least move them into an Archived state
+ * known issues/enhancements saved for V3 --
+ * 
+ * 
+ * 
  */
 contract CrowdFund is Ownable, ReentrancyGuard {
 	struct FundRun {
@@ -77,27 +73,18 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 	mapping(uint16 => MultiSigVault[]) public vaults; //Fund Run's proposals
 	//      proposalId...
 	mapping(uint16 => bytes[]) public signatureList;
+	mapping(uint16 => uint256) public vaultNonces; //fundRunId => Nonce
 	mapping(uint256 => FundRun) public fundRuns;
 	mapping(address => DonorsLog) public donorLogs; //a single donor will have all of their logs (across all Fund Runs they donated to) here
-	mapping(uint16 => uint256) public vaultNonces; //fundRunId => Nonce
 
 	uint16 public numberOfFundRuns = 0;
 	uint16 public numberOfMultisigProposals = 0;
 	uint256 public totalProfitsTaken = 0;
 	address[] public fundRunOwners;
 
+	uint256 private commissionPayout = 0;
 	uint16 private constant crowdFundCommission = 25; //.25%
 	uint16 private constant crowdFundDenominator = 10000;
-	uint256 private commissionPayout = 0;
-
-	/**
-	 * @dev  This ensures that the signature cannot be used for purposes outside of Ethereum:
-	 * https://medium.com/mycrypto/the-magic-of-digital-signatures-on-ethereum-98fe184dc9c7
-	 * The signature can be notated as {r, s, v}
-	 * 32 bytes for r (integar)
-	 * 32 bytes for s (integar)
-	 * 1  byte  for v (ethereum-specific recover identifier)
-	 */
 	string private constant MSG_PREFIX = "\x19Ethereum Signed Message:\n32";
 
 	event FundRunCreated(
@@ -267,7 +254,6 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 
 		signatureList[numberOfMultisigProposals].push(_signature);
 
-		//to see details of proposal in frontend
 		MultiSigVault memory vault = MultiSigVault({
 			proposalId: numberOfMultisigProposals,
 			amount: _tx.amount,
@@ -297,7 +283,9 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		emit ProposalSupported(msg.sender, _fundRunId, _proposalId);
 	}
 
-	//final transfer/call (when all signers are thought to have signed)
+	/**
+	 * @dev  final transfer/call (when all signers are thought to have signed)
+	 */
 	function multisigWithdraw(
 		MultiSigRequest calldata _tx,
 		uint256 _nonce,
@@ -541,6 +529,17 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 
 		require(success, "Withdrawal reverted.");
 		if (success) emit ContractOwnerWithdrawal(msg.sender, amountToWithdraw);
+	}
+
+	function updateFundRunStatus(uint16 _fundRunId) public {
+		FundRun storage fundRun = fundRuns[_fundRunId];
+		if (fundRun.deadline < block.timestamp)
+			if (fundRun.amountCollected < fundRun.target)
+				fundRun.status = FundRunStatus(1);
+			else fundRun.status = FundRunStatus(3);
+		else if (fundRun.amountCollected < fundRun.target)
+			fundRun.status = FundRunStatus(0);
+		else fundRun.status = FundRunStatus(2);
 	}
 
 	function _verifyMultisigRequest(
