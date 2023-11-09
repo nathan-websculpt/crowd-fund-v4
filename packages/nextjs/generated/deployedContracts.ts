@@ -5,7 +5,7 @@ const contracts = {
       name: "localhost",
       contracts: {
         CrowdFund: {
-          address: "0x8f86403A4DE0BB5791fa46B8e795C547942fE4Cf",
+          address: "0x9d4454B023096f34B160D6B654540c56A1F81688",
           abi: [
             {
               inputs: [
@@ -505,30 +505,6 @@ const contracts = {
                   type: "uint16",
                 },
               ],
-              name: "getDonors",
-              outputs: [
-                {
-                  internalType: "address[]",
-                  name: "",
-                  type: "address[]",
-                },
-                {
-                  internalType: "uint256[]",
-                  name: "",
-                  type: "uint256[]",
-                },
-              ],
-              stateMutability: "view",
-              type: "function",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "uint16",
-                  name: "_id",
-                  type: "uint16",
-                },
-              ],
               name: "getFundRun",
               outputs: [
                 {
@@ -690,25 +666,6 @@ const contracts = {
               inputs: [
                 {
                   internalType: "uint16",
-                  name: "_id",
-                  type: "uint16",
-                },
-              ],
-              name: "getOwnersOfFundRun",
-              outputs: [
-                {
-                  internalType: "address[]",
-                  name: "",
-                  type: "address[]",
-                },
-              ],
-              stateMutability: "view",
-              type: "function",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "uint16",
                   name: "_fundRunId",
                   type: "uint16",
                 },
@@ -751,30 +708,6 @@ const contracts = {
                   internalType: "struct CrowdFund.MultiSigVault[]",
                   name: "",
                   type: "tuple[]",
-                },
-              ],
-              stateMutability: "view",
-              type: "function",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "address",
-                  name: "_addr",
-                  type: "address",
-                },
-                {
-                  internalType: "uint16",
-                  name: "_id",
-                  type: "uint16",
-                },
-              ],
-              name: "isOwnerOfFundRun",
-              outputs: [
-                {
-                  internalType: "bool",
-                  name: "",
-                  type: "bool",
                 },
               ],
               stateMutability: "view",

@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 //yarn test ./test/CrowdFundTest.ts
 import { ethers } from "hardhat";
 import { CrowdFund } from "../typechain-types";
@@ -69,15 +68,6 @@ describe("CrowdFund", function () {
 
     const thisFundRun = await crowdFund.getFundRun(fundRunId);
     expect(thisFundRun.amountCollected).to.equal(expectedAmount);
-
-    //Looks at the following arrays on the Fund Run struct: address[] donors; uint256[] donations;
-    const donationsRaw = await crowdFund.getDonors(fundRunId);
-    const donors = donationsRaw[0];
-    const donations = donationsRaw[1];
-    const thisDonor = donors[donors.length - 1]; //donationsRaw[0][LAST_ITEM]
-    const thisDonation = donations[donations.length - 1]; //donationsRaw[1][0][LAST_ITEM]
-    expect(thisDonor).to.equal(walletSigning.address);
-    expect(thisDonation).to.equal(donationAmount);
   };
 
   const getExpectedAmts = (beforeContractCommission: number) => {

@@ -641,13 +641,15 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		}
 	}
 
-	/**
-	 * @dev Returns donor and donation arrays, for a Fund Run
-	 */
-	function getDonors(
+	function isOwnerOfFundRun(
+		address _addr,
 		uint16 _id
-	) public view returns (address[] memory, uint256[] memory) {
-		return (fundRuns[_id].donors, fundRuns[_id].donations);
+	) private view returns (bool) {
+		FundRun storage thisFundRun = fundRuns[_id];
+		for (uint16 i = 0; i < thisFundRun.owners.length; i++) {
+			if (thisFundRun.owners[i] == _addr) return true;
+		}
+		return false;
 	}
 
 	/**
@@ -664,21 +666,11 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 	}
 
 	/**
-	 * @dev Returns list of Proposals (from a Fund Run's Vault) in reverse order (latest-first)
+	 * @dev Returns list of Proposals (from a Fund Run's Vault)
 	 */
 	function getProposals(
 		uint16 _fundRunId
 	) public view returns (MultiSigVault[] memory) {
-		// MultiSigVault[] memory allProposals = new MultiSigVault[](vaults[_fundRunId].length);
-
-		// for (uint16 i = 1; i < vaults[_fundRunId].length + 1; i++) {
-		// 	MultiSigVault storage item = vaults[_fundRunId][i - i];
-		// 	allProposals[i - 1] = item;
-		// }
-		// return allProposals;
-
-		//TODO: A:2
-
 		return vaults[_fundRunId];
 	}
 
@@ -699,24 +691,6 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		returns (uint256 crowdFund_contractBalance)
 	{
 		return address(this).balance;
-	}
-
-	function getOwnersOfFundRun(
-		uint16 _id
-	) public view returns (address[] memory) {
-		FundRun storage fr = fundRuns[_id];
-		return fr.owners;
-	}
-
-	function isOwnerOfFundRun(
-		address _addr,
-		uint16 _id
-	) public view returns (bool) {
-		FundRun storage thisFundRun = fundRuns[_id];
-		for (uint16 i = 0; i < thisFundRun.owners.length; i++) {
-			if (thisFundRun.owners[i] == _addr) return true;
-		}
-		return false;
 	}
 
 	function getNonce(uint16 _fundRunId) public view returns (uint256) {

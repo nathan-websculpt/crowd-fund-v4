@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 //yarn test ./test/MultisigTest.ts
 import { ethers } from "hardhat";
 import { CrowdFund } from "../typechain-types";
