@@ -100,8 +100,8 @@ export const CreateFund = () => {
         <div className="flex items-center justify-center">
           <div className="flex flex-col gap-2 sm:gap-5">
             <div className="flex justify-end mb-5">
-              <Link href="/crowdfund/browse-fund-runs" passHref className="link">
-                <button className="btn btn-sm btn-primary">View Other Fund Runs</button>
+              <Link href="/crowdfund/browse-fund-runs" passHref className="btn btn-sm btn-primary">
+                View Other Fund Runs
               </Link>
               <button className="ml-5 btn btn-sm btn-primary" onClick={() => router.back()}>
                 Back

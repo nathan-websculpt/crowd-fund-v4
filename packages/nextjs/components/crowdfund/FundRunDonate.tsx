@@ -70,9 +70,9 @@ export const FundRunDonate = (fundRun: FundRunProps) => {
         {fundRun.owners.length === 1 ? (
           <OwnerWithdrawBtn fundRunId={fundRun.id} />
         ) : (
-          <Link href={`/crowdfund/vaults/${fundRun.id}`} passHref className="link">
+          <Link href={`/crowdfund/vaults/${fundRun.id}`} passHref className="w-10/12 mx-auto md:w-3/5 btn btn-primary">
             <div className="tooltip tooltip-primary" data-tip="View Proposals in the Vault">
-              <button className="w-10/12 mx-auto md:w-3/5 btn btn-primary">View Vault</button>
+              View Vault
             </div>
           </Link>
         )}

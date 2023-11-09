@@ -29,15 +29,15 @@ export const EntryPoint = () => {
               //entry to dapp
               return (
                 <>
-                  <Link href="/crowdfund/start-fund-run" passHref className="link">
+                  <Link href="/crowdfund/start-fund-run" passHref className="m-2 btn btn-primary">
                     <div className="tooltip tooltip-primary" data-tip="Start your Fund Run today!">
-                      <button className="m-2 btn btn-primary">Start Fund Run</button>
+                      Start Fund Run
                     </div>
                   </Link>
 
-                  <Link href="/crowdfund/browse-fund-runs" passHref className="link">
+                  <Link href="/crowdfund/browse-fund-runs" passHref className="m-2 btn btn-primary">
                     <div className="tooltip tooltip-primary" data-tip="Donate to projects">
-                      <button className="m-2 btn btn-primary">Start Donating</button>
+                      Start Donating
                     </div>
                   </Link>
                 </>
