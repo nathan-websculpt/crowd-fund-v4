@@ -202,7 +202,6 @@ describe("Multisig Test", function () {
         console.log("John has a balance of: ", formatEther(johnFirstBalance));
 
         const nonce = await getNonce(fundRunID);
-        console.log("\n\nNONCE: ", nonce.toString());
         const digest = await getDigest(nonce, transferAmount, john.address, alice.address, reason);
 
         //sign digest; CREATING proposal; then store signature in contract
@@ -255,7 +254,6 @@ describe("Multisig Test", function () {
         console.log("Bob has a balance of: ", formatEther(bobFirstBalance));
 
         const nonce = await getNonce(fundRunID);
-        console.log("\n\nNONCE: ", nonce.toString());
         const digest = await getDigest(nonce, transferAmount, bob.address, john.address, reason);
 
         //sign digest; CREATING proposal; then store signature in contract
@@ -308,7 +306,6 @@ describe("Multisig Test", function () {
         console.log("Bob has a balance of: ", formatEther(bobFirstBalance));
 
         const nonce = await getNonce(fundRunID);
-        console.log("\n\nNONCE: ", nonce.toString());
         const digest = await getDigest(nonce, transferAmount, bob.address, chandler.address, reason);
 
         //sign digest; CREATING proposal; then store signature in contract
@@ -369,7 +366,6 @@ describe("Multisig Test", function () {
         console.log("Alice has a balance of: ", formatEther(aliceFirstBalance));
 
         const nonce = await getNonce(fundRunID);
-        console.log("\n\nNONCE: ", nonce.toString());
         const digest = await getDigest(nonce, transferAmount, alice.address, ross.address, reason);
 
         //sign digest; SUPPORTING proposal; then store signature in contract

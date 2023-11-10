@@ -10,8 +10,10 @@ import { ECDSA } from "../node_modules/@openzeppelin/contracts/utils/cryptograph
 /**
  * @dev NOT PRODUCTION-READY ... FOR LEARNING PURPOSES ONLY
  * CrowdFund.sol is a POC Multisig "Crowd Fund Creator"
- * known issues/enhancements saved for V3 --
- *
+ * Currently saves signatures on the contract, nothing extra for you to set-up
+ * Should be as easy as Fork-and-Test
+ * known issues/enhancements saved for V3:
+ * - probably going to move signatures to subgraph
  *
  *
  */
@@ -86,13 +88,6 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 	uint16 private constant crowdFundDenominator = 10000;
 	string private constant MSG_PREFIX = "\x19Ethereum Signed Message:\n32";
 
-	event FundRunCreated(
-		uint16 id,
-		address[] owners,
-		string title,
-		uint256 target
-	);
-
 	event DonationOccurred(address[] owners, address donor, uint256 amount);
 
 	event FundRunOwnerWithdrawal(address[] owners, uint256 amount);
@@ -100,6 +95,13 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 	event DonorWithdrawal(address[] owners, address donor, uint256 amount);
 
 	event ContractOwnerWithdrawal(address contractOwner, uint256 amount);
+
+	event FundRunCreated(
+		uint16 id,
+		address[] owners,
+		string title,
+		uint256 target
+	);
 
 	event ProposalCreated(
 		address proposedBy,
@@ -528,7 +530,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		);
 
 		require(success, "Withdrawal reverted.");
-		if (success) emit ContractOwnerWithdrawal(msg.sender, amountToWithdraw);
+		emit ContractOwnerWithdrawal(msg.sender, amountToWithdraw);
 	}
 
 	function updateFundRunStatus(uint16 _fundRunId) external {
