@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import { NextPage } from "next";
+import { MetaHeader } from "~~/components/MetaHeader";
 import { Spinner } from "~~/components/Spinner";
 import { CreateProposal } from "~~/components/crowdfund/proposals/CreateProposal";
 import { ListProposals } from "~~/components/crowdfund/proposals/ListProposals";
@@ -17,6 +18,7 @@ const VaultPage: NextPage = () => {
 
   return (
     <>
+      <MetaHeader title="Multisig Vault" />
       {fundRunSingle ? (
         <>
           <div className="px-6 pt-10 pb-8 shadow-xl sm:my-auto bg-secondary sm:mx-auto sm:max-w-11/12 md:w-9/12 sm:rounded-lg sm:px-10">
