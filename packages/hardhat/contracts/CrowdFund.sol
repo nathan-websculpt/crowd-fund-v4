@@ -220,7 +220,10 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 	modifier txNotSent(uint16 _proposalId, uint16 _fundRunId) {
 		for (uint16 i = 0; i < vaults[_fundRunId].length; i++) {
 			if (vaults[_fundRunId][i].proposalId == _proposalId) {
-				require (vaults[_fundRunId][i].status != ProposalStatus(2), "This Multisig Tx has already went through.");
+				require(
+					vaults[_fundRunId][i].status != ProposalStatus(2),
+					"This Multisig Tx has already went through."
+				);
 				_;
 			}
 		}
@@ -344,7 +347,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		uint256 _target,
 		uint16 _deadline,
 		address[] memory _owners
-	) public {
+	) external {
 		uint256 fundRunDeadline = block.timestamp + _deadline * 60;
 		require(
 			fundRunDeadline > block.timestamp,
@@ -382,7 +385,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 	function donateToFundRun(
 		uint16 _id
 	)
-		public
+		external
 		payable
 		ownsThisFundRun(_id, msg.sender, false)
 		fundRunCompleted(_id, false)
@@ -418,7 +421,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 	function fundRunOwnerWithdraw(
 		uint16 _id
 	)
-		public
+		external
 		nonReentrant
 		isMultisig(_id, false)
 		ownsThisFundRun(_id, msg.sender, true)
@@ -474,7 +477,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 	function fundRunDonorWithdraw(
 		uint16 _id
 	)
-		public
+		external
 		nonReentrant
 		ownsThisFundRun(_id, msg.sender, false)
 		fundRunCompleted(_id, true)
@@ -513,7 +516,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 	/**
 	 * @dev  (OnlyOwner can) Withdraw the profits this contract has made
 	 */
-	function contractOwnerWithdraw() public onlyOwner nonReentrant {
+	function contractOwnerWithdraw() external onlyOwner nonReentrant {
 		require(commissionPayout > 0, "Nothing to withdraw");
 
 		uint256 amountToWithdraw = commissionPayout;
@@ -528,7 +531,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		if (success) emit ContractOwnerWithdrawal(msg.sender, amountToWithdraw);
 	}
 
-	function updateFundRunStatus(uint16 _fundRunId) public {
+	function updateFundRunStatus(uint16 _fundRunId) external {
 		FundRun storage fundRun = fundRuns[_fundRunId];
 		if (fundRun.deadline < block.timestamp)
 			if (fundRun.amountCollected < fundRun.target)
@@ -537,6 +540,47 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		else if (fundRun.amountCollected < fundRun.target)
 			fundRun.status = FundRunStatus(0);
 		else fundRun.status = FundRunStatus(2);
+	}
+
+	/**
+	 * @dev Returns list of Fund Runs in reverse order (latest-first)
+	 */
+	function getFundRuns() external view returns (FundRun[] memory) {
+		FundRun[] memory allFundRuns = new FundRun[](numberOfFundRuns);
+		for (uint16 i = 1; i < numberOfFundRuns + 1; i++) {
+			allFundRuns[i - 1] = fundRuns[numberOfFundRuns - i];
+		}
+		return allFundRuns;
+	}
+
+	/**
+	 * @dev Returns list of Proposals (from a Fund Run's Vault)
+	 */
+	function getProposals(
+		uint16 _fundRunId
+	) external view returns (MultiSigVault[] memory) {
+		return vaults[_fundRunId];
+	}
+
+	function getFundRun(uint16 _id) external view returns (FundRun memory) {
+		return fundRuns[_id];
+	}
+
+	function timeLeft(uint16 _id) external view returns (uint256) {
+		require(block.timestamp < fundRuns[_id].deadline, "It's ovaaaa");
+		return fundRuns[_id].deadline - block.timestamp;
+	}
+
+	function getBalance()
+		external
+		view
+		returns (uint256 crowdFund_contractBalance)
+	{
+		return address(this).balance;
+	}
+
+	function getNonce(uint16 _fundRunId) external view returns (uint256) {
+		return vaultNonces[_fundRunId];
 	}
 
 	function _verifyMultisigRequest(
@@ -646,46 +690,5 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 			if (fundRuns[_id].owners[i] == _addr) return true;
 		}
 		return false;
-	}
-
-	/**
-	 * @dev Returns list of Fund Runs in reverse order (latest-first)
-	 */
-	function getFundRuns() public view returns (FundRun[] memory) {
-		FundRun[] memory allFundRuns = new FundRun[](numberOfFundRuns);
-		for (uint16 i = 1; i < numberOfFundRuns + 1; i++) {
-			allFundRuns[i - 1] = fundRuns[numberOfFundRuns - i];
-		}
-		return allFundRuns;
-	}
-
-	/**
-	 * @dev Returns list of Proposals (from a Fund Run's Vault)
-	 */
-	function getProposals(
-		uint16 _fundRunId
-	) public view returns (MultiSigVault[] memory) {
-		return vaults[_fundRunId];
-	}
-
-	function getFundRun(uint16 _id) public view returns (FundRun memory) {
-		return fundRuns[_id];
-	}
-
-	function timeLeft(uint16 _id) public view returns (uint256) {
-		require(block.timestamp < fundRuns[_id].deadline, "It's ovaaaa");
-		return fundRuns[_id].deadline - block.timestamp;
-	}
-
-	function getBalance()
-		public
-		view
-		returns (uint256 crowdFund_contractBalance)
-	{
-		return address(this).balance;
-	}
-
-	function getNonce(uint16 _fundRunId) public view returns (uint256) {
-		return vaultNonces[_fundRunId];
 	}
 }
