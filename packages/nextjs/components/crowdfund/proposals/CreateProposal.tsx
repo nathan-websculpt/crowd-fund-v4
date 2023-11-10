@@ -1,3 +1,4 @@
+import router from "next/router";
 import { useEffect, useState } from "react";
 import { SignMessageReturnType, parseEther, toBytes } from "viem";
 import { useAccount, useWalletClient } from "wagmi";
@@ -80,6 +81,11 @@ export const CreateProposal = (proposal: CreateProposalProps) => {
   return (
     <>
       <div className="flex flex-col gap-2 sm:gap-5">
+      <div className="flex justify-start mb-5">
+          <button className="btn btn-sm btn-primary" onClick={() => router.back()}>
+            Back
+          </button>
+        </div>
         <h1>Create a New Proposal</h1>
         <h4 className="text-lg">
           Note: You have to handle proposals in order. If one proposal is not finalized before another is created, the

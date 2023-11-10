@@ -293,6 +293,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		isMultisig(_fundRunId, true)
 		ownsThisFundRun(_fundRunId, msg.sender, true)
 		createdProposal(_proposalId, _fundRunId, msg.sender, false)
+		txNotSent(_proposalId, _fundRunId)
 	{
 		changeProposalStatus(_fundRunId, _proposalId, 1);
 		signatureList[_proposalId].push(_signature);
@@ -334,6 +335,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		isMultisig(_fundRunId, true)
 		ownsThisFundRun(_fundRunId, msg.sender, true)
 		createdProposal(_proposalId, _fundRunId, msg.sender, true)
+		txNotSent(_proposalId, _fundRunId)
 	{
 		MultiSigVault[] storage vaultsList = vaults[_fundRunId];
 		for (uint16 i = 0; i < vaultsList.length; i++) {
