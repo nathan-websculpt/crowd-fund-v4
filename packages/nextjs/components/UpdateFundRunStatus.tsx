@@ -16,11 +16,9 @@ export const UpdateFundRunStatus = (fundRun: UpdateStatusProps) => {
 
   return (
     <>
-      <div className="flex justify-end">
-        <button className="btn btn-primary btn-xs" onClick={() => writeAsync()} disabled={isLoading}>
-          {isLoading ? <span className="loading loading-spinner loading-sm"></span> : <>Update Status</>}
-        </button>
-      </div>
+      <button className="btn btn-primary btn-xs" onClick={() => writeAsync()} disabled={isLoading}>
+        {isLoading ? <span className="loading loading-spinner loading-sm"></span> : <>Update Status</>}
+      </button>
     </>
   );
 };

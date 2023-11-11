@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { parseEther } from "viem";
+import { formatEther, parseEther } from "viem";
 import { useAccount } from "wagmi";
 import { useScaffoldContractWrite, useScaffoldEventSubscriber } from "~~/hooks/scaffold-eth";
 
@@ -40,7 +40,7 @@ export const CreateFund = () => {
           "\nTitle: ",
           title,
           "\n  with a target of: ",
-          target,
+          formatEther(target),
         );
         if (owners !== undefined) if (address.address === owners[0]) router.push(`/crowdfund/${id}`);
       });

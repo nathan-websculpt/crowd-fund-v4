@@ -16,33 +16,34 @@ interface FundRunDisplayProps {
 export const FundRunDisplay = (fundRun: FundRunDisplayProps) => {
   return (
     <>
-      <UpdateFundRunStatus fundRunId={fundRun.id} />
+      <div className="flex justify-between">
+        <FundRunStatus status={fundRun.status} />
+        <UpdateFundRunStatus fundRunId={fundRun.id} />
+      </div>
 
-      <label className="text-sm font-bold underline">Title</label>
-      <p className="text-md">{fundRun.title}</p>
+      <label className="text-lg font-bold underline">Title</label>
+      <p className="mt-0 mb-1 text-xl">{fundRun.title}</p>
 
-      <label className="text-sm font-bold underline">Description</label>
-      <p className="text-md">{fundRun.description}</p>
+      <label className="text-lg font-bold underline">Description</label>
+      <p className="mt-0 mb-1 text-xl">{fundRun.description}</p>
 
-      <div className="justify-between lg:px-2 lg:flex lg:flex-row">
-        <div className="flex flex-col lg:p-2">
-          <label className="text-sm font-bold underline">Money Target</label>
-          <p className="break-all text-md">{formatEther(fundRun.target)}</p>
+      <div className="justify-between mt-5 lg:mt-0 lg:px-4 lg:flex">
+        <div className="flex flex-col">
+          <label className="text-lg font-bold underline">Money Target</label>
+          <p className="mt-0 mb-1 text-xl break-all">{formatEther(fundRun.target)}</p>
         </div>
 
-        <div className="flex flex-col mt-4 lg:p-2 lg:mt-0">
-          <label className="text-sm font-bold underline">Ether Donated</label>
-          <p className="break-all text-md">{formatEther(fundRun.amountCollected)}</p>
+        <div className="flex flex-col">
+          <label className="text-lg font-bold underline">Ether Donated</label>
+          <p className="mt-0 mb-1 text-xl break-all">{formatEther(fundRun.amountCollected)}</p>
         </div>
       </div>
 
-      <div className="justify-between lg:px-2 lg:flex lg:flex-row">
-        <div className="flex flex-col lg:p-2">
-          <label className="text-sm font-bold underline">Ether Withdrawn</label>
-          <p className="break-all text-md">{formatEther(fundRun.amountWithdrawn)}</p>
+      <div className="justify-between lg:px-4 lg:flex">
+        <div className="flex flex-col">
+          <label className="text-lg font-bold underline">Ether Withdrawn</label>
+          <p className="mt-0 mb-1 text-xl break-all">{formatEther(fundRun.amountWithdrawn)}</p>
         </div>
-
-        <FundRunStatus status={fundRun.status} />
       </div>
     </>
   );

@@ -51,22 +51,23 @@ export const FundRunDonate = (fundRun: FundRunProps) => {
 
   return (
     <>
-      <div className="tooltip tooltip-primary" data-tip="Donation Amount in Ether ... like '0.1' or '1'">
-        <input
-          type="number"
-          placeholder="Donation Amount"
-          className="max-w-xs input input-bordered input-accent"
-          onChange={e => setDonationInput(e.target.value)}
-        />
-      </div>
+      <div className="flex">
+        <div className="tooltip tooltip-primary" data-tip="Donation Amount in Ether ... like '0.1' or '1'">
+          <input
+            type="number"
+            placeholder="Donation Amount"
+            className="max-w-xs input input-bordered input-accent"
+            onChange={e => setDonationInput(e.target.value)}
+          />
+        </div>
 
-      <div className="tooltip tooltip-primary" data-tip="Ready to donate Ether?">
-        <button className="mt-5 ml-0 xl:ml-7 btn btn-primary" onClick={() => validateThenWrite()} disabled={isLoading}>
-          {isLoading ? <span className="loading loading-spinner loading-sm"></span> : <>DONATE NOW</>}
-        </button>
+        <div className="tooltip tooltip-primary" data-tip="Ready to donate Ether?">
+          <button className="ml-2 btn btn-primary" onClick={() => validateThenWrite()} disabled={isLoading}>
+            {isLoading ? <span className="loading loading-spinner loading-sm"></span> : <>DONATE NOW</>}
+          </button>
+        </div>
       </div>
-
-      <div className="flex flex-col justify-center gap-8 pt-6 mt-20 mb-5 border-t-4 sm:mt-12 sm:flex-row sm:flex-wrap">
+      <div className="flex flex-col justify-center gap-8 pt-6 mt-4 mb-5 border-t-4 sm:flex-row sm:flex-wrap">
         {fundRun.owners.length === 1 ? (
           <OwnerWithdrawBtn fundRunId={fundRun.id} />
         ) : (

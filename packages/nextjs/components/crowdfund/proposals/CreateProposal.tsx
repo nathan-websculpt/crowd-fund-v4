@@ -1,5 +1,5 @@
-import router from "next/router";
 import { useEffect, useState } from "react";
+import router from "next/router";
 import { SignMessageReturnType, parseEther, toBytes } from "viem";
 import { useAccount, useWalletClient } from "wagmi";
 import getDigest from "~~/helpers/getDigest";
@@ -8,9 +8,10 @@ import { useScaffoldContractRead, useScaffoldContractWrite, useScaffoldEventSubs
 
 interface CreateProposalProps {
   fundRunId: number;
+  title: string;
 }
 
-export const CreateProposal = (proposal: CreateProposalProps) => {
+export const CreateProposal = (fundRun: CreateProposalProps) => {
   const userAddress = useAccount();
   const [transferInput, setTransferInput] = useState("0.1");
   const [toAddressInput, setToAddressInput] = useState("0xd6119D0a6aaFE3a2aDF7733523126CF73C1C073C");
@@ -46,7 +47,7 @@ export const CreateProposal = (proposal: CreateProposalProps) => {
   const { data: fundRunNonce } = useScaffoldContractRead({
     contractName: "CrowdFund",
     functionName: "getNonce",
-    args: [proposal.fundRunId],
+    args: [fundRun.fundRunId],
   });
 
   const signNewProposal = async () => {
@@ -65,7 +66,7 @@ export const CreateProposal = (proposal: CreateProposalProps) => {
     functionName: "createMultisigProposal",
     args: [
       creationSignature,
-      proposal?.fundRunId,
+      fundRun?.fundRunId,
       {
         amount: parseEther(transferInput),
         to: toAddressInput,
@@ -81,13 +82,17 @@ export const CreateProposal = (proposal: CreateProposalProps) => {
   return (
     <>
       <div className="flex flex-col gap-2 sm:gap-5">
-      <div className="flex justify-start mb-5">
+        <div className="flex justify-start mb-5">
           <button className="btn btn-sm btn-primary" onClick={() => router.back()}>
             Back
           </button>
         </div>
-        <h1>Create a New Proposal</h1>
-        <h4 className="text-lg">
+        <div className="flex mb-5">
+          <label className="mr-2 text-lg font-bold underline">Fund Run Title:</label>
+          <p className="m-0 text-lg">{fundRun.title}</p>
+        </div>
+        <h1 className="mb-0 text-xl">Create a New Proposal</h1>
+        <h4 className="mt-0 mb-4 text-lg">
           Note: You have to handle proposals in order. If one proposal is not finalized before another is created, the
           nonce will be off (for the unfinished proposal); however, each of these vaults has its own nonce, so they do
           not interfere with each other.
