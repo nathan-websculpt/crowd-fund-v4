@@ -82,6 +82,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 	mapping(uint16 => MultiSigVault[]) public vaults; //Fund Run's proposals
 	//      proposalId
 	mapping(uint16 => bytes[]) public signatureList;
+	mapping(uint16 => address[]) public signerList;
 	mapping(uint16 => uint256) public vaultNonces; //fundRunId => Nonce
 	mapping(uint256 => FundRun) public fundRuns;
 	mapping(address => DonorsLog) public donorLogs; //a single donor will have all of their logs (across all Fund Runs they donated to) here
@@ -269,6 +270,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		);
 
 		signatureList[numberOfMultisigProposals].push(_signature);
+		signerList[numberOfMultisigProposals].push(msg.sender);
 
 		MultiSigVault memory vault = MultiSigVault({
 			proposalId: numberOfMultisigProposals,
@@ -295,8 +297,13 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		createdProposal(_proposalId, _fundRunId, msg.sender, false)
 		txNotSent(_proposalId, _fundRunId)
 	{
+		require(
+			!userHasSigned(msg.sender, _proposalId),
+			"This user has already supported this proposal."
+		);
 		changeProposalStatus(_fundRunId, _proposalId, 1);
 		signatureList[_proposalId].push(_signature);
+		signerList[_proposalId].push(msg.sender);
 		emit ProposalSupported(msg.sender, _fundRunId, _proposalId);
 	}
 
@@ -699,6 +706,16 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 	) private view returns (bool) {
 		for (uint16 i = 0; i < fundRuns[_id].owners.length; i++) {
 			if (fundRuns[_id].owners[i] == _addr) return true;
+		}
+		return false;
+	}
+
+	function userHasSigned(
+		address signer,
+		uint16 _proposalId
+	) private view returns (bool) {
+		for (uint16 i = 0; i < signerList[_proposalId].length; i++) {
+			if (signerList[_proposalId][i] == signer) return true;
 		}
 		return false;
 	}
