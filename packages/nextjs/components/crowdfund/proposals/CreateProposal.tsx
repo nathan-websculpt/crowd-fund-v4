@@ -76,6 +76,11 @@ export const CreateProposal = (fundRun: CreateProposalProps) => {
     ],
     onBlockConfirmation: txnReceipt => {
       console.log("📦 Transaction blockHash", txnReceipt.blockHash);
+      setCreationSignature(undefined);
+    },
+    onError: err => {
+      console.log("Transaction Error Message", err?.message);
+      setCreationSignature(undefined);
     },
   });
 

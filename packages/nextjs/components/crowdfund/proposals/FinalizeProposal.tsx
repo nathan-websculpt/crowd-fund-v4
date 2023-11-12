@@ -59,6 +59,11 @@ export const FinalizeProposal = (proposal: FinalizeProposalProps) => {
     args: [tx, nonce, proposal.fundRunId, proposal.proposalId],
     onBlockConfirmation: txnReceipt => {
       console.log("📦 Transaction blockHash", txnReceipt.blockHash);
+      setNonce(undefined);
+    },
+    onError: err => {
+      console.log("Transaction Error Message", err?.message);
+      setNonce(undefined);
     },
   });
 

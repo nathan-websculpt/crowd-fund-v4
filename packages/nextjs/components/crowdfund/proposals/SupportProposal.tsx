@@ -66,6 +66,11 @@ export const SupportProposal = (proposal: SupportProposalProps) => {
     args: [supportSignature, proposal?.fundRunId, proposal?.proposalId],
     onBlockConfirmation: txnReceipt => {
       console.log("📦 Transaction blockHash", txnReceipt.blockHash);
+      setSupportSignature(undefined);
+    },
+    onError: err => {
+      console.log("Transaction Error Message", err?.message);
+      setSupportSignature(undefined);
     },
   });
 
