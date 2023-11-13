@@ -5,11 +5,6 @@ A multisig “Crowdfunding” dApp; [V1](https://github.com/nathan-websculpt/cro
 
 ⚙️ Built with [Scaffold-ETH 2](#Contents), using NextJS, RainbowKit, Hardhat, Wagmi, and Typescript.
 
-![](./multisig_demo.mp4)
-
-<video width="320" height="240" controls>
-  <source src="./multisig_demo.mp4" type="video/mp4">
-</video>
 
 ## Overview
 
