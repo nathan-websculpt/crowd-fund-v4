@@ -82,6 +82,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 	mapping(uint16 => MultiSigVault[]) public vaults; //Fund Run's proposals
 	//      proposalId
 	mapping(uint16 => bytes[]) public signatureList;
+	//      proposalId
 	mapping(uint16 => address[]) public signerList;
 	mapping(uint16 => uint256) public vaultNonces; //fundRunId => Nonce
 	mapping(uint256 => FundRun) public fundRuns;
