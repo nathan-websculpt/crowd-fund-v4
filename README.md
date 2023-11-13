@@ -43,7 +43,7 @@ https://github.com/nathan-websculpt/crowd-fund-v2/assets/58645278/d6fc16c6-ec37-
   - The deadline ⌛ has passed
   - The fund’s donations are greater-than/equal-to the *target money goal*
 
-###  📜 *The 'rules-of-use' for Multisig "Fund Runs":*
+###  📜 *How Multisig "Fund Runs" are different:*
 - The mindset of a multisig vault is that payments made (from it) are more granular 
 - If a user wants to get all of their funds at once, a Single-Wallet "Fund Run" is a better choice
 - A Multisig Fund Run is good for users who want to show their donors a set of record-logs for payments coming out of their vault
