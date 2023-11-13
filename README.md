@@ -1,7 +1,6 @@
 # 🚀 🌑 Multisig Crowd Funds
-Note: In progress, you may want to [use Crowd Fund V1 instead](https://github.com/nathan-websculpt/crowd-fund)
 
-A multisig “Crowdfunding” dApp; [V1](https://github.com/nathan-websculpt/crowd-fund) provides Single-Wallet Crowd Funding
+A multisig “Crowdfunding” dApp
 
 ⚙️ Built with [Scaffold-ETH 2](#Contents), using NextJS, RainbowKit, Hardhat, Wagmi, and Typescript.
 
@@ -22,12 +21,12 @@ https://github.com/nathan-websculpt/crowd-fund-v2/assets/58645278/d6fc16c6-ec37-
 
 ## 🙂 Overview
 
-### 🔎🔎🔎 *Changes from V1:*
+### 🔎🔎🔎 *Changes from [Crowd Fund V1](https://github.com/nathan-websculpt/crowd-fund):*
 
 - Fund Runs can now be created with **multiple owners** 🔐
 - Unlike Single-Owner Vaults, transactions from a Multisig Vault *must be approved* by **all of the Vault's Owners**
 - Multisig Vaults can be made for 2 or 3 owners
-- Proposals can be viewed/created/supported/revoked from *'/crowdfund/vaults/{FundRunId}'*
+- Proposals can be viewed/created/supported/revoked from `'/crowdfund/vaults/{FundRunId}'`
 - New Proposals can only be revoked by the CREATOR of the Proposal
 - Frontend is now completely migrated to [Viem](https://viem.sh/docs/ethers-migration.html)
 
@@ -64,11 +63,11 @@ https://github.com/nathan-websculpt/crowd-fund-v2/assets/58645278/d6fc16c6-ec37-
 - **Multisig Vaults** 🗝️🗝️🗝️ 🔒
   - The **MultiSigRequest** *struct* will be used as the Tx/Tuple for signing
   - The **MultiSigVault** *struct* has additional data: *proposalId* and *status*
-  - Send a **MultiSigRequest** (along with the *signature* and *fundRunId*) to *createMultisigProposal()* to create a new proposal
-  - *supportMultisigProposal()* simply pushes the *signature* and the *msg.sender* to arrays on the **mappings**: *signatureList* and *signerList*
-  - **_verifyMultisigRequest()** occurs before any funds are sent
+  - Send a **MultiSigRequest** (along with the *signature* and *fundRunId*) to `createMultisigProposal()` to create a new proposal
+  - `supportMultisigProposal()` simply pushes the *signature* and the *msg.sender* to arrays on the **mappings**: *signatureList* and *signerList*
+  - `_verifyMultisigRequest()` occurs before any funds are sent
     - uses a **MultiSigRequest** *(along with the nonce)* to re-create a digest that will be recovered/checked using EACH signature in *signatureList*
-      - **ECDSA**.*recover(digest, signature)*
+      - `ECDSA.recover(digest, signature)`
   - Each Vault has its own **incrementing nonce**
     - This means that proposals do need to be created/sent in order, but Vaults do not interfere with one another
     - Stale proposals preventing transactions can be revoked
