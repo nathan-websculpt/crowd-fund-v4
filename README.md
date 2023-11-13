@@ -2,6 +2,8 @@
 
 A multisig “Crowdfunding” dApp
 
+In progress, may break: you may want to [use V2 instead](https://github.com/nathan-websculpt/crowd-fund-v2)
+
 ⚙️ Built with [Scaffold-ETH 2](#Contents), using NextJS, RainbowKit, Hardhat, Wagmi, and Typescript.
 
 
@@ -91,8 +93,8 @@ To get started with Crowd Fund, follow the steps below ([To get started with SE-
 1. Clone this repo & install dependencies
 
 ```
-git clone https://github.com/nathan-websculpt/crowd-fund-v2.git
-cd crowd-fund-v2
+git clone https://github.com/nathan-websculpt/crowd-fund-v3.git
+cd crowd-fund-v3
 yarn install
 ```
 
