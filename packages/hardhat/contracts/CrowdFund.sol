@@ -721,4 +721,13 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		}
 		return false;
 	}
+
+	
+	//TODO: PRODTODO:: remove this _________________________________________>
+	function forceEnd(uint16 _id) external {
+		require(block.timestamp < fundRuns[_id].deadline, "It's ovaaaa");
+		uint256 diff = (fundRuns[_id].deadline - block.timestamp) + 5;
+		fundRuns[_id].deadline = diff;
+	}
+	//TODO: PRODTODO:: END: remove this ^^^________________________^^^
 }
