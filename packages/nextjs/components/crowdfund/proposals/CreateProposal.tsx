@@ -5,6 +5,7 @@ import { useAccount, useWalletClient } from "wagmi";
 import getDigest from "~~/helpers/getDigest";
 import getNonce from "~~/helpers/getNonce";
 import { useScaffoldContractRead, useScaffoldContractWrite, useScaffoldEventSubscriber } from "~~/hooks/scaffold-eth";
+import { notification } from "~~/utils/scaffold-eth";
 
 interface CreateProposalProps {
   fundRunId: number;
@@ -12,11 +13,13 @@ interface CreateProposalProps {
 }
 
 export const CreateProposal = (fundRun: CreateProposalProps) => {
-  const userAddress = useAccount();
+  const userAccount = useAccount();
   const [transferInput, setTransferInput] = useState("0.1");
   const [toAddressInput, setToAddressInput] = useState("");
   const [reasonInput, setReasonInput] = useState("test proposal");
   const [creationSignature, setCreationSignature] = useState<SignMessageReturnType>();
+  const [error, setError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   const { data: walletClient } = useWalletClient();
 
@@ -50,9 +53,21 @@ export const CreateProposal = (fundRun: CreateProposalProps) => {
     args: [fundRun.fundRunId],
   });
 
+  const newErr = (msg: string) => {
+    notification.warning(msg, { position: "top-right", duration: 6000 });
+    setErrorMsg(msg);
+    setError(true);
+  };
+
   const signNewProposal = async () => {
+    setErrorMsg("");
+    setError(false);
+    if (toAddressInput === "") {
+      newErr("Please input a To Address.");
+      return;
+    }
     const nonce = getNonce(fundRunNonce);
-    const digest = await getDigest(nonce, parseEther(transferInput), toAddressInput, userAddress.address, reasonInput);
+    const digest = await getDigest(nonce, parseEther(transferInput), toAddressInput, userAccount.address, reasonInput);
 
     const proposalCreationSig: any = await walletClient?.signMessage({
       account: walletClient.account,
@@ -70,7 +85,7 @@ export const CreateProposal = (fundRun: CreateProposalProps) => {
       {
         amount: parseEther(transferInput),
         to: toAddressInput,
-        proposedBy: userAddress.address,
+        proposedBy: userAccount.address,
         reason: reasonInput,
       },
     ],
@@ -92,6 +107,13 @@ export const CreateProposal = (fundRun: CreateProposalProps) => {
             Back
           </button>
         </div>
+        {error ? (
+          <div className="flex justify-center">
+            <p className="whitespace-pre-line">{errorMsg}</p>
+          </div>
+        ) : (
+          <></>
+        )}
         <div className="flex mb-5">
           <label className="mr-2 text-lg font-bold underline">Fund Run Title:</label>
           <p className="m-0 text-lg">{fundRun.title}</p>

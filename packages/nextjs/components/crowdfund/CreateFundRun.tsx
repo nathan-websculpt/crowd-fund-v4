@@ -4,10 +4,11 @@ import { useRouter } from "next/router";
 import { formatEther, parseEther } from "viem";
 import { useAccount } from "wagmi";
 import { useScaffoldContractWrite, useScaffoldEventSubscriber } from "~~/hooks/scaffold-eth";
+import { notification } from "~~/utils/scaffold-eth";
 
 export const CreateFundRun = () => {
   const router = useRouter();
-  const address = useAccount();
+  const userAccount = useAccount();
   const [titleInput, setTitleInput] = useState("");
   const [descInput, setDescInput] = useState("");
   const [targetInput, setTargetInput] = useState<bigint>(parseEther("1"));
@@ -42,7 +43,7 @@ export const CreateFundRun = () => {
           "\n  with a target of: ",
           formatEther(target),
         );
-        if (owners !== undefined) if (address.address === owners[0]) router.push(`/crowdfund/${id}`);
+        if (owners !== undefined) if (userAccount.address === owners[0]) router.push(`/crowdfund/${id}`);
       });
     },
   });
@@ -56,26 +57,51 @@ export const CreateFundRun = () => {
     },
   });
 
+  const newErr = (msg: string) => {
+    notification.warning(msg, { position: "top-right", duration: 6000 });
+    setErrorMsg(msg);
+    setError(true);
+  };
+
   const validateThenWrite = () => {
     setErrorMsg("");
     setError(false);
+    // validate Fund Run data
     if (titleInput === "" || descInput === "") {
-      setErrorMsg("Please provide a Title and a Description.");
-      setError(true);
+      newErr("Please provide a Title and a Description.");
       return;
     } else if (targetInput <= 0 || deadlineInput <= 0) {
-      setErrorMsg("A goal and a deadline are both required fields.");
-      setError(true);
+      newErr("A goal and a deadline are both required fields.");
       return;
     } else if (deadlineInput > 65535) {
-      setErrorMsg("The Deadline must be less than 65,535 ... it is a uint16 in the contract");
-      setError(true);
+      newErr("The Deadline must be less than 65,535 ... it is a uint16 in the contract");
       return;
     }
 
+    // validate MULTISIG Fund Run data
+    if (isMultiSigSelected) {
+      if (walletCount === 2) {
+        if (additionalAddressOne === "") {
+          newErr("Please provide an address for your co-owner.");
+          return;
+        }
+      } else if (walletCount === 3) {
+        if (additionalAddressOne === "" || additionalAddressTwo === "") {
+          newErr("Please provide addresses for BOTH of your co-owners.");
+          return;
+        }
+      }
+
+      if (additionalAddressOne === userAccount.address || additionalAddressTwo === userAccount.address) {
+        newErr("You input your own wallet address as one of the co-owners ... please select a different address.");
+        return;
+      }
+    }
+
+    // validation complete
     const oList: string[] = [];
-    if (address?.address !== undefined) {
-      oList.push(address.address);
+    if (userAccount?.address !== undefined) {
+      oList.push(userAccount.address);
       if (isMultiSigSelected) {
         if (walletCount === 2) oList.push(additionalAddressOne);
         else if (walletCount === 3) {
