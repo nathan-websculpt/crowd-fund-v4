@@ -5,7 +5,7 @@ import { formatEther, parseEther } from "viem";
 import { useAccount } from "wagmi";
 import { useScaffoldContractWrite, useScaffoldEventSubscriber } from "~~/hooks/scaffold-eth";
 
-export const CreateFund = () => {
+export const CreateFundRun = () => {
   const router = useRouter();
   const address = useAccount();
   const [titleInput, setTitleInput] = useState("");
