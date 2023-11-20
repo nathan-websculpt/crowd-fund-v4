@@ -473,14 +473,9 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		);
 
 		//contract takes its cut
-		uint256 fundsMinusCommission = (grossWithdrawAmount *
-			crowdFundCommission) / crowdFundDenominator; //0.25%
-		uint256 netWithdrawAmount = grossWithdrawAmount - fundsMinusCommission;
+		uint256 netWithdrawAmount = getNetWithdrawAmount(grossWithdrawAmount);
 
 		fundRun.amountWithdrawn = fundRun.amountWithdrawn + grossWithdrawAmount;
-
-		//update profit amount
-		commissionPayout = commissionPayout + fundsMinusCommission;
 
 		if (fundRun.status != FundRunStatus(3))
 			fundRun.status = FundRunStatus(3);
@@ -663,13 +658,9 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		);
 
 		//contract takes its cut
-		uint256 fundsMinusCommission = (_tx.amount * crowdFundCommission) /
-			crowdFundDenominator; //0.25%
-		uint256 netWithdrawAmount = _tx.amount - fundsMinusCommission;
+		uint256 netWithdrawAmount = getNetWithdrawAmount(_tx.amount);
 
 		fundRun.amountWithdrawn = fundRun.amountWithdrawn + _tx.amount;
-		//update profit amount
-		commissionPayout = commissionPayout + fundsMinusCommission;
 
 		if (fundRun.status != FundRunStatus(3))
 			fundRun.status = FundRunStatus(3);
@@ -701,6 +692,16 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		}
 	}
 
+	function getNetWithdrawAmount(
+		uint256 _grossWithdrawAmount
+	) private returns (uint256 netWithdrawAmount) {
+		uint256 fundsMinusCommission = (_grossWithdrawAmount *
+			crowdFundCommission) / crowdFundDenominator; //0.25%
+		netWithdrawAmount = _grossWithdrawAmount - fundsMinusCommission;
+		//update profit amount
+		commissionPayout = commissionPayout + fundsMinusCommission;
+	}
+
 	function isOwnerOfFundRun(
 		address _addr,
 		uint16 _id
@@ -712,11 +713,11 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 	}
 
 	function userHasSigned(
-		address signer,
+		address _signer,
 		uint16 _proposalId
 	) private view returns (bool) {
 		for (uint16 i = 0; i < signerList[_proposalId].length; i++) {
-			if (signerList[_proposalId][i] == signer) return true;
+			if (signerList[_proposalId][i] == _signer) return true;
 		}
 		return false;
 	}
