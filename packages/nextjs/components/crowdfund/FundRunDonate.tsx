@@ -1,11 +1,9 @@
 import { useState } from "react";
 import Link from "next/link";
-import { IntegerVariant, isValidInteger } from "../scaffold-eth";
 import { DonorWithdrawBtn } from "./DonorWithdrawBtn";
 import { OwnerWithdrawBtn } from "./OwnerWithdrawBtn";
-import { formatEther, parseEther } from "viem";
+import { formatEther } from "viem";
 import { useScaffoldContractWrite, useScaffoldEventSubscriber } from "~~/hooks/scaffold-eth";
-import { notification } from "~~/utils/scaffold-eth";
 
 interface FundRunProps {
   id: number;
@@ -13,8 +11,7 @@ interface FundRunProps {
 }
 
 export const FundRunDonate = (fundRun: FundRunProps) => {
-  const [donationInput, setDonationInput] = useState<bigint>(0n);
-  const [donationDisplay, setDonationDisplay] = useState("");
+  const [donationInput, setDonationInput] = useState("");
 
   useScaffoldEventSubscriber({
     contractName: "CrowdFund",
@@ -45,35 +42,22 @@ export const FundRunDonate = (fundRun: FundRunProps) => {
   });
 
   const validateThenWrite = () => {
-    if (donationInput > 0) {
-      notification.warning("Please input a donation amount.", { position: "top-right", duration: 6000 });
+    if (donationInput === "") {
+      alert("Please input a donation amount.");
       return;
     }
     writeAsync();
   };
-
-  function handleBigIntChange(newVal: string): void {
-    if (newVal.trim().length === 0) {
-      console.log("empty string, setting bigint to 0");
-      setDonationInput(0n);
-      setDonationDisplay(newVal);
-    } else if (isValidInteger(IntegerVariant.UINT256, newVal, false)) {
-      console.log("UPDATING bigint to", newVal);
-      setDonationInput(parseEther(newVal));
-      console.log(parseEther(newVal));
-      setDonationDisplay(newVal);
-    } else console.log("handleBigIntChange() total failure");
-  }
 
   return (
     <>
       <div className="flex">
         <div className="tooltip tooltip-primary" data-tip="Donation Amount in Ether ... like '0.1' or '1'">
           <input
+            type="number"
             placeholder="Donation Amount"
             className="max-w-xs input input-bordered input-accent"
-            value={donationDisplay}
-            onChange={e => handleBigIntChange(e.target.value)}
+            onChange={e => setDonationInput(e.target.value)}
           />
         </div>
 
