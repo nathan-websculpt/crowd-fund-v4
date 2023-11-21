@@ -1,9 +1,11 @@
 import { useState } from "react";
 import Link from "next/link";
+import { IntegerVariant, isValidInteger } from "../scaffold-eth";
 import { DonorWithdrawBtn } from "./DonorWithdrawBtn";
 import { OwnerWithdrawBtn } from "./OwnerWithdrawBtn";
 import { formatEther } from "viem";
 import { useScaffoldContractWrite, useScaffoldEventSubscriber } from "~~/hooks/scaffold-eth";
+import { notification } from "~~/utils/scaffold-eth";
 
 interface FundRunProps {
   id: number;
@@ -38,26 +40,33 @@ export const FundRunDonate = (fundRun: FundRunProps) => {
     onBlockConfirmation: txnReceipt => {
       console.log("📦 Transaction blockHash", txnReceipt.blockHash);
     },
-    value: donationInput,
+    value: donationInput, //TODO: pretty sure this HAS to be a string (when sending ether in the tx)
   });
 
   const validateThenWrite = () => {
-    if (donationInput === "") {
-      alert("Please input a donation amount.");
+    if (donationInput.trim() === "") {
+      notification.warning("Please input a valid donation amount.", { position: "top-right", duration: 6000 });
       return;
     }
     writeAsync();
   };
+
+  function handleBigIntChange(newVal: string): void {
+    if (isValidInteger(IntegerVariant.UINT256, newVal, false)) {
+      console.log("UPDATING bigint to", newVal);
+      setDonationInput(newVal);
+    } else console.log("handleBigIntChange() total failure");
+  }
 
   return (
     <>
       <div className="flex">
         <div className="tooltip tooltip-primary" data-tip="Donation Amount in Ether ... like '0.1' or '1'">
           <input
-            type="number"
             placeholder="Donation Amount"
             className="max-w-xs input input-bordered input-accent"
-            onChange={e => setDonationInput(e.target.value)}
+            value={donationInput}
+            onChange={e => handleBigIntChange(e.target.value)}
           />
         </div>
 
