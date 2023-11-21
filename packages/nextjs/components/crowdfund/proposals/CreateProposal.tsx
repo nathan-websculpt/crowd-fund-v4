@@ -6,6 +6,7 @@ import getDigest from "~~/helpers/getDigest";
 import getNonce from "~~/helpers/getNonce";
 import { useScaffoldContractRead, useScaffoldContractWrite, useScaffoldEventSubscriber } from "~~/hooks/scaffold-eth";
 import { notification } from "~~/utils/scaffold-eth";
+import { IntegerVariant, isValidInteger } from "~~/components/scaffold-eth";
 
 interface CreateProposalProps {
   fundRunId: number;
@@ -14,7 +15,8 @@ interface CreateProposalProps {
 
 export const CreateProposal = (fundRun: CreateProposalProps) => {
   const userAccount = useAccount();
-  const [transferInput, setTransferInput] = useState("0.1");
+  const [transferDisplay, setTransferDisplay] = useState("0.1");
+  const [transferInput, setTransferInput] = useState<bigint>(parseEther("0.1"));
   const [toAddressInput, setToAddressInput] = useState("");
   const [reasonInput, setReasonInput] = useState("test proposal");
   const [creationSignature, setCreationSignature] = useState<SignMessageReturnType>();
@@ -67,7 +69,7 @@ export const CreateProposal = (fundRun: CreateProposalProps) => {
       return;
     }
     const nonce = getNonce(fundRunNonce);
-    const digest = await getDigest(nonce, parseEther(transferInput), toAddressInput, userAccount.address, reasonInput);
+    const digest = await getDigest(nonce, transferInput, toAddressInput, userAccount.address, reasonInput);
 
     const proposalCreationSig: any = await walletClient?.signMessage({
       account: walletClient.account,
@@ -83,7 +85,7 @@ export const CreateProposal = (fundRun: CreateProposalProps) => {
       creationSignature,
       fundRun?.fundRunId,
       {
-        amount: parseEther(transferInput),
+        amount: transferInput,
         to: toAddressInput,
         proposedBy: userAccount.address,
         reason: reasonInput,
@@ -98,6 +100,19 @@ export const CreateProposal = (fundRun: CreateProposalProps) => {
       setCreationSignature(undefined);
     },
   });
+ 
+  function handleBigIntChange(newVal: string): void {
+    if (newVal.trim().length === 0) {
+      console.log("empty string, setting bigint to 0");
+      setTransferInput(0n);
+      setTransferDisplay(newVal);
+    } else if (isValidInteger(IntegerVariant.UINT256, newVal, false)) {
+      console.log("UPDATING bigint to", newVal);
+      setTransferInput(parseEther(newVal));
+      console.log(parseEther(newVal));
+      setTransferDisplay(newVal);
+    } else console.log("handleBigIntChange() total failure");
+  }
 
   return (
     <>
@@ -147,11 +162,10 @@ export const CreateProposal = (fundRun: CreateProposalProps) => {
           <div className="flex flex-col mt-4 sm:mt-0">
             <label className="text-lg font-bold">Amount</label>
             <input
-              type="number"
               placeholder="Transfer Amount"
               className="px-3 py-3 border rounded-lg bg-base-200 border-base-300"
-              value={transferInput}
-              onChange={e => setTransferInput(e.target.value)}
+              value={transferDisplay}
+              onChange={e => handleBigIntChange(e.target.value)}
             />
           </div>
         </div>

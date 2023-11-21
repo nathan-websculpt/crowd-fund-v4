@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { SIGNED_NUMBER_REGEX } from "../scaffold-eth";
+import { IntegerVariant, isValidInteger } from "../scaffold-eth";
 import { formatEther, parseEther } from "viem";
 import { useAccount } from "wagmi";
 import { useScaffoldContractWrite, useScaffoldEventSubscriber } from "~~/hooks/scaffold-eth";
@@ -12,9 +12,10 @@ export const CreateFundRun = () => {
   const userAccount = useAccount();
   const [titleInput, setTitleInput] = useState("");
   const [descInput, setDescInput] = useState("");
-  const [targetInput, setTargetInput] = useState<bigint>(parseEther("1"));
+  const [targetInput, setTargetInput] = useState<bigint>(1n);
   const [targetDisplay, setTargetDisplay] = useState("1");
   const [deadlineInput, setDeadlineInput] = useState<number>(1);
+  const [deadlineDisplay, setDeadlineDisplay] = useState("1");
   const [error, setError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [isMultiSigSelected, setIsMultiSigSelected] = useState(false);
@@ -80,10 +81,6 @@ export const CreateFundRun = () => {
       return;
     }
 
-    //Number.isNaN(deadlineInput)
-    //if (typeof value === "bigint") {
-    //if (isValidInteger(variant, value, false)) {
-
     // validate MULTISIG Fund Run data
     if (isMultiSigSelected) {
       if (walletCount === 2) {
@@ -131,12 +128,23 @@ export const CreateFundRun = () => {
       console.log("empty string, setting bigint to 0");
       setTargetInput(0n);
       setTargetDisplay(newVal);
-    } else if (!SIGNED_NUMBER_REGEX.test(newVal)) return;
-    else {
+    } else if (isValidInteger(IntegerVariant.UINT256, newVal, false)) {
       console.log("UPDATING bigint to", newVal);
       setTargetInput(parseEther(newVal));
       setTargetDisplay(newVal);
-    }
+    } else console.log("handleBigIntChange() total failure");
+  }
+
+  function handleNumberChange(newVal: string): void {
+    if (newVal.trim().length === 0) {
+      console.log("empty string, setting deadline to 0");
+      setDeadlineInput(0);
+      setDeadlineDisplay(newVal);
+    } else if (isValidInteger(IntegerVariant.UINT16, newVal, true)) {
+      console.log("good int, setting deadline to", newVal);
+      setDeadlineInput(parseInt(newVal));
+      setDeadlineDisplay(newVal);
+    } else console.log("handleNumberChange() total failure");
   }
 
   return (
@@ -191,11 +199,10 @@ export const CreateFundRun = () => {
               <div className="flex flex-col mt-4 sm:mt-0">
                 <label className="text-lg font-bold">Deadline (mins from now)</label>
                 <input
-                  type="number"
                   placeholder="Deadline"
                   className="px-3 py-3 border rounded-lg bg-base-200 border-base-300"
-                  value={deadlineInput}
-                  onChange={e => setDeadlineInput(parseInt(e.target.value))}
+                  value={deadlineDisplay}
+                  onChange={e => handleNumberChange(e.target.value)}
                 />
               </div>
             </div>
