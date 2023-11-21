@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { SIGNED_NUMBER_REGEX } from "../scaffold-eth";
 import { formatEther, parseEther } from "viem";
 import { useAccount } from "wagmi";
 import { useScaffoldContractWrite, useScaffoldEventSubscriber } from "~~/hooks/scaffold-eth";
@@ -12,7 +13,8 @@ export const CreateFundRun = () => {
   const [titleInput, setTitleInput] = useState("");
   const [descInput, setDescInput] = useState("");
   const [targetInput, setTargetInput] = useState<bigint>(parseEther("1"));
-  const [deadlineInput, setDeadlineInput] = useState<number>(0);
+  const [targetDisplay, setTargetDisplay] = useState("1");
+  const [deadlineInput, setDeadlineInput] = useState<number>(1);
   const [error, setError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [isMultiSigSelected, setIsMultiSigSelected] = useState(false);
@@ -67,7 +69,7 @@ export const CreateFundRun = () => {
     setErrorMsg("");
     setError(false);
     // validate Fund Run data
-    if (titleInput === "" || descInput === "") {
+    if (titleInput.trim() === "" || descInput.trim() === "") {
       newErr("Please provide a Title and a Description.");
       return;
     } else if (targetInput <= 0 || deadlineInput <= 0) {
@@ -77,6 +79,10 @@ export const CreateFundRun = () => {
       newErr("The Deadline must be less than 65,535 ... it is a uint16 in the contract");
       return;
     }
+
+    //Number.isNaN(deadlineInput)
+    //if (typeof value === "bigint") {
+    //if (isValidInteger(variant, value, false)) {
 
     // validate MULTISIG Fund Run data
     if (isMultiSigSelected) {
@@ -120,6 +126,19 @@ export const CreateFundRun = () => {
     else setWalletCount(1);
   };
 
+  function handleBigIntChange(newVal: string): void {
+    if (newVal.trim().length === 0) {
+      console.log("empty string, setting bigint to 0");
+      setTargetInput(0n);
+      setTargetDisplay(newVal);
+    } else if (!SIGNED_NUMBER_REGEX.test(newVal)) return;
+    else {
+      console.log("UPDATING bigint to", newVal);
+      setTargetInput(parseEther(newVal));
+      setTargetDisplay(newVal);
+    }
+  }
+
   return (
     <>
       <div className="px-6 pt-10 pb-8 shadow-xl sm:my-auto bg-secondary sm:mx-auto sm:max-w-11/12 md:w-9/12 sm:rounded-lg sm:px-10">
@@ -162,10 +181,10 @@ export const CreateFundRun = () => {
               <div className="flex flex-col">
                 <label className="text-lg font-bold">Minimum Goal</label>
                 <input
-                  type="number"
                   placeholder="Target Amount"
                   className="px-3 py-3 border rounded-lg bg-base-200 border-base-300"
-                  onChange={e => setTargetInput(parseEther(e.target.value))}
+                  value={targetDisplay}
+                  onChange={e => handleBigIntChange(e.target.value)}
                 />
               </div>
 
