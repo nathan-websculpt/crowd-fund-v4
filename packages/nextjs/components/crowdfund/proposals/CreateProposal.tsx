@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import router from "next/router";
 import { SignMessageReturnType, parseEther, toBytes } from "viem";
 import { useAccount, useWalletClient } from "wagmi";
+import { IntegerVariant, isValidInteger } from "~~/components/scaffold-eth";
 import getDigest from "~~/helpers/getDigest";
 import getNonce from "~~/helpers/getNonce";
 import { useScaffoldContractRead, useScaffoldContractWrite, useScaffoldEventSubscriber } from "~~/hooks/scaffold-eth";
 import { notification } from "~~/utils/scaffold-eth";
-import { IntegerVariant, isValidInteger } from "~~/components/scaffold-eth";
 
 interface CreateProposalProps {
   fundRunId: number;
@@ -67,6 +67,9 @@ export const CreateProposal = (fundRun: CreateProposalProps) => {
     if (toAddressInput === "") {
       newErr("Please input a To Address.");
       return;
+    } else if (transferInput <= 0) {
+      newErr("Please input a valid amount.");
+      return;
     }
     const nonce = getNonce(fundRunNonce);
     const digest = await getDigest(nonce, transferInput, toAddressInput, userAccount.address, reasonInput);
@@ -100,7 +103,7 @@ export const CreateProposal = (fundRun: CreateProposalProps) => {
       setCreationSignature(undefined);
     },
   });
- 
+
   function handleBigIntChange(newVal: string): void {
     if (newVal.trim().length === 0) {
       console.log("empty string, setting bigint to 0");
