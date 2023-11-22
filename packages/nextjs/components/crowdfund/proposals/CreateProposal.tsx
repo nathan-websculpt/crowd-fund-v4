@@ -31,6 +31,23 @@ export const CreateProposal = (fundRun: CreateProposalProps) => {
     }
   }, [creationSignature]);
 
+  function handleBigIntChange(newVal: string): void {
+    const _v = newVal.trim();
+    if (_v.length === 0 || _v === ".") {
+      setTransferInput(0n);
+      setTransferDisplay(_v);
+    } else if (isValidInteger(IntegerVariant.UINT256, _v, false)) {
+      setTransferInput(parseEther(_v));
+      setTransferDisplay(_v);
+    }
+  }
+
+  const newErr = (msg: string) => {
+    notification.warning(msg, { position: "top-right", duration: 6000 });
+    setErrorMsg(msg);
+    setError(true);
+  };
+
   useScaffoldEventSubscriber({
     contractName: "CrowdFund",
     eventName: "ProposalCreated",
@@ -54,12 +71,6 @@ export const CreateProposal = (fundRun: CreateProposalProps) => {
     functionName: "getNonce",
     args: [fundRun.fundRunId],
   });
-
-  const newErr = (msg: string) => {
-    notification.warning(msg, { position: "top-right", duration: 6000 });
-    setErrorMsg(msg);
-    setError(true);
-  };
 
   const signNewProposal = async () => {
     setErrorMsg("");
@@ -103,19 +114,6 @@ export const CreateProposal = (fundRun: CreateProposalProps) => {
       setCreationSignature(undefined);
     },
   });
-
-  function handleBigIntChange(newVal: string): void {
-    if (newVal.trim().length === 0) {
-      console.log("empty string, setting bigint to 0");
-      setTransferInput(0n);
-      setTransferDisplay(newVal);
-    } else if (isValidInteger(IntegerVariant.UINT256, newVal, false)) {
-      console.log("UPDATING bigint to", newVal);
-      setTransferInput(parseEther(newVal));
-      console.log(parseEther(newVal));
-      setTransferDisplay(newVal);
-    } else console.log("handleBigIntChange() total failure");
-  }
 
   return (
     <>

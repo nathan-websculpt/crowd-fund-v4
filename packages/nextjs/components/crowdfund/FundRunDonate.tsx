@@ -15,6 +15,11 @@ interface FundRunProps {
 export const FundRunDonate = (fundRun: FundRunProps) => {
   const [donationInput, setDonationInput] = useState("");
 
+  function handleBigIntChange(newVal: string): void {
+    const _v = newVal.trim();
+    if (_v.length === 0 || _v === "." || isValidInteger(IntegerVariant.UINT256, _v, false)) setDonationInput(_v);
+  }
+
   useScaffoldEventSubscriber({
     contractName: "CrowdFund",
     eventName: "DonationOccurred",
@@ -44,19 +49,12 @@ export const FundRunDonate = (fundRun: FundRunProps) => {
   });
 
   const validateThenWrite = () => {
-    if (donationInput.trim() === "") {
+    if (donationInput.trim() === "" || donationInput.trim() === ".") {
       notification.warning("Please input a valid donation amount.", { position: "top-right", duration: 6000 });
       return;
     }
     writeAsync();
   };
-
-  function handleBigIntChange(newVal: string): void {
-    if (isValidInteger(IntegerVariant.UINT256, newVal, false)) {
-      console.log("UPDATING bigint to", newVal);
-      setDonationInput(newVal);
-    } else console.log("handleBigIntChange() total failure");
-  }
 
   return (
     <>

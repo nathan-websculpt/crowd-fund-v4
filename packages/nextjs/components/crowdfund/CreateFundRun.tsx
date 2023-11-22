@@ -12,7 +12,7 @@ export const CreateFundRun = () => {
   const userAccount = useAccount();
   const [titleInput, setTitleInput] = useState("");
   const [descInput, setDescInput] = useState("");
-  const [targetInput, setTargetInput] = useState<bigint>(1n);
+  const [targetInput, setTargetInput] = useState<bigint>(parseEther("1"));
   const [targetDisplay, setTargetDisplay] = useState("1");
   const [deadlineInput, setDeadlineInput] = useState<number>(1);
   const [deadlineDisplay, setDeadlineDisplay] = useState("1");
@@ -29,6 +29,41 @@ export const CreateFundRun = () => {
       writeAsync();
     }
   }, [ownersList]);
+
+  const newErr = (msg: string) => {
+    notification.warning(msg, { position: "top-right", duration: 6000 });
+    setErrorMsg(msg);
+    setError(true);
+  };
+
+  function handleBigIntChange(newVal: string): void {
+    const _v = newVal.trim();
+    if (_v.length === 0 || _v === ".") {
+      setTargetInput(0n);
+      setTargetDisplay(_v);
+    } else if (isValidInteger(IntegerVariant.UINT256, _v, false)) {
+      setTargetInput(parseEther(_v));
+      setTargetDisplay(_v);
+    }
+  }
+
+  function handleNumberChange(newVal: string): void {
+    const _v = newVal.trim();
+    if (_v.length === 0) {
+      setDeadlineInput(0);
+      setDeadlineDisplay(_v);
+    } else if (isValidInteger(IntegerVariant.UINT16, _v, true)) {
+      setDeadlineInput(parseInt(_v));
+      setDeadlineDisplay(_v);
+    }
+  }
+
+  const multiSigSelectionHandler = () => {
+    const selection = !isMultiSigSelected;
+    setIsMultiSigSelected(selection);
+    if (selection) setWalletCount(2);
+    else setWalletCount(1);
+  };
 
   useScaffoldEventSubscriber({
     contractName: "CrowdFund",
@@ -59,12 +94,6 @@ export const CreateFundRun = () => {
       console.log("📦 Transaction blockHash", txnReceipt.blockHash);
     },
   });
-
-  const newErr = (msg: string) => {
-    notification.warning(msg, { position: "top-right", duration: 6000 });
-    setErrorMsg(msg);
-    setError(true);
-  };
 
   const validateThenWrite = () => {
     setErrorMsg("");
@@ -115,37 +144,6 @@ export const CreateFundRun = () => {
       setOwnersList(oList);
     }
   };
-
-  const multiSigClickHandler = () => {
-    const selection = !isMultiSigSelected;
-    setIsMultiSigSelected(selection);
-    if (selection) setWalletCount(2);
-    else setWalletCount(1);
-  };
-
-  function handleBigIntChange(newVal: string): void {
-    if (newVal.trim().length === 0) {
-      console.log("empty string, setting bigint to 0");
-      setTargetInput(0n);
-      setTargetDisplay(newVal);
-    } else if (isValidInteger(IntegerVariant.UINT256, newVal, false)) {
-      console.log("UPDATING bigint to", newVal);
-      setTargetInput(parseEther(newVal));
-      setTargetDisplay(newVal);
-    } else console.log("handleBigIntChange() total failure");
-  }
-
-  function handleNumberChange(newVal: string): void {
-    if (newVal.trim().length === 0) {
-      console.log("empty string, setting deadline to 0");
-      setDeadlineInput(0);
-      setDeadlineDisplay(newVal);
-    } else if (isValidInteger(IntegerVariant.UINT16, newVal, true)) {
-      console.log("good int, setting deadline to", newVal);
-      setDeadlineInput(parseInt(newVal));
-      setDeadlineDisplay(newVal);
-    } else console.log("handleNumberChange() total failure");
-  }
 
   return (
     <>
@@ -211,7 +209,7 @@ export const CreateFundRun = () => {
             <div className="form-control">
               <label className="cursor-pointer label">
                 <span className="label-text">Multisig?</span>
-                <input type="checkbox" className="checkbox checkbox-accent" onChange={multiSigClickHandler} />
+                <input type="checkbox" className="checkbox checkbox-accent" onChange={multiSigSelectionHandler} />
               </label>
             </div>
             {isMultiSigSelected && (
