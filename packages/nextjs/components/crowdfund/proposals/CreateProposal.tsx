@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import router from "next/router";
-import { SignMessageReturnType, parseEther, toBytes } from "viem";
+import { SignMessageReturnType, isAddress, parseEther, toBytes } from "viem";
 import { useAccount, useWalletClient } from "wagmi";
 import { IntegerVariant, isValidInteger } from "~~/components/scaffold-eth";
 import getDigest from "~~/helpers/getDigest";
@@ -75,8 +75,8 @@ export const CreateProposal = (fundRun: CreateProposalProps) => {
   const signNewProposal = async () => {
     setErrorMsg("");
     setError(false);
-    if (toAddressInput === "") {
-      newErr("Please input a To Address.");
+    if (!isAddress(toAddressInput)) {
+      newErr("Please input a valid Address.");
       return;
     } else if (transferInput <= 0) {
       newErr("Please input a valid amount.");

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { IntegerVariant, isValidInteger } from "../scaffold-eth";
-import { formatEther, parseEther } from "viem";
+import { formatEther, isAddress, parseEther } from "viem";
 import { useAccount } from "wagmi";
 import { useScaffoldContractWrite, useScaffoldEventSubscriber } from "~~/hooks/scaffold-eth";
 import { notification } from "~~/utils/scaffold-eth";
@@ -58,7 +58,7 @@ export const CreateFundRun = () => {
     }
   }
 
-  const multiSigSelectionHandler = () => {
+  const handleMultisigSelection = () => {
     const selection = !isMultiSigSelected;
     setIsMultiSigSelected(selection);
     if (selection) setWalletCount(2);
@@ -113,20 +113,27 @@ export const CreateFundRun = () => {
     // validate MULTISIG Fund Run data
     if (isMultiSigSelected) {
       if (walletCount === 2) {
-        if (additionalAddressOne === "") {
-          newErr("Please provide an address for your co-owner.");
+        if (!isAddress(additionalAddressOne)) {
+          newErr("Please provide a VALID address for your co-owner.");
+          return;
+        }
+        if (additionalAddressOne === userAccount.address) {
+          newErr("You input your own wallet address as the co-owner ... please select a different address.");
           return;
         }
       } else if (walletCount === 3) {
-        if (additionalAddressOne === "" || additionalAddressTwo === "") {
-          newErr("Please provide addresses for BOTH of your co-owners.");
+        if (!isAddress(additionalAddressOne) || !isAddress(additionalAddressTwo)) {
+          newErr("Please provide VALID addresses for BOTH of your co-owners.");
           return;
         }
-      }
-
-      if (additionalAddressOne === userAccount.address || additionalAddressTwo === userAccount.address) {
-        newErr("You input your own wallet address as one of the co-owners ... please select a different address.");
-        return;
+        if (additionalAddressOne === additionalAddressTwo) {
+          newErr("The two co-owners are the same -- they must be different wallets.");
+          return;
+        }
+        if (additionalAddressOne === userAccount.address || additionalAddressTwo === userAccount.address) {
+          newErr("You input your own wallet address as one of the co-owners ... please select a different address.");
+          return;
+        }
       }
     }
 
@@ -209,7 +216,7 @@ export const CreateFundRun = () => {
             <div className="form-control">
               <label className="cursor-pointer label">
                 <span className="label-text">Multisig?</span>
-                <input type="checkbox" className="checkbox checkbox-accent" onChange={multiSigSelectionHandler} />
+                <input type="checkbox" className="checkbox checkbox-accent" onChange={handleMultisigSelection} />
               </label>
             </div>
             {isMultiSigSelected && (
