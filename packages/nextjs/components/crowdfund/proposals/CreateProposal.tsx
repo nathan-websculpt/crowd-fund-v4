@@ -78,8 +78,17 @@ export const CreateProposal = (fundRun: CreateProposalProps) => {
     if (!isAddress(toAddressInput)) {
       newErr("Please input a valid Address.");
       return;
-    } else if (transferInput <= 0) {
+    }
+    if (transferInput <= 0) {
       newErr("Please input a valid amount.");
+      return;
+    }
+    if (reasonInput.trim().length === 0) {
+      newErr("A reason is required.");
+      return;
+    }
+    if (reasonInput.trim().length > 150) {
+      newErr("The max-length for the reason field is 150 characters");
       return;
     }
     const nonce = getNonce(fundRunNonce);
