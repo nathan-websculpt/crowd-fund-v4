@@ -381,6 +381,12 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		);
 		require(_target > 0, "Your money target must be greater than 0.");
 
+		/**
+		 * @dev prevents creator from adding self as co-owner
+		 *      prevents two co-owners from having the same address
+		 */
+		require(validateOwners(msg.sender, _owners), "The co-owners and the creator of a Fund Run must all have different wallet addresses.");
+
 		FundRun storage fundRun = fundRuns[numberOfFundRuns];
 		fundRun.id = numberOfFundRuns;
 		fundRun.owners = _owners;
@@ -722,7 +728,30 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		return false;
 	}
 
-	
+	/**
+	 * @dev RETURNS FALSE IF:
+	 *      creator adds self as co-owner
+	 *      two co-owners have the same address
+	 * Otherwise returns TRUE
+	 */
+	function validateOwners(
+		address _creator,
+		address[] memory _owners
+	) private pure returns (bool) {
+		if(_owners.length == 1) return true;
+		bool creatorAlreadyInList = false;
+		address addrOne;
+		address addrTwo;
+		for (uint16 i = 0; i < _owners.length; i++) {
+			if (_owners[i] == _creator && creatorAlreadyInList) return false;
+			else if(_owners[i] == _creator) creatorAlreadyInList = true;
+			if (_owners[i] == addrOne || _owners[i] == addrTwo) return false;
+			if (i == 0) addrOne = _owners[i];
+			else if (i == 1) addrTwo = _owners[i];
+		}
+		return true;
+	}
+
 	//TODO: PRODTODO:: remove this _________________________________________>
 	function forceEnd(uint16 _id) external {
 		require(block.timestamp < fundRuns[_id].deadline, "It's ovaaaa");
