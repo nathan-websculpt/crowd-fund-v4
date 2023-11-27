@@ -7,20 +7,10 @@ import { ECDSA } from "../node_modules/@openzeppelin/contracts/utils/cryptograph
 
 /**
  * @dev NOT PRODUCTION-READY ... FOR LEARNING PURPOSES ONLY
- * CrowdFund.sol is a POC Multisig "Crowd Fund Creator"
- * Currently saves signatures on the contract; nothing extra for you to set-up
- * - Should be as easy as Fork-and-Test
+ * moving to subgraphs
  *
- * A Multisig "Vault" becomes available when a Multisig "Fund Run" is completed/funded
- * - Proposals can be created within the "Vault" and managed via the table at '/crowdfund/vaults/{fundRunId}'
- * - Each "Vault" uses its own Nonce
- *   - This way, Vaults do not interfere with each other
- *   - However, proposal transactions need to be created/sent in order (within their own vault)
- *     - This is due to the Incremented-Nonce's use as a security-measure
- *     - Meaning: If you create two proposals (before finishing the first), you won't be able to send the first proposal's Tx
  *
- * known issues/enhancements saved for V3:
- * - probably going to move signatures to subgraph
+ *
  *
  */
 
