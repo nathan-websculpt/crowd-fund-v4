@@ -1,0 +1,51 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: crowdFundTestTwo
+    network: sepolia
+    source:
+      address: "0xcBeC135df75f330F0C70A4183c388729B4B4774e"
+      abi: crowdFundTestTwo
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - ContractOwnerWithdrawal
+        - DonationOccurred
+        - DonorWithdrawal
+        - FundRunCreated
+        - FundRunOwnerWithdrawal
+        - MultisigTransferCompleted
+        - OwnershipTransferred
+        - ProposalCreated
+        - ProposalRevoked
+        - ProposalSupported
+      abis:
+        - name: crowdFundTestTwo
+          file: ./abis/crowdFundTestTwo.json
+      eventHandlers:
+        - event: ContractOwnerWithdrawal(address,uint256)
+          handler: handleContractOwnerWithdrawal
+        - event: DonationOccurred(address,uint256)
+          handler: handleDonationOccurred
+        - event: DonorWithdrawal(address,uint256)
+          handler: handleDonorWithdrawal
+        - event: FundRunCreated(uint16,string,uint256)
+          handler: handleFundRunCreated
+        - event: FundRunOwnerWithdrawal(uint256)
+          handler: handleFundRunOwnerWithdrawal
+        - event: MultisigTransferCompleted(uint16,uint16,address,uint256)
+          handler: handleMultisigTransferCompleted
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: ProposalCreated(address,bytes,uint16,uint16,uint256,address,string)
+          handler: handleProposalCreated
+        - event: ProposalRevoked(uint16,uint16,address,string)
+          handler: handleProposalRevoked
+        - event: ProposalSupported(address,bytes,uint16,uint16)
+          handler: handleProposalSupported
+      file: ./src/crowd-fund-test-two.ts

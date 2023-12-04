@@ -87,17 +87,16 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 	uint16 private constant crowdFundDenominator = 10000;
 	string private constant MSG_PREFIX = "\x19Ethereum Signed Message:\n32";
 
-	event DonationOccurred(address[] owners, address donor, uint256 amount);
+	event DonationOccurred(address donor, uint256 amount);
 
-	event FundRunOwnerWithdrawal(address[] owners, uint256 amount);
+	event FundRunOwnerWithdrawal(uint256 amount);
 
-	event DonorWithdrawal(address[] owners, address donor, uint256 amount);
+	event DonorWithdrawal(address donor, uint256 amount);
 
 	event ContractOwnerWithdrawal(address contractOwner, uint256 amount);
 
 	event FundRunCreated(
 		uint16 id,
-		address[] owners,
 		string title,
 		uint256 target
 	);
@@ -395,7 +394,6 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 
 		emit FundRunCreated(
 			fundRun.id,
-			fundRun.owners,
 			fundRun.title,
 			fundRun.target
 		);
@@ -434,7 +432,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 			fundRun.status != FundRunStatus(2)
 		) fundRun.status = FundRunStatus(2);
 
-		emit DonationOccurred(fundRun.owners, msg.sender, amount);
+		emit DonationOccurred(msg.sender, amount);
 	}
 
 	function fundRunOwnerWithdraw(
@@ -485,7 +483,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		);
 
 		require(success, "Withdrawal reverted.");
-		emit FundRunOwnerWithdrawal(fundRun.owners, netWithdrawAmount);
+		emit FundRunOwnerWithdrawal(netWithdrawAmount);
 	}
 
 	function fundRunDonorWithdraw(
@@ -524,7 +522,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		);
 
 		require(success, "Withdrawal reverted.");
-		emit DonorWithdrawal(fundRun.owners, msg.sender, amountToWithdraw);
+		emit DonorWithdrawal(msg.sender, amountToWithdraw);
 	}
 
 	/**

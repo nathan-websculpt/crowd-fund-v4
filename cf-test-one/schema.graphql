@@ -1,0 +1,100 @@
+type ContractOwnerWithdrawal @entity(immutable: true) {
+  id: Bytes!
+  contractOwner: Bytes! # address
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type DonationOccurred @entity(immutable: true) {
+  id: Bytes!
+  donor: Bytes! # address
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type DonorWithdrawal @entity(immutable: true) {
+  id: Bytes!
+  donor: Bytes! # address
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type FundRunCreated @entity(immutable: true) {
+  id: Bytes!
+  crowdFundTestTwo_id: Int! # uint16
+  title: String! # string
+  target: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type FundRunOwnerWithdrawal @entity(immutable: true) {
+  id: Bytes!
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type MultisigTransferCompleted @entity(immutable: true) {
+  id: Bytes!
+  fundRunId: Int! # uint16
+  proposalId: Int! # uint16
+  to: Bytes! # address
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type OwnershipTransferred @entity(immutable: true) {
+  id: Bytes!
+  previousOwner: Bytes! # address
+  newOwner: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ProposalCreated @entity(immutable: true) {
+  id: Bytes!
+  proposedBy: Bytes! # address
+  signature: Bytes! # bytes
+  fundRunId: Int! # uint16
+  proposalId: Int! # uint16
+  amount: BigInt! # uint256
+  to: Bytes! # address
+  reason: String! # string
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ProposalRevoked @entity(immutable: true) {
+  id: Bytes!
+  fundRunId: Int! # uint16
+  proposalId: Int! # uint16
+  to: Bytes! # address
+  reason: String! # string
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ProposalSupported @entity(immutable: true) {
+  id: Bytes!
+  supportedBy: Bytes! # address
+  signature: Bytes! # bytes
+  fundRunId: Int! # uint16
+  proposalId: Int! # uint16
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
