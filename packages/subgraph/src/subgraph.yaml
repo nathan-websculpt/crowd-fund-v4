@@ -48,4 +48,4 @@ dataSources:
           handler: handleProposalRevoked
         - event: ProposalSupported(address,bytes,uint16,uint16)
           handler: handleProposalSupported
-      file: ./src/crowd-fund-test-three.ts
+      file: mapping.ts
