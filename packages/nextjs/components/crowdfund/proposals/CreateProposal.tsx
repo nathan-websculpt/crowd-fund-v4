@@ -53,14 +53,22 @@ export const CreateProposal = (fundRun: CreateProposalProps) => {
     eventName: "ProposalCreated",
     listener: logs => {
       logs.map(log => {
-        const { proposedBy, fundRunId, proposalId } = log.args;
+        const { proposedBy, signature, fundRunId, proposalId, amount, to, reason } = log.args;
         console.log(
           "📡 New Proposal Creation Event \nProposed By:",
           proposedBy,
-          "Fund Run Id: ",
+          "\nWith Signature: ",
+          signature,
+          "\nFund Run Id: ",
           fundRunId,
           "\nProposal Id: ",
           proposalId,
+          "\nAmount: ",
+          amount,
+          "\nTo: ",
+          to,
+          "\nReason: ",
+          reason,
         );
       });
     },

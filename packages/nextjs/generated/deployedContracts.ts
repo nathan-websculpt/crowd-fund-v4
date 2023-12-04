@@ -5,7 +5,7 @@ const contracts = {
       name: "localhost",
       contracts: {
         CrowdFund: {
-          address: "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853",
+          address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
           abi: [
             {
               inputs: [
@@ -198,6 +198,12 @@ const contracts = {
                 },
                 {
                   indexed: false,
+                  internalType: "bytes",
+                  name: "signature",
+                  type: "bytes",
+                },
+                {
+                  indexed: false,
                   internalType: "uint16",
                   name: "fundRunId",
                   type: "uint16",
@@ -207,6 +213,24 @@ const contracts = {
                   internalType: "uint16",
                   name: "proposalId",
                   type: "uint16",
+                },
+                {
+                  indexed: false,
+                  internalType: "uint256",
+                  name: "amount",
+                  type: "uint256",
+                },
+                {
+                  indexed: false,
+                  internalType: "address",
+                  name: "to",
+                  type: "address",
+                },
+                {
+                  indexed: false,
+                  internalType: "string",
+                  name: "reason",
+                  type: "string",
                 },
               ],
               name: "ProposalCreated",
@@ -251,6 +275,12 @@ const contracts = {
                   internalType: "address",
                   name: "supportedBy",
                   type: "address",
+                },
+                {
+                  indexed: false,
+                  internalType: "bytes",
+                  name: "signature",
+                  type: "bytes",
                 },
                 {
                   indexed: false,
@@ -659,57 +689,6 @@ const contracts = {
             {
               inputs: [
                 {
-                  internalType: "uint16",
-                  name: "_fundRunId",
-                  type: "uint16",
-                },
-              ],
-              name: "getProposals",
-              outputs: [
-                {
-                  components: [
-                    {
-                      internalType: "uint16",
-                      name: "proposalId",
-                      type: "uint16",
-                    },
-                    {
-                      internalType: "uint256",
-                      name: "amount",
-                      type: "uint256",
-                    },
-                    {
-                      internalType: "address",
-                      name: "to",
-                      type: "address",
-                    },
-                    {
-                      internalType: "address",
-                      name: "proposedBy",
-                      type: "address",
-                    },
-                    {
-                      internalType: "string",
-                      name: "reason",
-                      type: "string",
-                    },
-                    {
-                      internalType: "enum CrowdFund.ProposalStatus",
-                      name: "status",
-                      type: "uint8",
-                    },
-                  ],
-                  internalType: "struct CrowdFund.MultiSigVault[]",
-                  name: "",
-                  type: "tuple[]",
-                },
-              ],
-              stateMutability: "view",
-              type: "function",
-            },
-            {
-              inputs: [
-                {
                   components: [
                     {
                       internalType: "uint256",
@@ -750,6 +729,11 @@ const contracts = {
                   internalType: "uint16",
                   name: "_proposalId",
                   type: "uint16",
+                },
+                {
+                  internalType: "bytes[]",
+                  name: "_signaturesList",
+                  type: "bytes[]",
                 },
               ],
               name: "multisigWithdraw",
@@ -801,72 +785,6 @@ const contracts = {
               name: "renounceOwnership",
               outputs: [],
               stateMutability: "nonpayable",
-              type: "function",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "uint16",
-                  name: "_fundRunId",
-                  type: "uint16",
-                },
-                {
-                  internalType: "uint16",
-                  name: "_proposalId",
-                  type: "uint16",
-                },
-              ],
-              name: "revokeMultisigProposal",
-              outputs: [],
-              stateMutability: "nonpayable",
-              type: "function",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "uint16",
-                  name: "",
-                  type: "uint16",
-                },
-                {
-                  internalType: "uint256",
-                  name: "",
-                  type: "uint256",
-                },
-              ],
-              name: "signatureList",
-              outputs: [
-                {
-                  internalType: "bytes",
-                  name: "",
-                  type: "bytes",
-                },
-              ],
-              stateMutability: "view",
-              type: "function",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "uint16",
-                  name: "",
-                  type: "uint16",
-                },
-                {
-                  internalType: "uint256",
-                  name: "",
-                  type: "uint256",
-                },
-              ],
-              name: "signerList",
-              outputs: [
-                {
-                  internalType: "address",
-                  name: "",
-                  type: "address",
-                },
-              ],
-              stateMutability: "view",
               type: "function",
             },
             {
@@ -964,55 +882,6 @@ const contracts = {
                   internalType: "uint256",
                   name: "",
                   type: "uint256",
-                },
-              ],
-              stateMutability: "view",
-              type: "function",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "uint16",
-                  name: "",
-                  type: "uint16",
-                },
-                {
-                  internalType: "uint256",
-                  name: "",
-                  type: "uint256",
-                },
-              ],
-              name: "vaults",
-              outputs: [
-                {
-                  internalType: "uint16",
-                  name: "proposalId",
-                  type: "uint16",
-                },
-                {
-                  internalType: "uint256",
-                  name: "amount",
-                  type: "uint256",
-                },
-                {
-                  internalType: "address",
-                  name: "to",
-                  type: "address",
-                },
-                {
-                  internalType: "address",
-                  name: "proposedBy",
-                  type: "address",
-                },
-                {
-                  internalType: "string",
-                  name: "reason",
-                  type: "string",
-                },
-                {
-                  internalType: "enum CrowdFund.ProposalStatus",
-                  name: "status",
-                  type: "uint8",
                 },
               ],
               stateMutability: "view",

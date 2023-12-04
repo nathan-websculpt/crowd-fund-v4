@@ -30,11 +30,13 @@ export const SupportProposal = (proposal: SupportProposalProps) => {
     eventName: "ProposalSupported",
     listener: logs => {
       logs.map(log => {
-        const { supportedBy, fundRunId, proposalId } = log.args;
+        const { supportedBy, signature, fundRunId, proposalId } = log.args;
         console.log(
           "📡 New Proposal Supported Event \nSupported By:",
           supportedBy,
-          "Fund Run Id: ",
+          "\nWith Signature: ",
+          signature,
+          "\nFund Run Id: ",
           fundRunId,
           "\nProposal Id: ",
           proposalId,
