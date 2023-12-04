@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import router from "next/router";
+import { gql, useQuery } from "@apollo/client";
+import { loadDevMessages, loadErrorMessages } from "@apollo/client/dev";
+//TODO: remove
 import { SignMessageReturnType, isAddress, parseEther, toBytes } from "viem";
 import { useAccount, useWalletClient } from "wagmi";
 import { IntegerVariant, isValidInteger } from "~~/components/scaffold-eth";
@@ -131,6 +134,28 @@ export const CreateProposal = (fundRun: CreateProposalProps) => {
       setCreationSignature(undefined);
     },
   });
+
+  loadDevMessages(); //TODO: remove
+  loadErrorMessages(); //TODO: remove
+  const PROPOSALS_GRAPHQL = `{
+    proposalCreateds(first: 5) {
+      proposedBy
+      signature
+      fundRunId
+      proposalId
+      amount
+      to
+      reason
+    }
+  }
+  `;
+
+  const PROPOSALS_GQL = gql(PROPOSALS_GRAPHQL);
+  const proposalsData = useQuery(PROPOSALS_GQL, { pollInterval: 1000 });
+
+  for (let i = 0; i < proposalsData?.data?.proposalCreateds?.length; i++) {
+    console.log("Proposal from GraphQL Data: ", proposalsData.data.proposalCreateds[i]);
+  }
 
   return (
     <>
