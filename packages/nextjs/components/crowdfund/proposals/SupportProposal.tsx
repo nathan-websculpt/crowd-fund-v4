@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { gql, useLazyQuery } from "@apollo/client";
 import { SignMessageReturnType, toBytes } from "viem";
 import { useWalletClient } from "wagmi";
 import getDigest from "~~/helpers/getDigest";
@@ -16,14 +17,29 @@ interface SupportProposalProps {
 
 export const SupportProposal = (proposal: SupportProposalProps) => {
   const [supportSignature, setSupportSignature] = useState<SignMessageReturnType>();
-
   const { data: walletClient } = useWalletClient();
 
+  const PROPOSAL_GRAPHQL = gql`
+    query ($slug: Int!) {
+      proposalCreateds(where: { proposalId: $slug }) {
+        proposedBy
+        signature
+        fundRunId
+        proposalId
+        amount
+        to
+        reason
+      }
+    }
+  `;
+  const [getProposal, { loading, error, data }] = useLazyQuery(PROPOSAL_GRAPHQL);
+
   useEffect(() => {
-    if (supportSignature !== undefined) {
+    if (supportSignature !== undefined && data !== undefined) {
+      console.log(data.proposalCreateds[0]); //TODO: just for testing
       writeAsync();
     }
-  }, [supportSignature]);
+  }, [data]);
 
   useScaffoldEventSubscriber({
     contractName: "CrowdFund",
@@ -59,7 +75,9 @@ export const SupportProposal = (proposal: SupportProposalProps) => {
       account: walletClient.account,
       message: { raw: toBytes(digest) },
     });
+    console.log(proposalSupportSig);
     setSupportSignature(proposalSupportSig);
+    getProposal({ variables: { slug: proposal.proposalId } });
   };
 
   const { writeAsync, isLoading } = useScaffoldContractWrite({
@@ -78,6 +96,10 @@ export const SupportProposal = (proposal: SupportProposalProps) => {
 
   return (
     <>
+      {/* 
+if (loading) return <p>Loading ...</p>;
+
+if (error) return `Error! ${error}`; */}
       <td className="w-1/12 text-center md:py-4">
         <div className="tooltip tooltip-primary tooltip-right" data-tip="Support this proposal before finalizing.">
           <button className="w-full btn" onClick={() => supportProposal()} disabled={isLoading}>

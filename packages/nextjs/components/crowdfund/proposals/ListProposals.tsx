@@ -1,25 +1,35 @@
 import { SingleProposal } from "./SingleProposal";
 import { Spinner } from "~~/components/Spinner";
 import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
+import { gql, useQuery } from "@apollo/client";
 
 interface ListProposalProps {
   fundRunId: number;
 }
 
 export const ListProposals = (frVault: ListProposalProps) => {
-  const { data: vaultProposals, isLoading: isListLoading } = useScaffoldContractRead({
-    contractName: "CrowdFund",
-    functionName: "getProposals",
-    args: [frVault.fundRunId],
-  });
 
-  if (isListLoading) {
-    return (
-      <div className="flex flex-col gap-2 p-2 m-4 mx-auto border shadow-xl border-base-300 bg-base-200 sm:rounded-lg">
-        <Spinner width="150px" height="150px" />
-      </div>
-    );
-  } else {
+  const PROPOSALS_GRAPHQL = gql`query ($slug: Int!) {
+    proposalCreateds(where: {fundRunId: $slug}) {
+      proposedBy
+      signature
+      fundRunId
+      proposalId
+      amount
+      to
+      reason
+    }
+  }
+  `;
+  const vaultProposals = useQuery(PROPOSALS_GRAPHQL, { variables: { slug: frVault.fundRunId } });
+
+  // if (isListLoading) {
+  //   return (
+  //     <div className="flex flex-col gap-2 p-2 m-4 mx-auto border shadow-xl border-base-300 bg-base-200 sm:rounded-lg">
+  //       <Spinner width="150px" height="150px" />
+  //     </div>
+  //   );
+  // } else {
     return (
       <>
         <div className="flex justify-center w-11/12 mt-9 max-w-11/12 sm:mx-auto">
@@ -52,7 +62,7 @@ export const ListProposals = (frVault: ListProposalProps) => {
                 </tr>
               </thead>
               <tbody>
-                {vaultProposals?.map(vp =>
+                {vaultProposals?.data?.proposalCreateds?.map(vp =>
                   vp.to !== "0x0000000000000000000000000000000000000000" &&
                   vp.proposedBy !== "0x0000000000000000000000000000000000000000" ? (
                     <tr
@@ -79,5 +89,5 @@ export const ListProposals = (frVault: ListProposalProps) => {
         </div>
       </>
     );
-  }
+  // }
 };

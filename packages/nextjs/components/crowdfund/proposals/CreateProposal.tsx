@@ -154,7 +154,8 @@ export const CreateProposal = (fundRun: CreateProposalProps) => {
   const proposalsData = useQuery(PROPOSALS_GQL, { pollInterval: 1000 });
 
   for (let i = 0; i < proposalsData?.data?.proposalCreateds?.length; i++) {
-    console.log("Proposal from GraphQL Data: ", proposalsData.data.proposalCreateds[i]);
+    //TODO:
+    // console.log("Proposal from GraphQL Data: ", proposalsData.data.proposalCreateds[i]);
   }
 
   return (
