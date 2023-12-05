@@ -95,30 +95,24 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 
 	event ContractOwnerWithdrawal(address contractOwner, uint256 amount);
 
-	event FundRunCreated(
-		uint16 id, //TODO: probably need to change to fundRunId
-		string title,
-		uint256 target
-	);
+	event FundRunCreated(uint16 fundRunId, string title, uint256 target);
 
-	event ProposalCreated(
-		address proposedBy,
-		bytes signature,
-		uint16 fundRunId,
+	event Proposal(
 		uint16 proposalId,
+		uint16 fundRunId,
+		address proposedBy,
 		uint256 amount,
 		address to,
 		string reason
 	);
 
-	event ProposalSupported(
+	event ProposalSignature(
 		address supportedBy,
 		bytes signature,
-		uint16 fundRunId,
 		uint16 proposalId
 	);
 
-	event ProposalRevoked(
+	event ProposalRevoke(
 		uint16 fundRunId,
 		uint16 proposalId,
 		address to,
@@ -277,7 +271,17 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		// // });
 		// // vaults[_fundRunId].push(vault);
 
-		emit ProposalCreated(msg.sender, _signature, _fundRunId, numberOfMultisigProposals, _tx.amount, _tx.to, _tx.reason); //TODO: status?
+		emit Proposal(
+			numberOfMultisigProposals,
+			_fundRunId,
+			msg.sender,
+			_tx.amount,
+			_tx.to,
+			_tx.reason
+		); //TODO: status?
+		
+		emit ProposalSignature(msg.sender, _signature, numberOfMultisigProposals);
+		
 		numberOfMultisigProposals++;
 	}
 
@@ -289,15 +293,15 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		external
 		isMultisig(_fundRunId, true)
 		ownsThisFundRun(_fundRunId, msg.sender, true)
-		// // createdProposal(_proposalId, _fundRunId, msg.sender, false)
-		// // txNotSent(_proposalId, _fundRunId)
+	// // createdProposal(_proposalId, _fundRunId, msg.sender, false)
+	// // txNotSent(_proposalId, _fundRunId)
 	{
 		// // require(
 		// // 	!userHasSigned(msg.sender, _proposalId),
 		// // 	"This user has already supported this proposal."
 		// // );
 		// // changeProposalStatus(_fundRunId, _proposalId, 1);
-		emit ProposalSupported(msg.sender, _signature, _fundRunId, _proposalId);
+		emit ProposalSignature(msg.sender, _signature, _proposalId);
 	}
 
 	/**
@@ -308,20 +312,15 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		uint256 _nonce,
 		uint16 _fundRunId,
 		uint16 _proposalId,
-		bytes[] calldata _signaturesList //TODO: get from subgraph
+		bytes[] calldata _signaturesList
 	)
 		external
 		nonReentrant
 		isMultisig(_fundRunId, true)
 		ownsThisFundRun(_fundRunId, msg.sender, true)
-		// // txNotSent(_proposalId, _fundRunId)
+	// // txNotSent(_proposalId, _fundRunId)
 	{
-		_verifyMultisigRequest(
-			_tx,
-			_nonce,
-			_signaturesList, //TODO: get from subgraph
-			_fundRunId
-		);
+		_verifyMultisigRequest(_tx, _nonce, _signaturesList, _fundRunId);
 		_multisigTransfer(_tx, _fundRunId, _proposalId);
 	}
 
@@ -378,7 +377,10 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		 * @dev prevents creator from adding self as co-owner
 		 *      prevents two co-owners from having the same address
 		 */
-		require(validateOwners(msg.sender, _owners), "The co-owners and the creator of a Fund Run must all have different wallet addresses.");
+		require(
+			validateOwners(msg.sender, _owners),
+			"The co-owners and the creator of a Fund Run must all have different wallet addresses."
+		);
 
 		FundRun storage fundRun = fundRuns[numberOfFundRuns];
 		fundRun.id = numberOfFundRuns;
@@ -392,11 +394,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		fundRun.status = FundRunStatus(0);
 		numberOfFundRuns++;
 
-		emit FundRunCreated(
-			fundRun.id,
-			fundRun.title,
-			fundRun.target
-		);
+		emit FundRunCreated(fundRun.id, fundRun.title, fundRun.target);
 	}
 
 	function donateToFundRun(
@@ -730,13 +728,13 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		address _creator,
 		address[] memory _owners
 	) private pure returns (bool) {
-		if(_owners.length == 1) return true;
+		if (_owners.length == 1) return true;
 		bool creatorAlreadyInList = false;
 		address addrOne;
 		address addrTwo;
 		for (uint16 i = 0; i < _owners.length; i++) {
 			if (_owners[i] == _creator && creatorAlreadyInList) return false;
-			else if(_owners[i] == _creator) creatorAlreadyInList = true;
+			else if (_owners[i] == _creator) creatorAlreadyInList = true;
 			if (_owners[i] == addrOne || _owners[i] == addrTwo) return false;
 			if (i == 0) addrOne = _owners[i];
 			else if (i == 1) addrTwo = _owners[i];
