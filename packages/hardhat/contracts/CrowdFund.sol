@@ -87,7 +87,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 	uint16 private constant crowdFundDenominator = 10000;
 	string private constant MSG_PREFIX = "\x19Ethereum Signed Message:\n32";
 
-	event DonationOccurred(address donor, uint256 amount);
+	event Donation(address donor, uint256 amount);
 
 	event FundRunOwnerWithdrawal(uint256 amount);
 
@@ -116,7 +116,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		string reason
 	);
 
-	event MultisigTransferCompleted(
+	event MultisigTransfer(
 		uint16 fundRunId,
 		uint16 proposalId,
 		address to,
@@ -431,7 +431,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 			fundRun.status != FundRunStatus(2)
 		) fundRun.status = FundRunStatus(2);
 
-		emit DonationOccurred(msg.sender, amount);
+		emit Donation(msg.sender, amount);
 	}
 
 	function fundRunOwnerWithdraw(
@@ -667,7 +667,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		(bool success, ) = payable(_tx.to).call{ value: netWithdrawAmount }("");
 
 		require(success, "Transfer not fulfilled");
-		emit MultisigTransferCompleted(
+		emit MultisigTransfer(
 			_fundRunId,
 			_proposalId,
 			_tx.to,
