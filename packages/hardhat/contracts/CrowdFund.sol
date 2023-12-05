@@ -96,7 +96,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 	event ContractOwnerWithdrawal(address contractOwner, uint256 amount);
 
 	event FundRunCreated(
-		uint16 id,
+		uint16 id, //TODO: probably need to change to fundRunId
 		string title,
 		uint256 target
 	);

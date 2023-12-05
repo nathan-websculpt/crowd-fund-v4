@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { gql, useLazyQuery } from "@apollo/client";
 import { SignMessageReturnType, toBytes } from "viem";
 import { useWalletClient } from "wagmi";
 import getDigest from "~~/helpers/getDigest";
@@ -19,27 +18,11 @@ export const SupportProposal = (proposal: SupportProposalProps) => {
   const [supportSignature, setSupportSignature] = useState<SignMessageReturnType>();
   const { data: walletClient } = useWalletClient();
 
-  const PROPOSAL_GRAPHQL = gql`
-    query ($slug: Int!) {
-      proposalCreateds(where: { proposalId: $slug }) {
-        proposedBy
-        signature
-        fundRunId
-        proposalId
-        amount
-        to
-        reason
-      }
-    }
-  `;
-  const [getProposal, { loading, error, data }] = useLazyQuery(PROPOSAL_GRAPHQL);
-
   useEffect(() => {
-    if (supportSignature !== undefined && data !== undefined) {
-      console.log(data.proposalCreateds[0]); //TODO: just for testing
+    if (supportSignature !== undefined) {
       writeAsync();
     }
-  }, [data]);
+  }, [supportSignature]);
 
   useScaffoldEventSubscriber({
     contractName: "CrowdFund",
@@ -75,9 +58,7 @@ export const SupportProposal = (proposal: SupportProposalProps) => {
       account: walletClient.account,
       message: { raw: toBytes(digest) },
     });
-    console.log(proposalSupportSig);
     setSupportSignature(proposalSupportSig);
-    getProposal({ variables: { slug: proposal.proposalId } });
   };
 
   const { writeAsync, isLoading } = useScaffoldContractWrite({
