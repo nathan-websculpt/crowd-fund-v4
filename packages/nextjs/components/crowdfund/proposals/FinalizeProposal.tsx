@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { gql, useLazyQuery } from "@apollo/client";
-import { formatEther } from "viem";
 import getNonce from "~~/helpers/getNonce";
-import { useScaffoldContractRead, useScaffoldContractWrite, useScaffoldEventSubscriber } from "~~/hooks/scaffold-eth";
+import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 
 interface FinalizeProposalProps {
   fundRunId: number;
@@ -57,26 +56,6 @@ export const FinalizeProposal = (proposal: FinalizeProposalProps) => {
     }
   }, [signaturesList]);
 
-  useScaffoldEventSubscriber({
-    contractName: "CrowdFund",
-    eventName: "MultisigTransferCompleted",
-    listener: logs => {
-      logs.map(log => {
-        const { fundRunId, proposalId, to, amount } = log.args;
-        console.log(
-          "📡 New Multisig-Transfer-Completed Event \nFund Run Id:",
-          fundRunId,
-          "Proposal Id: ",
-          proposalId,
-          "\nTo: ",
-          to,
-          "\nAmount: ",
-          formatEther(amount),
-        );
-      });
-    },
-  });
-
   const { data: fundRunNonce } = useScaffoldContractRead({
     contractName: "CrowdFund",
     functionName: "getNonce",
@@ -101,7 +80,7 @@ export const FinalizeProposal = (proposal: FinalizeProposalProps) => {
       setNonce(undefined);
     },
   });
-  if (error) return `Error! ${error}`;//TODO: REMOVE
+  if (error) return `Error! ${error}`; //TODO: REMOVE
   return (
     <>
       <td className="w-1/12 text-center md:py-4">

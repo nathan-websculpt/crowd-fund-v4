@@ -1,27 +1,10 @@
-import { formatEther } from "viem";
-import { useScaffoldContractWrite, useScaffoldEventSubscriber } from "~~/hooks/scaffold-eth";
+import { useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 
 interface OwnerProps {
   fundRunId: number;
 }
 
 export const OwnerWithdrawBtn = (owner: OwnerProps) => {
-  useScaffoldEventSubscriber({
-    contractName: "CrowdFund",
-    eventName: "FundRunOwnerWithdrawal",
-    listener: logs => {
-      logs.map(log => {
-        const { owners, amount } = log.args;
-        console.log(
-          "📡 New Owner Withdrawal Event \nFund Run Owner:",
-          owners,
-          "\nWithdrawal Amount: ",
-          formatEther(amount),
-        );
-      });
-    },
-  });
-
   const { writeAsync, isLoading } = useScaffoldContractWrite({
     contractName: "CrowdFund",
     functionName: "fundRunOwnerWithdraw",

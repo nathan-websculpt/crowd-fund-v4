@@ -3,8 +3,7 @@ import Link from "next/link";
 import { IntegerVariant, isValidInteger } from "../scaffold-eth";
 import { DonorWithdrawBtn } from "./DonorWithdrawBtn";
 import { OwnerWithdrawBtn } from "./OwnerWithdrawBtn";
-import { formatEther } from "viem";
-import { useScaffoldContractWrite, useScaffoldEventSubscriber } from "~~/hooks/scaffold-eth";
+import { useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 import { notification } from "~~/utils/scaffold-eth";
 
 interface FundRunProps {
@@ -19,24 +18,6 @@ export const FundRunDonate = (fundRun: FundRunProps) => {
     const _v = newVal.trim();
     if (_v.length === 0 || _v === "." || isValidInteger(IntegerVariant.UINT256, _v, false)) setDonationInput(_v);
   }
-
-  useScaffoldEventSubscriber({
-    contractName: "CrowdFund",
-    eventName: "DonationOccurred",
-    listener: logs => {
-      logs.map(log => {
-        const { owners, donor, amount } = log.args;
-        console.log(
-          "📡 New Donation Event \nFund Run Owner:",
-          owners,
-          "\nDonor: ",
-          donor,
-          "\nDonation amount: ",
-          formatEther(amount),
-        );
-      });
-    },
-  });
 
   const { writeAsync, isLoading } = useScaffoldContractWrite({
     contractName: "CrowdFund",

@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { IntegerVariant, isValidInteger } from "../scaffold-eth";
-import { formatEther, isAddress, parseEther } from "viem";
+import { isAddress, parseEther } from "viem";
 import { useAccount } from "wagmi";
-import { useScaffoldContractWrite, useScaffoldEventSubscriber } from "~~/hooks/scaffold-eth";
+import { useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 import { notification } from "~~/utils/scaffold-eth";
 
 export const CreateFundRun = () => {
@@ -64,27 +64,6 @@ export const CreateFundRun = () => {
     if (selection) setWalletCount(2);
     else setWalletCount(1);
   };
-
-  useScaffoldEventSubscriber({
-    contractName: "CrowdFund",
-    eventName: "FundRunCreated",
-    listener: logs => {
-      logs.map(log => {
-        const { id, owners, title, target } = log.args;
-        console.log(
-          "📡 New Fund Run Event \ncreator:",
-          owners,
-          "\nID: ",
-          id,
-          "\nTitle: ",
-          title,
-          "\n  with a target of: ",
-          formatEther(target),
-        );
-        if (owners !== undefined) if (userAccount.address === owners[0]) router.push(`/crowdfund/${id}`);
-      });
-    },
-  });
 
   const { writeAsync, isLoading } = useScaffoldContractWrite({
     contractName: "CrowdFund",

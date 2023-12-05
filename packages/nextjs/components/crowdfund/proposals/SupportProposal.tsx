@@ -3,7 +3,7 @@ import { SignMessageReturnType, toBytes } from "viem";
 import { useWalletClient } from "wagmi";
 import getDigest from "~~/helpers/getDigest";
 import getNonce from "~~/helpers/getNonce";
-import { useScaffoldContractRead, useScaffoldContractWrite, useScaffoldEventSubscriber } from "~~/hooks/scaffold-eth";
+import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 
 interface SupportProposalProps {
   fundRunId: number;
@@ -23,26 +23,6 @@ export const SupportProposal = (proposal: SupportProposalProps) => {
       writeAsync();
     }
   }, [supportSignature]);
-
-  useScaffoldEventSubscriber({
-    contractName: "CrowdFund",
-    eventName: "ProposalSupported",
-    listener: logs => {
-      logs.map(log => {
-        const { supportedBy, signature, fundRunId, proposalId } = log.args;
-        console.log(
-          "📡 New Proposal Supported Event \nSupported By:",
-          supportedBy,
-          "\nWith Signature: ",
-          signature,
-          "\nFund Run Id: ",
-          fundRunId,
-          "\nProposal Id: ",
-          proposalId,
-        );
-      });
-    },
-  });
 
   const { data: fundRunNonce } = useScaffoldContractRead({
     contractName: "CrowdFund",

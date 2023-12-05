@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react";
 import router from "next/router";
 import { gql, useQuery } from "@apollo/client";
-import { loadDevMessages, loadErrorMessages } from "@apollo/client/dev";
-//TODO: remove
 import { SignMessageReturnType, isAddress, parseEther, toBytes } from "viem";
 import { useAccount, useWalletClient } from "wagmi";
 import { IntegerVariant, isValidInteger } from "~~/components/scaffold-eth";
 import getDigest from "~~/helpers/getDigest";
 import getNonce from "~~/helpers/getNonce";
-import { useScaffoldContractRead, useScaffoldContractWrite, useScaffoldEventSubscriber } from "~~/hooks/scaffold-eth";
+import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 import { notification } from "~~/utils/scaffold-eth";
 
 interface CreateProposalProps {
@@ -50,32 +48,6 @@ export const CreateProposal = (fundRun: CreateProposalProps) => {
     setErrorMsg(msg);
     setError(true);
   };
-
-  useScaffoldEventSubscriber({
-    contractName: "CrowdFund",
-    eventName: "ProposalCreated",
-    listener: logs => {
-      logs.map(log => {
-        const { proposedBy, signature, fundRunId, proposalId, amount, to, reason } = log.args;
-        console.log(
-          "📡 New Proposal Creation Event \nProposed By:",
-          proposedBy,
-          "\nWith Signature: ",
-          signature,
-          "\nFund Run Id: ",
-          fundRunId,
-          "\nProposal Id: ",
-          proposalId,
-          "\nAmount: ",
-          amount,
-          "\nTo: ",
-          to,
-          "\nReason: ",
-          reason,
-        );
-      });
-    },
-  });
 
   const { data: fundRunNonce } = useScaffoldContractRead({
     contractName: "CrowdFund",
@@ -135,8 +107,6 @@ export const CreateProposal = (fundRun: CreateProposalProps) => {
     },
   });
 
-  loadDevMessages(); //TODO: remove
-  loadErrorMessages(); //TODO: remove
   const PROPOSALS_GRAPHQL = `{
     proposalCreateds(first: 5) {
       proposedBy
