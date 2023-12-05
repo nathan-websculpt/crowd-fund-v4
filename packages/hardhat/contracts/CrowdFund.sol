@@ -15,7 +15,7 @@ import { ECDSA } from "../node_modules/@openzeppelin/contracts/utils/cryptograph
  */
 
 contract CrowdFund is Ownable, ReentrancyGuard {
-	struct FundRun {
+	struct FundRun_ {
 		uint16 id; //not large enough in a prod scenario
 		address[] owners;
 		string title;
@@ -75,7 +75,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 	//      proposalId
 	// // mapping(uint16 => address[]) public signerList;
 	mapping(uint16 => uint256) public vaultNonces; //fundRunId => Nonce
-	mapping(uint256 => FundRun) public fundRuns;
+	mapping(uint256 => FundRun_) public fundRuns;
 	mapping(address => DonorsLog) public donorLogs; //a single donor will have all of their logs (across all Fund Runs they donated to) here
 
 	uint16 public numberOfFundRuns = 0;
@@ -95,7 +95,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 
 	event ContractOwnerWithdrawal(address contractOwner, uint256 amount);
 
-	event FundRunCreated(uint16 fundRunId, string title, uint256 target);
+	event FundRun(uint16 fundRunId, string title, uint256 target);
 
 	event Proposal(
 		uint16 proposalId,
@@ -106,11 +106,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		string reason
 	);
 
-	event ProposalSignature(
-		uint16 proposalId,
-		address signer,
-		bytes signature
-	);
+	event ProposalSignature(uint16 proposalId, address signer, bytes signature);
 	//^^^ Proposal (one-to-) will have (-many) ProposalSignatures
 
 	event ProposalRevoke(
@@ -244,7 +240,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		fundRunCompleted(_fundRunId, true)
 		fundRunSucceeded(_fundRunId, true)
 	{
-		FundRun storage fundRun = fundRuns[_fundRunId];
+		FundRun_ storage fundRun = fundRuns[_fundRunId];
 		require(fundRun.amountCollected > 0, "There is nothing to withdraw");
 		require(
 			fundRun.amountCollected > fundRun.amountWithdrawn,
@@ -280,8 +276,12 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 			_tx.to,
 			_tx.reason
 		); //TODO: status?
-		
-		emit ProposalSignature(msg.sender, _signature, numberOfMultisigProposals);
+
+		emit ProposalSignature(
+			numberOfMultisigProposals,
+			msg.sender,
+			_signature
+		);
 
 		numberOfMultisigProposals++;
 	}
@@ -302,7 +302,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		// // 	"This user has already supported this proposal."
 		// // );
 		// // changeProposalStatus(_fundRunId, _proposalId, 1);
-		emit ProposalSignature(msg.sender, _signature, _proposalId);
+		emit ProposalSignature(_proposalId, msg.sender, _signature);
 	}
 
 	/**
@@ -383,7 +383,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 			"The co-owners and the creator of a Fund Run must all have different wallet addresses."
 		);
 
-		FundRun storage fundRun = fundRuns[numberOfFundRuns];
+		FundRun_ storage fundRun = fundRuns[numberOfFundRuns];
 		fundRun.id = numberOfFundRuns;
 		fundRun.owners = _owners;
 		fundRun.title = _title;
@@ -395,7 +395,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		fundRun.status = FundRunStatus(0);
 		numberOfFundRuns++;
 
-		emit FundRunCreated(fundRun.id, fundRun.title, fundRun.target);
+		emit FundRun(fundRun.id, fundRun.title, fundRun.target);
 	}
 
 	function donateToFundRun(
@@ -409,7 +409,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		require(msg.value > 0, "Minimum payment amount not met.");
 		uint256 amount = msg.value;
 
-		FundRun storage fundRun = fundRuns[_id];
+		FundRun_ storage fundRun = fundRuns[_id];
 
 		fundRun.donors.push(msg.sender);
 		fundRun.donations.push(amount);
@@ -444,7 +444,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		fundRunCompleted(_id, true)
 		fundRunSucceeded(_id, true)
 	{
-		FundRun storage fundRun = fundRuns[_id];
+		FundRun_ storage fundRun = fundRuns[_id];
 		require(fundRun.amountCollected > 0, "There is nothing to withdraw");
 		require(
 			fundRun.amountCollected > fundRun.amountWithdrawn,
@@ -494,7 +494,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		fundRunCompleted(_id, true)
 		fundRunSucceeded(_id, false)
 	{
-		FundRun storage fundRun = fundRuns[_id];
+		FundRun_ storage fundRun = fundRuns[_id];
 		DonorsLog storage donorLog = donorLogs[msg.sender];
 		uint256 amountToWithdraw = donorLog.donorMoneyLog[fundRun.id];
 		require(
@@ -543,7 +543,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 	}
 
 	function updateFundRunStatus(uint16 _fundRunId) external {
-		FundRun storage fundRun = fundRuns[_fundRunId];
+		FundRun_ storage fundRun = fundRuns[_fundRunId];
 		if (fundRun.deadline < block.timestamp)
 			if (fundRun.amountCollected < fundRun.target)
 				fundRun.status = FundRunStatus(1);
@@ -556,8 +556,8 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 	/**
 	 * @dev Returns list of Fund Runs in reverse order (latest-first)
 	 */
-	function getFundRuns() external view returns (FundRun[] memory) {
-		FundRun[] memory allFundRuns = new FundRun[](numberOfFundRuns);
+	function getFundRuns() external view returns (FundRun_[] memory) {
+		FundRun_[] memory allFundRuns = new FundRun_[](numberOfFundRuns);
 		for (uint16 i = 1; i < numberOfFundRuns + 1; i++) {
 			allFundRuns[i - 1] = fundRuns[numberOfFundRuns - i];
 		}
@@ -573,7 +573,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 	// // 	return vaults[_fundRunId];
 	// // }
 
-	function getFundRun(uint16 _id) external view returns (FundRun memory) {
+	function getFundRun(uint16 _id) external view returns (FundRun_ memory) {
 		return fundRuns[_id];
 	}
 
@@ -639,7 +639,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		uint16 _fundRunId,
 		uint16 _proposalId
 	) private {
-		FundRun storage fundRun = fundRuns[_fundRunId];
+		FundRun_ storage fundRun = fundRuns[_fundRunId];
 		require(fundRun.amountCollected > 0, "There is nothing to withdraw");
 		require(
 			fundRun.amountCollected > fundRun.amountWithdrawn,
