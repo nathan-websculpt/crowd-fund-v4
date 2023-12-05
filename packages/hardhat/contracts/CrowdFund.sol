@@ -107,10 +107,11 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 	);
 
 	event ProposalSignature(
-		address supportedBy,
-		bytes signature,
-		uint16 proposalId
+		uint16 proposalId,
+		address signer,
+		bytes signature
 	);
+	//^^^ Proposal (one-to-) will have (-many) ProposalSignatures
 
 	event ProposalRevoke(
 		uint16 fundRunId,
@@ -281,7 +282,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		); //TODO: status?
 		
 		emit ProposalSignature(msg.sender, _signature, numberOfMultisigProposals);
-		
+
 		numberOfMultisigProposals++;
 	}
 
