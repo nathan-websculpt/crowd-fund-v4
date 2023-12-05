@@ -38,7 +38,6 @@ export const FinalizeProposal = (proposal: FinalizeProposalProps) => {
   }, [nonce]);
 
   useEffect(() => {
-    console.log("pre-check", data);
     if (data !== undefined) {
       console.log(data);
       let thisArr = [];

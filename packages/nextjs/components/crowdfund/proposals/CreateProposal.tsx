@@ -107,27 +107,6 @@ export const CreateProposal = (fundRun: CreateProposalProps) => {
     },
   });
 
-  const PROPOSALS_GRAPHQL = `{
-    proposalCreateds(first: 5) {
-      proposedBy
-      signature
-      fundRunId
-      proposalId
-      amount
-      to
-      reason
-    }
-  }
-  `;
-
-  const PROPOSALS_GQL = gql(PROPOSALS_GRAPHQL);
-  const proposalsData = useQuery(PROPOSALS_GQL, { pollInterval: 1000 });
-
-  for (let i = 0; i < proposalsData?.data?.proposalCreateds?.length; i++) {
-    //TODO:
-    // console.log("Proposal from GraphQL Data: ", proposalsData.data.proposalCreateds[i]);
-  }
-
   return (
     <>
       <div className="flex flex-col gap-2 sm:gap-5">

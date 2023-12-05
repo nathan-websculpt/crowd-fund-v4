@@ -898,7 +898,7 @@ const contracts = {
       name: "sepolia",
       contracts: {
         CrowdFund: {
-          address: "0xcBeC135df75f330F0C70A4183c388729B4B4774e",
+          address: "0xb8aD2A8994790bB63F6c3FD01EBCD3Ac286E803b",
           abi: [
             {
               inputs: [
@@ -946,7 +946,7 @@ const contracts = {
                   type: "uint256",
                 },
               ],
-              name: "DonationOccurred",
+              name: "Donation",
               type: "event",
             },
             {
@@ -974,7 +974,7 @@ const contracts = {
                 {
                   indexed: false,
                   internalType: "uint16",
-                  name: "id",
+                  name: "fundRunId",
                   type: "uint16",
                 },
                 {
@@ -990,7 +990,7 @@ const contracts = {
                   type: "uint256",
                 },
               ],
-              name: "FundRunCreated",
+              name: "FundRun",
               type: "event",
             },
             {
@@ -1034,7 +1034,7 @@ const contracts = {
                   type: "uint256",
                 },
               ],
-              name: "MultisigTransferCompleted",
+              name: "MultisigTransfer",
               type: "event",
             },
             {
@@ -1061,15 +1061,9 @@ const contracts = {
               inputs: [
                 {
                   indexed: false,
-                  internalType: "address",
-                  name: "proposedBy",
-                  type: "address",
-                },
-                {
-                  indexed: false,
-                  internalType: "bytes",
-                  name: "signature",
-                  type: "bytes",
+                  internalType: "uint16",
+                  name: "proposalId",
+                  type: "uint16",
                 },
                 {
                   indexed: false,
@@ -1079,9 +1073,9 @@ const contracts = {
                 },
                 {
                   indexed: false,
-                  internalType: "uint16",
-                  name: "proposalId",
-                  type: "uint16",
+                  internalType: "address",
+                  name: "proposedBy",
+                  type: "address",
                 },
                 {
                   indexed: false,
@@ -1102,7 +1096,7 @@ const contracts = {
                   type: "string",
                 },
               ],
-              name: "ProposalCreated",
+              name: "Proposal",
               type: "event",
             },
             {
@@ -1133,7 +1127,7 @@ const contracts = {
                   type: "string",
                 },
               ],
-              name: "ProposalRevoked",
+              name: "ProposalRevoke",
               type: "event",
             },
             {
@@ -1141,8 +1135,14 @@ const contracts = {
               inputs: [
                 {
                   indexed: false,
+                  internalType: "uint16",
+                  name: "proposalId",
+                  type: "uint16",
+                },
+                {
+                  indexed: false,
                   internalType: "address",
-                  name: "supportedBy",
+                  name: "signer",
                   type: "address",
                 },
                 {
@@ -1151,20 +1151,8 @@ const contracts = {
                   name: "signature",
                   type: "bytes",
                 },
-                {
-                  indexed: false,
-                  internalType: "uint16",
-                  name: "fundRunId",
-                  type: "uint16",
-                },
-                {
-                  indexed: false,
-                  internalType: "uint16",
-                  name: "proposalId",
-                  type: "uint16",
-                },
               ],
-              name: "ProposalSupported",
+              name: "ProposalSignature",
               type: "event",
             },
             {
@@ -1458,7 +1446,7 @@ const contracts = {
                       type: "uint8",
                     },
                   ],
-                  internalType: "struct CrowdFund.FundRun",
+                  internalType: "struct CrowdFund.FundRun_",
                   name: "",
                   type: "tuple",
                 },
@@ -1528,7 +1516,7 @@ const contracts = {
                       type: "uint8",
                     },
                   ],
-                  internalType: "struct CrowdFund.FundRun[]",
+                  internalType: "struct CrowdFund.FundRun_[]",
                   name: "",
                   type: "tuple[]",
                 },
