@@ -1,184 +1,186 @@
 import {
-    ContractOwnerWithdrawal as ContractOwnerWithdrawalEvent,
-    DonationOccurred as DonationOccurredEvent,
-    DonorWithdrawal as DonorWithdrawalEvent,
-    FundRunCreated as FundRunCreatedEvent,
-    FundRunOwnerWithdrawal as FundRunOwnerWithdrawalEvent,
-    MultisigTransferCompleted as MultisigTransferCompletedEvent,
-    OwnershipTransferred as OwnershipTransferredEvent,
-    ProposalCreated as ProposalCreatedEvent,
-    ProposalRevoked as ProposalRevokedEvent,
-    ProposalSupported as ProposalSupportedEvent
-  } from "../generated/crowdFundTestThree/crowdFundTestThree"
-  import {
-    ContractOwnerWithdrawal,
-    DonationOccurred,
-    DonorWithdrawal,
-    FundRunCreated,
-    FundRunOwnerWithdrawal,
-    MultisigTransferCompleted,
-    OwnershipTransferred,
-    ProposalCreated,
-    ProposalRevoked,
-    ProposalSupported
-  } from "../generated/schema"
-  
-  export function handleContractOwnerWithdrawal(
-    event: ContractOwnerWithdrawalEvent
-  ): void {
-    let entity = new ContractOwnerWithdrawal(
-      event.transaction.hash.concatI32(event.logIndex.toI32())
-    )
-    entity.contractOwner = event.params.contractOwner
-    entity.amount = event.params.amount
-  
-    entity.blockNumber = event.block.number
-    entity.blockTimestamp = event.block.timestamp
-    entity.transactionHash = event.transaction.hash
-  
-    entity.save()
+  ContractOwnerWithdrawal as ContractOwnerWithdrawalEvent,
+  Donation as DonationEvent,
+  DonorWithdrawal as DonorWithdrawalEvent,
+  FundRun as FundRunEvent,
+  FundRunOwnerWithdrawal as FundRunOwnerWithdrawalEvent,
+  MultisigTransfer as MultisigTransferEvent,
+  OwnershipTransferred as OwnershipTransferredEvent,
+  Proposal as ProposalEvent,
+  ProposalRevoke as ProposalRevokeEvent,
+  ProposalSignature as ProposalSignatureEvent
+} from "../generated/cfTestFive/cfTestFive"
+import {
+  ContractOwnerWithdrawal,
+  Donation,
+  DonorWithdrawal,
+  FundRun,
+  FundRunOwnerWithdrawal,
+  MultisigTransfer,
+  OwnershipTransferred,
+  Proposal,
+  ProposalRevoke,
+  ProposalSignature
+} from "../generated/schema"
+import { Bytes } from "@graphprotocol/graph-ts"
+
+export function handleContractOwnerWithdrawal(
+  event: ContractOwnerWithdrawalEvent
+): void {
+  let entity = new ContractOwnerWithdrawal(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
+  )
+  entity.contractOwner = event.params.contractOwner
+  entity.amount = event.params.amount
+
+  entity.blockNumber = event.block.number
+  entity.blockTimestamp = event.block.timestamp
+  entity.transactionHash = event.transaction.hash
+
+  entity.save()
+}
+
+export function handleDonation(event: DonationEvent): void {
+  let entity = new Donation(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
+  )
+  entity.donor = event.params.donor
+  entity.amount = event.params.amount
+
+  entity.blockNumber = event.block.number
+  entity.blockTimestamp = event.block.timestamp
+  entity.transactionHash = event.transaction.hash
+
+  entity.save()
+}
+
+export function handleDonorWithdrawal(event: DonorWithdrawalEvent): void {
+  let entity = new DonorWithdrawal(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
+  )
+  entity.donor = event.params.donor
+  entity.amount = event.params.amount
+
+  entity.blockNumber = event.block.number
+  entity.blockTimestamp = event.block.timestamp
+  entity.transactionHash = event.transaction.hash
+
+  entity.save()
+}
+
+export function handleFundRun(event: FundRunEvent): void {
+  let entity = new FundRun(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
+  )
+  entity.fundRunId = event.params.fundRunId
+  entity.title = event.params.title
+  entity.target = event.params.target
+
+  entity.blockNumber = event.block.number
+  entity.blockTimestamp = event.block.timestamp
+  entity.transactionHash = event.transaction.hash
+
+  entity.save()
+}
+
+export function handleFundRunOwnerWithdrawal(
+  event: FundRunOwnerWithdrawalEvent
+): void {
+  let entity = new FundRunOwnerWithdrawal(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
+  )
+  entity.amount = event.params.amount
+
+  entity.blockNumber = event.block.number
+  entity.blockTimestamp = event.block.timestamp
+  entity.transactionHash = event.transaction.hash
+
+  entity.save()
+}
+
+export function handleMultisigTransfer(event: MultisigTransferEvent): void {
+  let entity = new MultisigTransfer(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
+  )
+  entity.fundRunId = event.params.fundRunId
+  entity.proposalId = event.params.proposalId
+  entity.to = event.params.to
+  entity.amount = event.params.amount
+
+  entity.blockNumber = event.block.number
+  entity.blockTimestamp = event.block.timestamp
+  entity.transactionHash = event.transaction.hash
+
+  entity.save()
+}
+
+export function handleOwnershipTransferred(
+  event: OwnershipTransferredEvent
+): void {
+  let entity = new OwnershipTransferred(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
+  )
+  entity.previousOwner = event.params.previousOwner
+  entity.newOwner = event.params.newOwner
+
+  entity.blockNumber = event.block.number
+  entity.blockTimestamp = event.block.timestamp
+  entity.transactionHash = event.transaction.hash
+
+  entity.save()
+}
+
+export function handleProposal(event: ProposalEvent): void {
+  let entity = new Proposal(
+    Bytes.fromHexString("proposals_").concat(Bytes.fromI32(event.params.proposalId))
+  )
+  entity.proposalId = event.params.proposalId
+  entity.fundRunId = event.params.fundRunId
+  entity.proposedBy = event.params.proposedBy
+  entity.amount = event.params.amount
+  entity.to = event.params.to
+  entity.reason = event.params.reason
+
+  entity.blockNumber = event.block.number
+  entity.blockTimestamp = event.block.timestamp
+  entity.transactionHash = event.transaction.hash
+
+  entity.save()
+}
+
+export function handleProposalSignature(event: ProposalSignatureEvent): void {
+  let entity = new ProposalSignature(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
+  )
+  entity.proposalId = event.params.proposalId
+  entity.signer = event.params.signer
+  entity.signature = event.params.signature
+
+  entity.blockNumber = event.block.number
+  entity.blockTimestamp = event.block.timestamp
+  entity.transactionHash = event.transaction.hash
+
+  let proposalEntity = Proposal.load(Bytes.fromHexString("proposals_").concat(Bytes.fromI32(event.params.proposalId)))
+  if(proposalEntity !== null) {
+    entity.proposal = Bytes.fromHexString("proposals_").concat(Bytes.fromI32(event.params.proposalId));
   }
   
-  export function handleDonationOccurred(event: DonationOccurredEvent): void {
-    let entity = new DonationOccurred(
-      event.transaction.hash.concatI32(event.logIndex.toI32())
-    )
-    entity.donor = event.params.donor
-    entity.amount = event.params.amount
-  
-    entity.blockNumber = event.block.number
-    entity.blockTimestamp = event.block.timestamp
-    entity.transactionHash = event.transaction.hash
-  
-    entity.save()
-  }
-  
-  export function handleDonorWithdrawal(event: DonorWithdrawalEvent): void {
-    let entity = new DonorWithdrawal(
-      event.transaction.hash.concatI32(event.logIndex.toI32())
-    )
-    entity.donor = event.params.donor
-    entity.amount = event.params.amount
-  
-    entity.blockNumber = event.block.number
-    entity.blockTimestamp = event.block.timestamp
-    entity.transactionHash = event.transaction.hash
-  
-    entity.save()
-  }
-  
-  export function handleFundRunCreated(event: FundRunCreatedEvent): void {
-    let entity = new FundRunCreated(
-      event.transaction.hash.concatI32(event.logIndex.toI32())
-    )
-    entity.crowdFundTestThree_id = event.params.id
-    entity.title = event.params.title
-    entity.target = event.params.target
-  
-    entity.blockNumber = event.block.number
-    entity.blockTimestamp = event.block.timestamp
-    entity.transactionHash = event.transaction.hash
-  
-    entity.save()
-  }
-  
-  export function handleFundRunOwnerWithdrawal(
-    event: FundRunOwnerWithdrawalEvent
-  ): void {
-    let entity = new FundRunOwnerWithdrawal(
-      event.transaction.hash.concatI32(event.logIndex.toI32())
-    )
-    entity.amount = event.params.amount
-  
-    entity.blockNumber = event.block.number
-    entity.blockTimestamp = event.block.timestamp
-    entity.transactionHash = event.transaction.hash
-  
-    entity.save()
-  }
-  
-  export function handleMultisigTransferCompleted(
-    event: MultisigTransferCompletedEvent
-  ): void {
-    let entity = new MultisigTransferCompleted(
-      event.transaction.hash.concatI32(event.logIndex.toI32())
-    )
-    entity.fundRunId = event.params.fundRunId
-    entity.proposalId = event.params.proposalId
-    entity.to = event.params.to
-    entity.amount = event.params.amount
-  
-    entity.blockNumber = event.block.number
-    entity.blockTimestamp = event.block.timestamp
-    entity.transactionHash = event.transaction.hash
-  
-    entity.save()
-  }
-  
-  export function handleOwnershipTransferred(
-    event: OwnershipTransferredEvent
-  ): void {
-    let entity = new OwnershipTransferred(
-      event.transaction.hash.concatI32(event.logIndex.toI32())
-    )
-    entity.previousOwner = event.params.previousOwner
-    entity.newOwner = event.params.newOwner
-  
-    entity.blockNumber = event.block.number
-    entity.blockTimestamp = event.block.timestamp
-    entity.transactionHash = event.transaction.hash
-  
-    entity.save()
-  }
-  
-  export function handleProposalCreated(event: ProposalCreatedEvent): void {
-    let entity = new ProposalCreated(
-      event.transaction.hash.concatI32(event.logIndex.toI32())
-    )
-    entity.proposedBy = event.params.proposedBy
-    entity.signature = event.params.signature
-    entity.fundRunId = event.params.fundRunId
-    entity.proposalId = event.params.proposalId
-    entity.amount = event.params.amount
-    entity.to = event.params.to
-    entity.reason = event.params.reason
-  
-    entity.blockNumber = event.block.number
-    entity.blockTimestamp = event.block.timestamp
-    entity.transactionHash = event.transaction.hash
-  
-    entity.save()
-  }
-  
-  export function handleProposalRevoked(event: ProposalRevokedEvent): void {
-    let entity = new ProposalRevoked(
-      event.transaction.hash.concatI32(event.logIndex.toI32())
-    )
-    entity.fundRunId = event.params.fundRunId
-    entity.proposalId = event.params.proposalId
-    entity.to = event.params.to
-    entity.reason = event.params.reason
-  
-    entity.blockNumber = event.block.number
-    entity.blockTimestamp = event.block.timestamp
-    entity.transactionHash = event.transaction.hash
-  
-    entity.save()
-  }
-  
-  export function handleProposalSupported(event: ProposalSupportedEvent): void {
-    let entity = new ProposalSupported(
-      event.transaction.hash.concatI32(event.logIndex.toI32())
-    )
-    entity.supportedBy = event.params.supportedBy
-    entity.signature = event.params.signature
-    entity.fundRunId = event.params.fundRunId
-    entity.proposalId = event.params.proposalId
-  
-    entity.blockNumber = event.block.number
-    entity.blockTimestamp = event.block.timestamp
-    entity.transactionHash = event.transaction.hash
-  
-    entity.save()
-  }
-  
+
+  entity.save()
+}
+
+export function handleProposalRevoke(event: ProposalRevokeEvent): void {
+  let entity = new ProposalRevoke(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
+  )
+  entity.fundRunId = event.params.fundRunId
+  entity.proposalId = event.params.proposalId
+  entity.to = event.params.to
+  entity.reason = event.params.reason
+
+  entity.blockNumber = event.block.number
+  entity.blockTimestamp = event.block.timestamp
+  entity.transactionHash = event.transaction.hash
+
+  entity.save()
+}

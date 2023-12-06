@@ -32,16 +32,16 @@ export class ContractOwnerWithdrawal__Params {
   }
 }
 
-export class DonationOccurred extends ethereum.Event {
-  get params(): DonationOccurred__Params {
-    return new DonationOccurred__Params(this);
+export class Donation extends ethereum.Event {
+  get params(): Donation__Params {
+    return new Donation__Params(this);
   }
 }
 
-export class DonationOccurred__Params {
-  _event: DonationOccurred;
+export class Donation__Params {
+  _event: Donation;
 
-  constructor(event: DonationOccurred) {
+  constructor(event: Donation) {
     this._event = event;
   }
 
@@ -76,20 +76,20 @@ export class DonorWithdrawal__Params {
   }
 }
 
-export class FundRunCreated extends ethereum.Event {
-  get params(): FundRunCreated__Params {
-    return new FundRunCreated__Params(this);
+export class FundRun extends ethereum.Event {
+  get params(): FundRun__Params {
+    return new FundRun__Params(this);
   }
 }
 
-export class FundRunCreated__Params {
-  _event: FundRunCreated;
+export class FundRun__Params {
+  _event: FundRun;
 
-  constructor(event: FundRunCreated) {
+  constructor(event: FundRun) {
     this._event = event;
   }
 
-  get id(): i32 {
+  get fundRunId(): i32 {
     return this._event.parameters[0].value.toI32();
   }
 
@@ -120,16 +120,16 @@ export class FundRunOwnerWithdrawal__Params {
   }
 }
 
-export class MultisigTransferCompleted extends ethereum.Event {
-  get params(): MultisigTransferCompleted__Params {
-    return new MultisigTransferCompleted__Params(this);
+export class MultisigTransfer extends ethereum.Event {
+  get params(): MultisigTransfer__Params {
+    return new MultisigTransfer__Params(this);
   }
 }
 
-export class MultisigTransferCompleted__Params {
-  _event: MultisigTransferCompleted;
+export class MultisigTransfer__Params {
+  _event: MultisigTransfer;
 
-  constructor(event: MultisigTransferCompleted) {
+  constructor(event: MultisigTransfer) {
     this._event = event;
   }
 
@@ -172,58 +172,54 @@ export class OwnershipTransferred__Params {
   }
 }
 
-export class ProposalCreated extends ethereum.Event {
-  get params(): ProposalCreated__Params {
-    return new ProposalCreated__Params(this);
+export class Proposal extends ethereum.Event {
+  get params(): Proposal__Params {
+    return new Proposal__Params(this);
   }
 }
 
-export class ProposalCreated__Params {
-  _event: ProposalCreated;
+export class Proposal__Params {
+  _event: Proposal;
 
-  constructor(event: ProposalCreated) {
+  constructor(event: Proposal) {
     this._event = event;
   }
 
-  get proposedBy(): Address {
-    return this._event.parameters[0].value.toAddress();
-  }
-
-  get signature(): Bytes {
-    return this._event.parameters[1].value.toBytes();
+  get proposalId(): i32 {
+    return this._event.parameters[0].value.toI32();
   }
 
   get fundRunId(): i32 {
-    return this._event.parameters[2].value.toI32();
+    return this._event.parameters[1].value.toI32();
   }
 
-  get proposalId(): i32 {
-    return this._event.parameters[3].value.toI32();
+  get proposedBy(): Address {
+    return this._event.parameters[2].value.toAddress();
   }
 
   get amount(): BigInt {
-    return this._event.parameters[4].value.toBigInt();
+    return this._event.parameters[3].value.toBigInt();
   }
 
   get to(): Address {
-    return this._event.parameters[5].value.toAddress();
+    return this._event.parameters[4].value.toAddress();
   }
 
   get reason(): string {
-    return this._event.parameters[6].value.toString();
+    return this._event.parameters[5].value.toString();
   }
 }
 
-export class ProposalRevoked extends ethereum.Event {
-  get params(): ProposalRevoked__Params {
-    return new ProposalRevoked__Params(this);
+export class ProposalRevoke extends ethereum.Event {
+  get params(): ProposalRevoke__Params {
+    return new ProposalRevoke__Params(this);
   }
 }
 
-export class ProposalRevoked__Params {
-  _event: ProposalRevoked;
+export class ProposalRevoke__Params {
+  _event: ProposalRevoke;
 
-  constructor(event: ProposalRevoked) {
+  constructor(event: ProposalRevoke) {
     this._event = event;
   }
 
@@ -244,37 +240,33 @@ export class ProposalRevoked__Params {
   }
 }
 
-export class ProposalSupported extends ethereum.Event {
-  get params(): ProposalSupported__Params {
-    return new ProposalSupported__Params(this);
+export class ProposalSignature extends ethereum.Event {
+  get params(): ProposalSignature__Params {
+    return new ProposalSignature__Params(this);
   }
 }
 
-export class ProposalSupported__Params {
-  _event: ProposalSupported;
+export class ProposalSignature__Params {
+  _event: ProposalSignature;
 
-  constructor(event: ProposalSupported) {
+  constructor(event: ProposalSignature) {
     this._event = event;
   }
 
-  get supportedBy(): Address {
-    return this._event.parameters[0].value.toAddress();
+  get proposalId(): i32 {
+    return this._event.parameters[0].value.toI32();
+  }
+
+  get signer(): Address {
+    return this._event.parameters[1].value.toAddress();
   }
 
   get signature(): Bytes {
-    return this._event.parameters[1].value.toBytes();
-  }
-
-  get fundRunId(): i32 {
-    return this._event.parameters[2].value.toI32();
-  }
-
-  get proposalId(): i32 {
-    return this._event.parameters[3].value.toI32();
+    return this._event.parameters[2].value.toBytes();
   }
 }
 
-export class crowdFundTestThree__fundRunsResult {
+export class cfTestFive__fundRunsResult {
   value0: i32;
   value1: string;
   value2: string;
@@ -356,7 +348,7 @@ export class crowdFundTestThree__fundRunsResult {
   }
 }
 
-export class crowdFundTestThree__getFundRunResultValue0Struct extends ethereum.Tuple {
+export class cfTestFive__getFundRunResultValue0Struct extends ethereum.Tuple {
   get id(): i32 {
     return this[0].toI32();
   }
@@ -402,7 +394,7 @@ export class crowdFundTestThree__getFundRunResultValue0Struct extends ethereum.T
   }
 }
 
-export class crowdFundTestThree__getFundRunsResultValue0Struct extends ethereum.Tuple {
+export class cfTestFive__getFundRunsResultValue0Struct extends ethereum.Tuple {
   get id(): i32 {
     return this[0].toI32();
   }
@@ -448,9 +440,9 @@ export class crowdFundTestThree__getFundRunsResultValue0Struct extends ethereum.
   }
 }
 
-export class crowdFundTestThree extends ethereum.SmartContract {
-  static bind(address: Address): crowdFundTestThree {
-    return new crowdFundTestThree("crowdFundTestThree", address);
+export class cfTestFive extends ethereum.SmartContract {
+  static bind(address: Address): cfTestFive {
+    return new cfTestFive("cfTestFive", address);
   }
 
   donorLogs(param0: Address): Address {
@@ -472,14 +464,14 @@ export class crowdFundTestThree extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
-  fundRuns(param0: BigInt): crowdFundTestThree__fundRunsResult {
+  fundRuns(param0: BigInt): cfTestFive__fundRunsResult {
     let result = super.call(
       "fundRuns",
       "fundRuns(uint256):(uint16,string,string,uint256,uint256,uint256,uint256,uint8)",
       [ethereum.Value.fromUnsignedBigInt(param0)]
     );
 
-    return new crowdFundTestThree__fundRunsResult(
+    return new cfTestFive__fundRunsResult(
       result[0].toI32(),
       result[1].toString(),
       result[2].toString(),
@@ -493,7 +485,7 @@ export class crowdFundTestThree extends ethereum.SmartContract {
 
   try_fundRuns(
     param0: BigInt
-  ): ethereum.CallResult<crowdFundTestThree__fundRunsResult> {
+  ): ethereum.CallResult<cfTestFive__fundRunsResult> {
     let result = super.tryCall(
       "fundRuns",
       "fundRuns(uint256):(uint16,string,string,uint256,uint256,uint256,uint256,uint8)",
@@ -504,7 +496,7 @@ export class crowdFundTestThree extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(
-      new crowdFundTestThree__fundRunsResult(
+      new cfTestFive__fundRunsResult(
         value[0].toI32(),
         value[1].toString(),
         value[2].toString(),
@@ -532,21 +524,21 @@ export class crowdFundTestThree extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  getFundRun(_id: i32): crowdFundTestThree__getFundRunResultValue0Struct {
+  getFundRun(_id: i32): cfTestFive__getFundRunResultValue0Struct {
     let result = super.call(
       "getFundRun",
       "getFundRun(uint16):((uint16,address[],string,string,uint256,uint256,uint256,uint256,address[],uint256[],uint8))",
       [ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(_id))]
     );
 
-    return changetype<crowdFundTestThree__getFundRunResultValue0Struct>(
+    return changetype<cfTestFive__getFundRunResultValue0Struct>(
       result[0].toTuple()
     );
   }
 
   try_getFundRun(
     _id: i32
-  ): ethereum.CallResult<crowdFundTestThree__getFundRunResultValue0Struct> {
+  ): ethereum.CallResult<cfTestFive__getFundRunResultValue0Struct> {
     let result = super.tryCall(
       "getFundRun",
       "getFundRun(uint16):((uint16,address[],string,string,uint256,uint256,uint256,uint256,address[],uint256[],uint8))",
@@ -557,26 +549,22 @@ export class crowdFundTestThree extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(
-      changetype<crowdFundTestThree__getFundRunResultValue0Struct>(
-        value[0].toTuple()
-      )
+      changetype<cfTestFive__getFundRunResultValue0Struct>(value[0].toTuple())
     );
   }
 
-  getFundRuns(): Array<crowdFundTestThree__getFundRunsResultValue0Struct> {
+  getFundRuns(): Array<cfTestFive__getFundRunsResultValue0Struct> {
     let result = super.call(
       "getFundRuns",
       "getFundRuns():((uint16,address[],string,string,uint256,uint256,uint256,uint256,address[],uint256[],uint8)[])",
       []
     );
 
-    return result[0].toTupleArray<
-      crowdFundTestThree__getFundRunsResultValue0Struct
-    >();
+    return result[0].toTupleArray<cfTestFive__getFundRunsResultValue0Struct>();
   }
 
   try_getFundRuns(): ethereum.CallResult<
-    Array<crowdFundTestThree__getFundRunsResultValue0Struct>
+    Array<cfTestFive__getFundRunsResultValue0Struct>
   > {
     let result = super.tryCall(
       "getFundRuns",
@@ -588,7 +576,7 @@ export class crowdFundTestThree extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(
-      value[0].toTupleArray<crowdFundTestThree__getFundRunsResultValue0Struct>()
+      value[0].toTupleArray<cfTestFive__getFundRunsResultValue0Struct>()
     );
   }
 
@@ -670,6 +658,52 @@ export class crowdFundTestThree extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  proposalCreator(param0: i32): Address {
+    let result = super.call(
+      "proposalCreator",
+      "proposalCreator(uint16):(address)",
+      [ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(param0))]
+    );
+
+    return result[0].toAddress();
+  }
+
+  try_proposalCreator(param0: i32): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "proposalCreator",
+      "proposalCreator(uint16):(address)",
+      [ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(param0))]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  proposalStatus(param0: i32): i32 {
+    let result = super.call(
+      "proposalStatus",
+      "proposalStatus(uint16):(uint8)",
+      [ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(param0))]
+    );
+
+    return result[0].toI32();
+  }
+
+  try_proposalStatus(param0: i32): ethereum.CallResult<i32> {
+    let result = super.tryCall(
+      "proposalStatus",
+      "proposalStatus(uint16):(uint8)",
+      [ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(param0))]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toI32());
   }
 
   timeLeft(_id: i32): BigInt {

@@ -3,49 +3,49 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum
-    name: crowdFundTestThree
+    name: cfTestFive
     network: sepolia
     source:
-      address: "0xcBeC135df75f330F0C70A4183c388729B4B4774e"
-      abi: crowdFundTestThree
-      startBlock: 0
+      address: "0x9Df5e40631CE186529F7ad1fA99a0c7450b3564e"
+      abi: cfTestFive
+      startBlock: 4835235
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
         - ContractOwnerWithdrawal
-        - DonationOccurred
+        - Donation
         - DonorWithdrawal
-        - FundRunCreated
+        - FundRun
         - FundRunOwnerWithdrawal
-        - MultisigTransferCompleted
+        - MultisigTransfer
         - OwnershipTransferred
-        - ProposalCreated
-        - ProposalRevoked
-        - ProposalSupported
+        - Proposal
+        - ProposalRevoke
+        - ProposalSignature
       abis:
-        - name: crowdFundTestThree
-          file: ./abis/crowdFundTestThree.json
+        - name: cfTestFive
+          file: ./abis/cfTestFive.json
       eventHandlers:
         - event: ContractOwnerWithdrawal(address,uint256)
           handler: handleContractOwnerWithdrawal
-        - event: DonationOccurred(address,uint256)
-          handler: handleDonationOccurred
+        - event: Donation(address,uint256)
+          handler: handleDonation
         - event: DonorWithdrawal(address,uint256)
           handler: handleDonorWithdrawal
-        - event: FundRunCreated(uint16,string,uint256)
-          handler: handleFundRunCreated
+        - event: FundRun(uint16,string,uint256)
+          handler: handleFundRun
         - event: FundRunOwnerWithdrawal(uint256)
           handler: handleFundRunOwnerWithdrawal
-        - event: MultisigTransferCompleted(uint16,uint16,address,uint256)
-          handler: handleMultisigTransferCompleted
+        - event: MultisigTransfer(uint16,uint16,address,uint256)
+          handler: handleMultisigTransfer
         - event: OwnershipTransferred(indexed address,indexed address)
           handler: handleOwnershipTransferred
-        - event: ProposalCreated(address,bytes,uint16,uint16,uint256,address,string)
-          handler: handleProposalCreated
-        - event: ProposalRevoked(uint16,uint16,address,string)
-          handler: handleProposalRevoked
-        - event: ProposalSupported(address,bytes,uint16,uint16)
-          handler: handleProposalSupported
-      file: mapping.ts
+        - event: Proposal(uint16,uint16,address,uint256,address,string)
+          handler: handleProposal
+        - event: ProposalRevoke(uint16,uint16,address,string)
+          handler: handleProposalRevoke
+        - event: ProposalSignature(uint16,address,bytes)
+          handler: handleProposalSignature
+      file: ./src/cf-test-five.ts

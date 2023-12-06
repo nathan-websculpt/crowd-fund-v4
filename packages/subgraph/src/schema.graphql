@@ -7,7 +7,7 @@ type ContractOwnerWithdrawal @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type DonationOccurred @entity(immutable: true) {
+type Donation @entity(immutable: true) {
   id: Bytes!
   donor: Bytes! # address
   amount: BigInt! # uint256
@@ -25,9 +25,9 @@ type DonorWithdrawal @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type FundRunCreated @entity(immutable: true) {
+type FundRun @entity(immutable: true) {
   id: Bytes!
-  crowdFundTestThree_id: Int! # uint16
+  fundRunId: Int! # uint16
   title: String! # string
   target: BigInt! # uint256
   blockNumber: BigInt!
@@ -43,7 +43,7 @@ type FundRunOwnerWithdrawal @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type MultisigTransferCompleted @entity(immutable: true) {
+type MultisigTransfer @entity(immutable: true) {
   id: Bytes!
   fundRunId: Int! # uint16
   proposalId: Int! # uint16
@@ -63,37 +63,37 @@ type OwnershipTransferred @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type ProposalCreated @entity(immutable: true) {
+type Proposal @entity {
   id: Bytes!
-  proposedBy: Bytes! # address
-  signature: Bytes! # bytes
-  fundRunId: Int! # uint16
   proposalId: Int! # uint16
+  fundRunId: Int! # uint16
+  proposedBy: Bytes! # address
   amount: BigInt! # uint256
   to: Bytes! # address
   reason: String! # string
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+  signatures: [ProposalSignature!] @derivedFrom(field: "proposal")
 }
 
-type ProposalRevoked @entity(immutable: true) {
+type ProposalSignature @entity {
+  id: Bytes!
+  proposalId: Int! # uint16
+  signer: Bytes! # address
+  signature: Bytes! # bytes
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  proposal: Proposal
+}
+
+type ProposalRevoke @entity(immutable: true) {
   id: Bytes!
   fundRunId: Int! # uint16
   proposalId: Int! # uint16
   to: Bytes! # address
   reason: String! # string
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type ProposalSupported @entity(immutable: true) {
-  id: Bytes!
-  supportedBy: Bytes! # address
-  signature: Bytes! # bytes
-  fundRunId: Int! # uint16
-  proposalId: Int! # uint16
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
