@@ -10,11 +10,10 @@ interface ListProposalProps {
 export const ListProposals = (frVault: ListProposalProps) => {
   const PROPOSALS_GRAPHQL = gql`
     query ($slug: Int!) {
-      proposalCreateds(where: { fundRunId: $slug }) {
-        proposedBy
-        signature
-        fundRunId
+      proposals(where: { fundRunId: $slug }) {
         proposalId
+        fundRunId
+        proposedBy
         amount
         to
         reason
@@ -62,7 +61,7 @@ export const ListProposals = (frVault: ListProposalProps) => {
               </tr>
             </thead>
             <tbody>
-              {vaultProposals?.data?.proposalCreateds?.map(vp =>
+              {vaultProposals?.data?.proposals?.map(vp =>
                 vp.to !== "0x0000000000000000000000000000000000000000" &&
                 vp.proposedBy !== "0x0000000000000000000000000000000000000000" ? (
                   <tr

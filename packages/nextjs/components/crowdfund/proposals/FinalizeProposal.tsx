@@ -18,13 +18,22 @@ export const FinalizeProposal = (proposal: FinalizeProposalProps) => {
 
   const [signaturesList, setSignaturesList] = useState<string[]>();
 
+  // const PROPOSAL_GRAPHQL = gql`
+  //   query ($slug1: Int!, $slug2: Int!) {
+  //     proposalCreateds(where: { fundRunId: $slug1, proposalId: $slug2 }) {
+  //       signature
+  //     }
+  //     proposalSupporteds(where: { fundRunId: $slug1, proposalId: $slug2 }) {
+  //       signature
+  //     }
+  //   }
+  // `;
   const PROPOSAL_GRAPHQL = gql`
     query ($slug1: Int!, $slug2: Int!) {
-      proposalCreateds(where: { fundRunId: $slug1, proposalId: $slug2 }) {
-        signature
-      }
-      proposalSupporteds(where: { fundRunId: $slug1, proposalId: $slug2 }) {
-        signature
+      proposals(where: { fundRunId: $slug1, proposalId: $slug2 }) {
+        signatures {
+          signature
+        }
       }
     }
   `;
@@ -40,10 +49,10 @@ export const FinalizeProposal = (proposal: FinalizeProposalProps) => {
   useEffect(() => {
     if (data !== undefined) {
       console.log(data);
-      let thisArr = [];
-      thisArr.push(data.proposalCreateds[0].signature);
-      for (let i = 0; i < data.proposalSupporteds.length; i++) {
-        thisArr.push(data.proposalSupporteds[i].signature);
+      const thisArr = [];
+      for (let i = 0; i < data.proposals[0].signatures.length; i++) {
+        console.log("looping sigs: ", data.proposals[0].signatures[i].signature);
+        thisArr.push(data.proposals[0].signatures[i].signature);
       }
       setSignaturesList(thisArr);
     }

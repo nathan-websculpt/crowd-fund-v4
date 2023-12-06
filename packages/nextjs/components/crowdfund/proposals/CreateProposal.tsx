@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import router from "next/router";
-import { gql, useQuery } from "@apollo/client";
 import { SignMessageReturnType, isAddress, parseEther, toBytes } from "viem";
 import { useAccount, useWalletClient } from "wagmi";
 import { IntegerVariant, isValidInteger } from "~~/components/scaffold-eth";
