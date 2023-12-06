@@ -898,7 +898,7 @@ const contracts = {
       name: "sepolia",
       contracts: {
         CrowdFund: {
-          address: "0xb8aD2A8994790bB63F6c3FD01EBCD3Ac286E803b",
+          address: "0x9Df5e40631CE186529F7ad1fA99a0c7450b3564e",
           abi: [
             {
               inputs: [
@@ -1632,6 +1632,44 @@ const contracts = {
                   internalType: "address",
                   name: "",
                   type: "address",
+                },
+              ],
+              stateMutability: "view",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  internalType: "uint16",
+                  name: "",
+                  type: "uint16",
+                },
+              ],
+              name: "proposalCreator",
+              outputs: [
+                {
+                  internalType: "address",
+                  name: "",
+                  type: "address",
+                },
+              ],
+              stateMutability: "view",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  internalType: "uint16",
+                  name: "",
+                  type: "uint16",
+                },
+              ],
+              name: "proposalStatus",
+              outputs: [
+                {
+                  internalType: "enum CrowdFund.ProposalStatus",
+                  name: "",
+                  type: "uint8",
                 },
               ],
               stateMutability: "view",

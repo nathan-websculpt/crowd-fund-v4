@@ -46,20 +46,11 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		string reason;
 	}
 
-	// // struct MultiSigVault {
-	// // 	uint16 proposalId;
-	// // 	uint256 amount;
-	// // 	address to;
-	// // 	address proposedBy;
-	// // 	string reason;
-	// // 	ProposalStatus status;
-	// // }
-
-	// // enum ProposalStatus {
-	// // 	Created,
-	// // 	Supported,
-	// // 	TxSent
-	// // }
+	enum ProposalStatus {
+		Created,
+		Supported,
+		TxSent
+	}
 
 	enum FundRunStatus {
 		Created,
@@ -68,15 +59,13 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		FullSuccess
 	}
 
-	//      fundRunId
-	// // mapping(uint16 => MultiSigVault[]) public vaults; //Fund Run's proposals
-	//      proposalId
-	// // mapping(uint16 => bytes[]) public signatureList;
-	//      proposalId
-	// // mapping(uint16 => address[]) public signerList;
 	mapping(uint16 => uint256) public vaultNonces; //fundRunId => Nonce
 	mapping(uint256 => FundRun_) public fundRuns;
 	mapping(address => DonorsLog) public donorLogs; //a single donor will have all of their logs (across all Fund Runs they donated to) here
+
+	//-b _22_subgraphs
+	mapping(uint16 => address) public proposalCreator;
+	mapping(uint16 => ProposalStatus) public proposalStatus;
 
 	uint16 public numberOfFundRuns = 0;
 	uint16 public numberOfMultisigProposals = 0;
@@ -187,43 +176,33 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		_;
 	}
 
-	// // modifier createdProposal(
-	// // 	uint16 _proposalId,
-	// // 	uint16 _fundRunId,
-	// // 	address signer,
-	// // 	bool mustBeProposer
-	// // ) {
-	// // 	MultiSigVault[] storage vaultsList = vaults[_fundRunId];
-	// // 	for (uint16 i = 0; i < vaultsList.length; i++) {
-	// // 		if (vaultsList[i].proposalId == _proposalId) {
-	// // 			if (mustBeProposer) {
-	// // 				require(
-	// // 					vaultsList[i].proposedBy == signer,
-	// // 					"The address is NOT the creator of this proposal -- action not allowed."
-	// // 				);
-	// // 				_;
-	// // 			} else {
-	// // 				require(
-	// // 					vaultsList[i].proposedBy != signer,
-	// // 					"The address is the creator of this proposal -- creators of proposals can not support them -- action not allowed."
-	// // 				);
-	// // 				_;
-	// // 			}
-	// // 		}
-	// // 	}
-	// // }
+	modifier createdProposal(
+		uint16 proposalId,
+		address signer,
+		bool mustBeProposer
+	) {
+		if (mustBeProposer) {
+			require(
+				proposalCreator[proposalId] == signer,
+				"The address is NOT the creator of this proposal -- action not allowed."
+			);
+			_;
+		} else {
+			require(
+				proposalCreator[proposalId] != signer,
+				"The address is the creator of this proposal -- creators of proposals can not support them -- action not allowed."
+			);
+			_;
+		}
+	}
 
-	// // modifier txNotSent(uint16 _proposalId, uint16 _fundRunId) {
-	// // 	for (uint16 i = 0; i < vaults[_fundRunId].length; i++) {
-	// // 		if (vaults[_fundRunId][i].proposalId == _proposalId) {
-	// // 			require(
-	// // 				vaults[_fundRunId][i].status != ProposalStatus(2),
-	// // 				"This Multisig Tx has already went through."
-	// // 			);
-	// // 			_;
-	// // 		}
-	// // 	}
-	// // }
+	modifier txNotSent(uint16 proposalId) {
+		require(
+			proposalStatus[proposalId] != ProposalStatus(2),
+			"This Multisig Tx has already went through."
+		);
+		_;
+	}
 
 	constructor(address _contractOwner) {
 		_transferOwnership(_contractOwner);
@@ -255,18 +234,8 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 			"This proposal would overdraw this Fund Run."
 		);
 
-		// // signatureList[numberOfMultisigProposals].push(_signature);
-		// // signerList[numberOfMultisigProposals].push(msg.sender);
-
-		// // MultiSigVault memory vault = MultiSigVault({
-		// // 	proposalId: numberOfMultisigProposals,
-		// // 	amount: _tx.amount,
-		// // 	to: _tx.to,
-		// // 	proposedBy: _tx.proposedBy,
-		// // 	reason: _tx.reason,
-		// // 	status: ProposalStatus(0)
-		// // });
-		// // vaults[_fundRunId].push(vault);
+		proposalCreator[numberOfMultisigProposals] = msg.sender;
+		proposalStatus[numberOfMultisigProposals] = ProposalStatus(0);
 
 		emit Proposal(
 			numberOfMultisigProposals,
@@ -275,7 +244,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 			_tx.amount,
 			_tx.to,
 			_tx.reason
-		); //TODO: status?
+		);
 
 		emit ProposalSignature(
 			numberOfMultisigProposals,
@@ -294,14 +263,15 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		external
 		isMultisig(_fundRunId, true)
 		ownsThisFundRun(_fundRunId, msg.sender, true)
-	// // createdProposal(_proposalId, _fundRunId, msg.sender, false)
-	// // txNotSent(_proposalId, _fundRunId)
+		createdProposal(_proposalId, msg.sender, false)
+		txNotSent(_proposalId)
 	{
+		//TODO: prevent on FE
 		// // require(
 		// // 	!userHasSigned(msg.sender, _proposalId),
 		// // 	"This user has already supported this proposal."
-		// // );
-		// // changeProposalStatus(_fundRunId, _proposalId, 1);
+		// // );		
+		proposalStatus[_proposalId] = ProposalStatus(1);
 		emit ProposalSignature(_proposalId, msg.sender, _signature);
 	}
 
@@ -319,7 +289,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		nonReentrant
 		isMultisig(_fundRunId, true)
 		ownsThisFundRun(_fundRunId, msg.sender, true)
-	// // txNotSent(_proposalId, _fundRunId)
+		txNotSent(_proposalId)
 	{
 		_verifyMultisigRequest(_tx, _nonce, _signaturesList, _fundRunId);
 		_multisigTransfer(_tx, _fundRunId, _proposalId);
@@ -335,7 +305,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 	// // 	external
 	// // 	isMultisig(_fundRunId, true)
 	// // 	ownsThisFundRun(_fundRunId, msg.sender, true)
-	// // 	createdProposal(_proposalId, _fundRunId, msg.sender, true)
+	// // 	createdProposal(_proposalId, msg.sender, true)
 	// // 	txNotSent(_proposalId, _fundRunId)
 	// // {
 	// // 	MultiSigVault[] storage vaultsList = vaults[_fundRunId];
@@ -564,15 +534,6 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		return allFundRuns;
 	}
 
-	/**
-	 * @dev Returns list of Proposals (from a Fund Run's Vault)
-	 */
-	// // function getProposals(
-	// // 	uint16 _fundRunId
-	// // ) external view returns (MultiSigVault[] memory) {
-	// // 	return vaults[_fundRunId];
-	// // }
-
 	function getFundRun(uint16 _id) external view returns (FundRun_ memory) {
 		return fundRuns[_id];
 	}
@@ -663,6 +624,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 			fundRun.status = FundRunStatus(3);
 
 		// // changeProposalStatus(_fundRunId, _proposalId, 2);
+		proposalStatus[_proposalId] = ProposalStatus(2);
 
 		(bool success, ) = payable(_tx.to).call{ value: netWithdrawAmount }("");
 
@@ -674,20 +636,6 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 			netWithdrawAmount
 		);
 	}
-
-	// // function changeProposalStatus(
-	// // 	uint16 _fundRunId,
-	// // 	uint16 _proposalId,
-	// // 	uint16 _newStatus
-	// // ) private {
-	// // 	for (uint16 i = 0; i < vaults[_fundRunId].length; i++) {
-	// // 		if (vaults[_fundRunId][i].proposalId == _proposalId) {
-	// // 			if (vaults[_fundRunId][i].status != ProposalStatus(_newStatus))
-	// // 				vaults[_fundRunId][i].status = ProposalStatus(_newStatus);
-	// // 			break;
-	// // 		}
-	// // 	}
-	// // }
 
 	function getNetWithdrawAmount(
 		uint256 _grossWithdrawAmount
