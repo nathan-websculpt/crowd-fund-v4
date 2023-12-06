@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { gql, useLazyQuery } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import getNonce from "~~/helpers/getNonce";
+import { GQL_SIGNATURES } from "~~/helpers/getQueries";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 
 interface FinalizeProposalProps {
@@ -18,16 +19,7 @@ export const FinalizeProposal = (proposal: FinalizeProposalProps) => {
 
   const [signaturesList, setSignaturesList] = useState<string[]>();
 
-  const PROPOSAL_GRAPHQL = gql`
-    query ($slug1: Int!, $slug2: Int!) {
-      proposals(where: { fundRunId: $slug1, proposalId: $slug2 }) {
-        signatures {
-          signature
-        }
-      }
-    }
-  `;
-  const [getProposal, { loading, error, data }] = useLazyQuery(PROPOSAL_GRAPHQL);
+  const [getProposal, { loading, error, data }] = useLazyQuery(GQL_SIGNATURES());
 
   useEffect(() => {
     if (nonce !== undefined) {
