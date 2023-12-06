@@ -17,7 +17,7 @@ export const FinalizeProposal = (proposal: FinalizeProposalProps) => {
   const tx = { amount: proposal.amount, to: proposal.to, proposedBy: proposal.proposedBy, reason: proposal.reason };
 
   const [signaturesList, setSignaturesList] = useState<string[]>();
-  
+
   const PROPOSAL_GRAPHQL = gql`
     query ($slug1: Int!, $slug2: Int!) {
       proposals(where: { fundRunId: $slug1, proposalId: $slug2 }) {
