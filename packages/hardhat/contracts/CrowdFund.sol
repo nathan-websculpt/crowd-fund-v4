@@ -63,7 +63,6 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 	mapping(uint256 => FundRun_) public fundRuns;
 	mapping(address => DonorsLog) public donorLogs; //a single donor will have all of their logs (across all Fund Runs they donated to) here
 
-	//-b _22_subgraphs
 	mapping(uint16 => address) public proposalCreator;
 	mapping(uint16 => ProposalStatus) public proposalStatus;
 
@@ -92,11 +91,11 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		address proposedBy,
 		uint256 amount,
 		address to,
-		string reason
+		string reason,
+		ProposalStatus status
 	);
 
 	event ProposalSignature(uint16 proposalId, address signer, bytes signature);
-	//^^^ Proposal (one-to-) will have (-many) ProposalSignatures
 
 	event ProposalRevoke(
 		uint16 fundRunId,
@@ -233,9 +232,9 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 			fundRun.amountWithdrawn + _tx.amount <= fundRun.amountCollected,
 			"This proposal would overdraw this Fund Run."
 		);
-
+		ProposalStatus thisStatus = ProposalStatus(0);
 		proposalCreator[numberOfMultisigProposals] = msg.sender;
-		proposalStatus[numberOfMultisigProposals] = ProposalStatus(0);
+		proposalStatus[numberOfMultisigProposals] = thisStatus;
 
 		emit Proposal(
 			numberOfMultisigProposals,
@@ -243,7 +242,8 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 			msg.sender,
 			_tx.amount,
 			_tx.to,
-			_tx.reason
+			_tx.reason,
+			thisStatus
 		);
 
 		emit ProposalSignature(
