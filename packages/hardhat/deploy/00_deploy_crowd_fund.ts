@@ -14,7 +14,7 @@ const deployCrowdFund: DeployFunction = async function (hre: HardhatRuntimeEnvir
   });
 };
 
-const wrappedDeploy = scaffoldDeployWrapper(deployCrowdFund);
+const wrappedDeploy = scaffoldDeployWrapper(deployCrowdFund); //FilipHarald  - commit f9f091d
 
 export default wrappedDeploy;
 
