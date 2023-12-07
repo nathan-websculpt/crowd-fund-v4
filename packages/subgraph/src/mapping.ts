@@ -165,11 +165,14 @@ export function handleProposalSignature(event: ProposalSignatureEvent): void {
 
   let proposalEntity = Proposal.load(Bytes.fromHexString("proposals_").concat(Bytes.fromI32(event.params.proposalId)))
   if(proposalEntity !== null) {
+    let newProposalCount = BigInt.fromI32(proposalEntity.signaturesCount + 1);
+
     if(proposalEntity.signaturesCount === 0) {
       proposalEntity.signaturesCount += 1;
     }
-    else if(proposalEntity.signaturesCount.toString() === proposalEntity.signaturesRequired.toString()) {
+    else if(newProposalCount.equals(proposalEntity.signaturesRequired)) {
       proposalEntity.status = 1;
+      proposalEntity.signaturesCount += 1;
       log.debug("debug one {}", [proposalEntity.signaturesCount.toString()])
     }
     else {
@@ -177,6 +180,9 @@ export function handleProposalSignature(event: ProposalSignatureEvent): void {
     }
     proposalEntity.save()
     entity.proposal = proposalEntity.id;
+  }
+  else {
+    log.debug("debug three {}", ["NO PROPOSAL FOUND: handleProposalSignature() ~mapping"])
   }
 
   entity.save()
