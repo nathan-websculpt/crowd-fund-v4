@@ -48,8 +48,9 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 
 	enum ProposalStatus {
 		Created,
-		Supported,
-		TxSent
+		ReadyToSend,
+		TxSent,
+		Revoked
 	}
 
 	enum FundRunStatus {
@@ -92,21 +93,18 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		uint256 amount,
 		address to,
 		string reason,
-		ProposalStatus status
+		ProposalStatus status,
+		uint256 signaturesRequired,
+		uint16 signaturesCount
 	);
 
 	event ProposalSignature(uint16 proposalId, address signer, bytes signature);
 
-	event ProposalRevoke(
-		uint16 fundRunId,
-		uint16 proposalId,
-		address to,
-		string reason
-	);
+	event ProposalRevoke(uint16 proposalId);
 
 	event MultisigTransfer(
-		uint16 fundRunId,
 		uint16 proposalId,
+		uint16 fundRunId,
 		address to,
 		uint256 amount
 	);
@@ -203,6 +201,14 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		_;
 	}
 
+	modifier notRevoked(uint16 proposalId) {
+		require(
+			proposalStatus[proposalId] != ProposalStatus(3),
+			"This Proposal has been revoked"
+		);
+		_;
+	}
+
 	constructor(address _contractOwner) {
 		_transferOwnership(_contractOwner);
 	}
@@ -243,7 +249,9 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 			_tx.amount,
 			_tx.to,
 			_tx.reason,
-			thisStatus
+			thisStatus,
+			fundRun.owners.length, //TODO: get value from user - total signatures required
+			0
 		);
 
 		emit ProposalSignature(
@@ -265,12 +273,13 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		ownsThisFundRun(_fundRunId, msg.sender, true)
 		createdProposal(_proposalId, msg.sender, false)
 		txNotSent(_proposalId)
+		notRevoked(_proposalId)
 	{
 		//TODO: prevent on FE
 		// // require(
 		// // 	!userHasSigned(msg.sender, _proposalId),
 		// // 	"This user has already supported this proposal."
-		// // );		
+		// // );
 		proposalStatus[_proposalId] = ProposalStatus(1);
 		emit ProposalSignature(_proposalId, msg.sender, _signature);
 	}
@@ -290,6 +299,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		isMultisig(_fundRunId, true)
 		ownsThisFundRun(_fundRunId, msg.sender, true)
 		txNotSent(_proposalId)
+		notRevoked(_proposalId)
 	{
 		_verifyMultisigRequest(_tx, _nonce, _signaturesList, _fundRunId);
 		_multisigTransfer(_tx, _fundRunId, _proposalId);
@@ -298,30 +308,20 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 	/**
 	 * @dev  Only the user who created a proposal can revoke it
 	 */
-	// // function revokeMultisigProposal(
-	// // 	uint16 _fundRunId,
-	// // 	uint16 _proposalId
-	// // )
-	// // 	external
-	// // 	isMultisig(_fundRunId, true)
-	// // 	ownsThisFundRun(_fundRunId, msg.sender, true)
-	// // 	createdProposal(_proposalId, msg.sender, true)
-	// // 	txNotSent(_proposalId, _fundRunId)
-	// // {
-	// // 	MultiSigVault[] storage vaultsList = vaults[_fundRunId];
-	// // 	for (uint16 i = 0; i < vaultsList.length; i++) {
-	// // 		if (vaultsList[i].proposalId == _proposalId) {
-	// // 			emit ProposalRevoked(
-	// // 				_fundRunId,
-	// // 				_proposalId,
-	// // 				vaults[_fundRunId][i].to,
-	// // 				vaults[_fundRunId][i].reason
-	// // 			);
-	// // 			delete vaults[_fundRunId][i];
-	// // 			break;
-	// // 		}
-	// // 	}
-	// // }
+	function revokeMultisigProposal(
+		uint16 _fundRunId,
+		uint16 _proposalId
+	)
+		external
+		isMultisig(_fundRunId, true)
+		ownsThisFundRun(_fundRunId, msg.sender, true)
+		createdProposal(_proposalId, msg.sender, true)
+		txNotSent(_proposalId)
+		notRevoked(_proposalId)
+	{
+		proposalStatus[_proposalId] = ProposalStatus(3);
+		emit ProposalRevoke(_proposalId);
+	}
 
 	function createFundRun(
 		string memory _title,
@@ -623,7 +623,6 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		if (fundRun.status != FundRunStatus(3))
 			fundRun.status = FundRunStatus(3);
 
-		// // changeProposalStatus(_fundRunId, _proposalId, 2);
 		proposalStatus[_proposalId] = ProposalStatus(2);
 
 		(bool success, ) = payable(_tx.to).call{ value: netWithdrawAmount }("");

@@ -601,19 +601,6 @@ export class MultisigTransfer extends Entity {
     this.set("id", Value.fromBytes(value));
   }
 
-  get fundRunId(): i32 {
-    let value = this.get("fundRunId");
-    if (!value || value.kind == ValueKind.NULL) {
-      return 0;
-    } else {
-      return value.toI32();
-    }
-  }
-
-  set fundRunId(value: i32) {
-    this.set("fundRunId", Value.fromI32(value));
-  }
-
   get proposalId(): i32 {
     let value = this.get("proposalId");
     if (!value || value.kind == ValueKind.NULL) {
@@ -625,6 +612,19 @@ export class MultisigTransfer extends Entity {
 
   set proposalId(value: i32) {
     this.set("proposalId", Value.fromI32(value));
+  }
+
+  get fundRunId(): i32 {
+    let value = this.get("fundRunId");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI32();
+    }
+  }
+
+  set fundRunId(value: i32) {
+    this.set("fundRunId", Value.fromI32(value));
   }
 
   get to(): Bytes {
@@ -921,6 +921,45 @@ export class Proposal extends Entity {
     this.set("reason", Value.fromString(value));
   }
 
+  get status(): i32 {
+    let value = this.get("status");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI32();
+    }
+  }
+
+  set status(value: i32) {
+    this.set("status", Value.fromI32(value));
+  }
+
+  get signaturesRequired(): BigInt {
+    let value = this.get("signaturesRequired");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set signaturesRequired(value: BigInt) {
+    this.set("signaturesRequired", Value.fromBigInt(value));
+  }
+
+  get signaturesCount(): i32 {
+    let value = this.get("signaturesCount");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI32();
+    }
+  }
+
+  set signaturesCount(value: i32) {
+    this.set("signaturesCount", Value.fromI32(value));
+  }
+
   get blockNumber(): BigInt {
     let value = this.get("blockNumber");
     if (!value || value.kind == ValueKind.NULL) {
@@ -1153,19 +1192,6 @@ export class ProposalRevoke extends Entity {
     this.set("id", Value.fromBytes(value));
   }
 
-  get fundRunId(): i32 {
-    let value = this.get("fundRunId");
-    if (!value || value.kind == ValueKind.NULL) {
-      return 0;
-    } else {
-      return value.toI32();
-    }
-  }
-
-  set fundRunId(value: i32) {
-    this.set("fundRunId", Value.fromI32(value));
-  }
-
   get proposalId(): i32 {
     let value = this.get("proposalId");
     if (!value || value.kind == ValueKind.NULL) {
@@ -1177,32 +1203,6 @@ export class ProposalRevoke extends Entity {
 
   set proposalId(value: i32) {
     this.set("proposalId", Value.fromI32(value));
-  }
-
-  get to(): Bytes {
-    let value = this.get("to");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBytes();
-    }
-  }
-
-  set to(value: Bytes) {
-    this.set("to", Value.fromBytes(value));
-  }
-
-  get reason(): string {
-    let value = this.get("reason");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toString();
-    }
-  }
-
-  set reason(value: string) {
-    this.set("reason", Value.fromString(value));
   }
 
   get blockNumber(): BigInt {

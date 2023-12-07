@@ -3,12 +3,12 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum
-    name: cfTestFive
+    name: CrowdFundTestEleven
     network: sepolia
     source:
-      address: "0x9Df5e40631CE186529F7ad1fA99a0c7450b3564e"
-      abi: cfTestFive
-      startBlock: 4835235
+      address: "0x9a219f797707304Ca8304F0c38D94392766833f3"
+      abi: CrowdFundTestEleven
+      startBlock: 4842405
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -25,8 +25,8 @@ dataSources:
         - ProposalRevoke
         - ProposalSignature
       abis:
-        - name: cfTestFive
-          file: ./abis/cfTestFive.json
+        - name: CrowdFundTestEleven
+          file: ./abis/CrowdFundTestEleven.json
       eventHandlers:
         - event: ContractOwnerWithdrawal(address,uint256)
           handler: handleContractOwnerWithdrawal
@@ -42,10 +42,10 @@ dataSources:
           handler: handleMultisigTransfer
         - event: OwnershipTransferred(indexed address,indexed address)
           handler: handleOwnershipTransferred
-        - event: Proposal(uint16,uint16,address,uint256,address,string)
+        - event: Proposal(uint16,uint16,address,uint256,address,string,uint8,uint256,uint16)
           handler: handleProposal
-        - event: ProposalRevoke(uint16,uint16,address,string)
+        - event: ProposalRevoke(uint16)
           handler: handleProposalRevoke
         - event: ProposalSignature(uint16,address,bytes)
           handler: handleProposalSignature
-      file: ./src/cf-test-five.ts
+      file: ./src/crowd-fund-test-eleven.ts

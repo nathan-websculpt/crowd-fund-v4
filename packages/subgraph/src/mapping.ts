@@ -1,3 +1,4 @@
+import { Bytes, log, BigInt } from "@graphprotocol/graph-ts"
 import {
   ContractOwnerWithdrawal as ContractOwnerWithdrawalEvent,
   Donation as DonationEvent,
@@ -9,7 +10,7 @@ import {
   Proposal as ProposalEvent,
   ProposalRevoke as ProposalRevokeEvent,
   ProposalSignature as ProposalSignatureEvent
-} from "../generated/cfTestFive/cfTestFive"
+} from "../generated/CrowdFundTestEleven/CrowdFundTestEleven"
 import {
   ContractOwnerWithdrawal,
   Donation,
@@ -22,7 +23,6 @@ import {
   ProposalRevoke,
   ProposalSignature
 } from "../generated/schema"
-import { Bytes } from "@graphprotocol/graph-ts"
 
 export function handleContractOwnerWithdrawal(
   event: ContractOwnerWithdrawalEvent
@@ -102,8 +102,8 @@ export function handleMultisigTransfer(event: MultisigTransferEvent): void {
   let entity = new MultisigTransfer(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
-  entity.fundRunId = event.params.fundRunId
   entity.proposalId = event.params.proposalId
+  entity.fundRunId = event.params.fundRunId
   entity.to = event.params.to
   entity.amount = event.params.amount
 
@@ -140,6 +140,9 @@ export function handleProposal(event: ProposalEvent): void {
   entity.amount = event.params.amount
   entity.to = event.params.to
   entity.reason = event.params.reason
+  entity.status = event.params.status
+  entity.signaturesRequired = event.params.signaturesRequired
+  entity.signaturesCount = event.params.signaturesCount
 
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
@@ -162,9 +165,19 @@ export function handleProposalSignature(event: ProposalSignatureEvent): void {
 
   let proposalEntity = Proposal.load(Bytes.fromHexString("proposals_").concat(Bytes.fromI32(event.params.proposalId)))
   if(proposalEntity !== null) {
-    entity.proposal = Bytes.fromHexString("proposals_").concat(Bytes.fromI32(event.params.proposalId));
+    if(proposalEntity.signaturesCount === 0) {
+      proposalEntity.signaturesCount += 1;
+    }
+    else if(proposalEntity.signaturesCount.toString() === proposalEntity.signaturesRequired.toString()) {
+      proposalEntity.status = 1;
+      log.debug("debug one {}", [proposalEntity.signaturesCount.toString()])
+    }
+    else {
+      proposalEntity.signaturesCount += 1;
+    }
+    proposalEntity.save()
+    entity.proposal = proposalEntity.id;
   }
-  
 
   entity.save()
 }
@@ -173,14 +186,17 @@ export function handleProposalRevoke(event: ProposalRevokeEvent): void {
   let entity = new ProposalRevoke(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
-  entity.fundRunId = event.params.fundRunId
   entity.proposalId = event.params.proposalId
-  entity.to = event.params.to
-  entity.reason = event.params.reason
 
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
+
+  let proposalEntity = Proposal.load(Bytes.fromHexString("proposals_").concat(Bytes.fromI32(event.params.proposalId)))
+  if(proposalEntity !== null) {
+    proposalEntity.status = 3;
+    proposalEntity.save()
+  }
 
   entity.save()
 }

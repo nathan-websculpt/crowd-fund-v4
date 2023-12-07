@@ -30,7 +30,7 @@ export const ListProposals = (frVault: ListProposalProps) => {
               <div className="w-24 h-6 ml-4 bg-secondary"></div>
             </div>
             <div className="flex items-center justified-center">
-              <p>🤝 - Supported</p>
+              <p>🤝 - Supported, Ready to Finalize</p>
               <div className="w-24 h-6 ml-4 bg-accent"></div>
             </div>
             <div className="flex items-center justified-center">

@@ -45,8 +45,8 @@ type FundRunOwnerWithdrawal @entity(immutable: true) {
 
 type MultisigTransfer @entity(immutable: true) {
   id: Bytes!
-  fundRunId: Int! # uint16
   proposalId: Int! # uint16
+  fundRunId: Int! # uint16
   to: Bytes! # address
   amount: BigInt! # uint256
   blockNumber: BigInt!
@@ -71,6 +71,9 @@ type Proposal @entity {
   amount: BigInt! # uint256
   to: Bytes! # address
   reason: String! # string
+  status: Int! # uint8
+  signaturesRequired: BigInt! # uint256
+  signaturesCount: Int! # uint16
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -90,10 +93,7 @@ type ProposalSignature @entity {
 
 type ProposalRevoke @entity(immutable: true) {
   id: Bytes!
-  fundRunId: Int! # uint16
   proposalId: Int! # uint16
-  to: Bytes! # address
-  reason: String! # string
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
