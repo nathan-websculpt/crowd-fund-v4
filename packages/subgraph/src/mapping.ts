@@ -4,20 +4,22 @@ import {
   Donation as DonationEvent,
   DonorWithdrawal as DonorWithdrawalEvent,
   FundRun as FundRunEvent,
-  FundRunOwnerWithdrawal as FundRunOwnerWithdrawalEvent,
+  FundRunStatusChange as FundRunStatusChangeEvent,
   MultisigTransfer as MultisigTransferEvent,
+  OwnerWithdrawal as OwnerWithdrawalEvent,
   OwnershipTransferred as OwnershipTransferredEvent,
   Proposal as ProposalEvent,
   ProposalRevoke as ProposalRevokeEvent,
   ProposalSignature as ProposalSignatureEvent
-} from "../generated/CrowdFundTestEleven/CrowdFundTestEleven"
+} from "../generated/CrowdFundTestThirteen/CrowdFundTestThirteen"
 import {
   ContractOwnerWithdrawal,
   Donation,
   DonorWithdrawal,
   FundRun,
-  FundRunOwnerWithdrawal,
+  FundRunStatusChange,
   MultisigTransfer,
+  OwnerWithdrawal,
   OwnershipTransferred,
   Proposal,
   ProposalRevoke,
@@ -44,12 +46,20 @@ export function handleDonation(event: DonationEvent): void {
   let entity = new Donation(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
+  entity.fundRunId = event.params.fundRunId
   entity.donor = event.params.donor
   entity.amount = event.params.amount
 
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
+
+  let fundRunEntity = FundRun.load(Bytes.fromHexString("fundruns__").concat(Bytes.fromI32(event.params.fundRunId)));
+  if(fundRunEntity !== null) {
+    fundRunEntity.amountCollected = fundRunEntity.amountCollected.plus(entity.amount);
+    if(fundRunEntity.status !== 2) fundRunEntity.status = 2;
+    fundRunEntity.save();
+  }
 
   entity.save()
 }
@@ -58,6 +68,7 @@ export function handleDonorWithdrawal(event: DonorWithdrawalEvent): void {
   let entity = new DonorWithdrawal(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
+  entity.fundRunId = event.params.fundRunId
   entity.donor = event.params.donor
   entity.amount = event.params.amount
 
@@ -65,16 +76,29 @@ export function handleDonorWithdrawal(event: DonorWithdrawalEvent): void {
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
 
+  let fundRunEntity = FundRun.load(Bytes.fromHexString("fundruns__").concat(Bytes.fromI32(event.params.fundRunId)));
+  if(fundRunEntity !== null) {
+    fundRunEntity.amountWithdrawn = fundRunEntity.amountWithdrawn.plus(entity.amount);
+    if(fundRunEntity.status !== 1) fundRunEntity.status = 1;
+    fundRunEntity.save();
+  }
+
   entity.save()
 }
 
 export function handleFundRun(event: FundRunEvent): void {
   let entity = new FundRun(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
+    Bytes.fromHexString("fundruns__").concat(Bytes.fromI32(event.params.fundRunId))
   )
   entity.fundRunId = event.params.fundRunId
+  entity.owners = changetype<Bytes[]>(event.params.owners)
   entity.title = event.params.title
+  entity.description = event.params.description
   entity.target = event.params.target
+  entity.deadline = event.params.deadline
+  entity.amountCollected = event.params.amountCollected
+  entity.amountWithdrawn = event.params.amountWithdrawn
+  entity.status = event.params.status
 
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
@@ -83,17 +107,24 @@ export function handleFundRun(event: FundRunEvent): void {
   entity.save()
 }
 
-export function handleFundRunOwnerWithdrawal(
-  event: FundRunOwnerWithdrawalEvent
+export function handleFundRunStatusChange(
+  event: FundRunStatusChangeEvent
 ): void {
-  let entity = new FundRunOwnerWithdrawal(
+  let entity = new FundRunStatusChange(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
-  entity.amount = event.params.amount
+  entity.fundRunId = event.params.fundRunId
+  entity.status = event.params.status
 
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
+
+  let fundRunEntity = FundRun.load(Bytes.fromHexString("fundruns__").concat(Bytes.fromI32(event.params.fundRunId)));
+  if(fundRunEntity !== null) {
+    fundRunEntity.status = entity.status;
+    fundRunEntity.save();
+  }
 
   entity.save()
 }
@@ -110,6 +141,34 @@ export function handleMultisigTransfer(event: MultisigTransferEvent): void {
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
+
+  let proposalEntity = Proposal.load(Bytes.fromHexString("proposals_").concat(Bytes.fromI32(event.params.proposalId)))
+  if(proposalEntity !== null) {
+    proposalEntity.status = 2;
+    proposalEntity.save();
+  }
+
+  entity.save()
+}
+
+export function handleOwnerWithdrawal(event: OwnerWithdrawalEvent): void {
+  let entity = new OwnerWithdrawal(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
+  )
+  entity.fundRunId = event.params.fundRunId
+  entity.owner = event.params.owner
+  entity.amount = event.params.amount
+
+  entity.blockNumber = event.block.number
+  entity.blockTimestamp = event.block.timestamp
+  entity.transactionHash = event.transaction.hash
+
+  let fundRunEntity = FundRun.load(Bytes.fromHexString("fundruns__").concat(Bytes.fromI32(event.params.fundRunId)));
+  if(fundRunEntity !== null) {
+    fundRunEntity.amountWithdrawn = fundRunEntity.amountWithdrawn.plus(entity.amount);
+    fundRunEntity.status = 3;
+    fundRunEntity.save();
+  }
 
   entity.save()
 }
@@ -197,12 +256,6 @@ export function handleProposalRevoke(event: ProposalRevokeEvent): void {
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
-
-  let proposalEntity = Proposal.load(Bytes.fromHexString("proposals_").concat(Bytes.fromI32(event.params.proposalId)))
-  if(proposalEntity !== null) {
-    proposalEntity.status = 3;
-    proposalEntity.save()
-  }
 
   entity.save()
 }

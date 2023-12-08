@@ -3,12 +3,12 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum
-    name: CrowdFundTestEleven
+    name: CrowdFundTestThirteen
     network: sepolia
     source:
-      address: "0x9a219f797707304Ca8304F0c38D94392766833f3"
-      abi: CrowdFundTestEleven
-      startBlock: 4842405
+      address: "0xC6B16E66C14eeD881bdA1F6aF76142d1B91533cf"
+      abi: CrowdFundTestThirteen
+      startBlock: 4848518
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -18,28 +18,31 @@ dataSources:
         - Donation
         - DonorWithdrawal
         - FundRun
-        - FundRunOwnerWithdrawal
+        - FundRunStatusChange
         - MultisigTransfer
+        - OwnerWithdrawal
         - OwnershipTransferred
         - Proposal
         - ProposalRevoke
         - ProposalSignature
       abis:
-        - name: CrowdFundTestEleven
-          file: ./abis/CrowdFundTestEleven.json
+        - name: CrowdFundTestThirteen
+          file: ./abis/CrowdFundTestThirteen.json
       eventHandlers:
         - event: ContractOwnerWithdrawal(address,uint256)
           handler: handleContractOwnerWithdrawal
-        - event: Donation(address,uint256)
+        - event: Donation(uint16,address,uint256)
           handler: handleDonation
-        - event: DonorWithdrawal(address,uint256)
+        - event: DonorWithdrawal(uint16,address,uint256)
           handler: handleDonorWithdrawal
-        - event: FundRun(uint16,string,uint256)
+        - event: FundRun(uint16,address[],string,string,uint256,uint256,uint256,uint256,uint8)
           handler: handleFundRun
-        - event: FundRunOwnerWithdrawal(uint256)
-          handler: handleFundRunOwnerWithdrawal
+        - event: FundRunStatusChange(uint16,uint8)
+          handler: handleFundRunStatusChange
         - event: MultisigTransfer(uint16,uint16,address,uint256)
           handler: handleMultisigTransfer
+        - event: OwnerWithdrawal(uint16,address,uint256)
+          handler: handleOwnerWithdrawal
         - event: OwnershipTransferred(indexed address,indexed address)
           handler: handleOwnershipTransferred
         - event: Proposal(uint16,uint16,address,uint256,address,string,uint8,uint256,uint16)
@@ -48,4 +51,4 @@ dataSources:
           handler: handleProposalRevoke
         - event: ProposalSignature(uint16,address,bytes)
           handler: handleProposalSignature
-      file: ./src/crowd-fund-test-eleven.ts
+      file: ./src/crowd-fund-test-thirteen.ts
