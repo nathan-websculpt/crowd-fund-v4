@@ -66,6 +66,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 
 	mapping(uint16 => address) public proposalCreator;
 	mapping(uint16 => ProposalStatus) public proposalStatus;
+	mapping(uint16 => address[]) public proposalSigners;
 
 	uint16 public numberOfFundRuns = 0;
 	uint16 public numberOfMultisigProposals = 0;
@@ -84,7 +85,12 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 
 	event ContractOwnerWithdrawal(address contractOwner, uint256 amount);
 
-	event FundRun(uint16 fundRunId, string title, uint256 target);
+	event FundRun(
+		uint16 fundRunId,
+		address[] owners,
+		string title,
+		uint256 target
+	);
 
 	event Proposal(
 		uint16 proposalId,
@@ -204,8 +210,18 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 	modifier notRevoked(uint16 proposalId) {
 		require(
 			proposalStatus[proposalId] != ProposalStatus(3),
-			"This Proposal has been revoked"
+			"This Proposal has been revoked - action not allowed."
 		);
+		_;
+	}
+
+	modifier userHasNotSigned(uint16 proposalId, address signer) {
+		for (uint16 i = 0; i < proposalSigners[proposalId].length; i++) {
+			require(
+				proposalSigners[proposalId][i] != signer,
+				"This user has already signed this proposal - action not allowed."
+			);
+		}
 		_;
 	}
 
@@ -241,6 +257,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		ProposalStatus thisStatus = ProposalStatus(0);
 		proposalCreator[numberOfMultisigProposals] = msg.sender;
 		proposalStatus[numberOfMultisigProposals] = thisStatus;
+		proposalSigners[numberOfMultisigProposals].push(msg.sender);
 
 		emit Proposal(
 			numberOfMultisigProposals,
@@ -274,12 +291,9 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		createdProposal(_proposalId, msg.sender, false)
 		txNotSent(_proposalId)
 		notRevoked(_proposalId)
+		userHasNotSigned(_proposalId, msg.sender)
 	{
-		//TODO: prevent on FE
-		// // require(
-		// // 	!userHasSigned(msg.sender, _proposalId),
-		// // 	"This user has already supported this proposal."
-		// // );
+		proposalSigners[_proposalId].push(msg.sender);
 		proposalStatus[_proposalId] = ProposalStatus(1);
 		emit ProposalSignature(_proposalId, msg.sender, _signature);
 	}
@@ -365,7 +379,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		fundRun.status = FundRunStatus(0);
 		numberOfFundRuns++;
 
-		emit FundRun(fundRun.id, fundRun.title, fundRun.target);
+		emit FundRun(fundRun.id, fundRun.owners, fundRun.title, fundRun.target);
 	}
 
 	function donateToFundRun(
@@ -655,16 +669,6 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		}
 		return false;
 	}
-
-	// // function userHasSigned(
-	// // 	address _signer,
-	// // 	uint16 _proposalId
-	// // ) private view returns (bool) {
-	// // 	for (uint16 i = 0; i < signerList[_proposalId].length; i++) {
-	// // 		if (signerList[_proposalId][i] == _signer) return true;
-	// // 	}
-	// // 	return false;
-	// // }
 
 	/**
 	 * @dev RETURNS FALSE IF:
