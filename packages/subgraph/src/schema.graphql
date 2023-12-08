@@ -27,7 +27,7 @@ type DonorWithdrawal @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type FundRun @entity(immutable: true) {
+type FundRun @entity {
   id: Bytes!
   fundRunId: Int! # uint16
   owners: [Bytes!]! # address[]

@@ -1,33 +1,32 @@
 import { useRouter } from "next/router";
+import { useQuery } from "@apollo/client";
 import { NextPage } from "next";
 import { MetaHeader } from "~~/components/MetaHeader";
 import { Spinner } from "~~/components/Spinner";
 import { CreateProposal } from "~~/components/crowdfund/proposals/CreateProposal";
 import { ListProposals } from "~~/components/crowdfund/proposals/ListProposals";
-import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
+import { GQL_FUNDRUN_BY_ID } from "~~/helpers/getQueries";
 
 const VaultPage: NextPage = () => {
   const router = useRouter();
   const { vault } = router.query as { vault?: `${string}` }; //fundRunId
 
-  const { data: fundRunSingle } = useScaffoldContractRead({
-    contractName: "CrowdFund",
-    functionName: "getFundRun",
-    args: vault,
+  const { loading, error, data } = useQuery(GQL_FUNDRUN_BY_ID(), {
+    variables: { slug: parseInt(vault) },
   });
 
   return (
     <>
       <MetaHeader title="Multisig Vault" />
-      {fundRunSingle ? (
+      {data?.fundRuns[0] ? (
         <>
           <div className="px-6 pt-10 pb-8 shadow-xl sm:my-auto bg-secondary sm:mx-auto sm:max-w-11/12 md:w-9/12 sm:rounded-lg sm:px-10">
             <div className="flex items-center justify-center">
-              <CreateProposal fundRunId={fundRunSingle.id} title={fundRunSingle.title} />
+              <CreateProposal fundRunId={data?.fundRuns[0].fundRunId} title={data?.fundRuns[0].title} />
             </div>
           </div>
 
-          <ListProposals fundRunId={fundRunSingle.id} />
+          <ListProposals fundRunId={data?.fundRuns[0].fundRunId} />
         </>
       ) : (
         <>

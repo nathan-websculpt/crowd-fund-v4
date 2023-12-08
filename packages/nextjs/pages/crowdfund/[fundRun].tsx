@@ -16,9 +16,6 @@ const FundRunPage: NextPage = () => {
     variables: { slug: parseInt(fundRun) },
     pollInterval: 1000,
   });
-  console.log(data);
-  console.log(error);
-  // console.log(fundRun);
 
   if (loading) {
     return (

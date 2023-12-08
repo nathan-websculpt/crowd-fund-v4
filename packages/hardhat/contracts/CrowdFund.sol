@@ -376,7 +376,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 
 		FundRunValues storage fundRunVals = fundRunValues[numberOfFundRuns];
 		fundRunVals.amountCollected = 0;
-		fundRunVals.target = 0;
+		fundRunVals.target = _target;
 		fundRunVals.amountWithdrawn = 0;
 
 		fundRunOwners[numberOfFundRuns] = _owners;
@@ -656,7 +656,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		(bool success, ) = payable(_tx.to).call{ value: netWithdrawAmount }("");
 
 		require(success, "Transfer not fulfilled");
-		emit MultisigTransfer(_id, _proposalId, _tx.to, netWithdrawAmount);
+		emit MultisigTransfer(_proposalId, _id, _tx.to, netWithdrawAmount);
 	}
 
 	function getNetWithdrawAmount(

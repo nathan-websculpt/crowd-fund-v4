@@ -56,9 +56,13 @@ export function handleDonation(event: DonationEvent): void {
 
   let fundRunEntity = FundRun.load(Bytes.fromHexString("fundruns__").concat(Bytes.fromI32(event.params.fundRunId)));
   if(fundRunEntity !== null) {
+    log.debug("debug updating... fund run status before {}", [fundRunEntity.status.toString()])
+    log.debug("debug updating... fund run amountWithdrawn before {}", [fundRunEntity.amountWithdrawn.toString()])
     fundRunEntity.amountCollected = fundRunEntity.amountCollected.plus(entity.amount);
     if(fundRunEntity.status !== 2) fundRunEntity.status = 2;
     fundRunEntity.save();
+    log.debug("debug updating... fund run status after {}", [fundRunEntity.status.toString()])
+    log.debug("debug updating... fund run amountWithdrawn after {}", [fundRunEntity.amountWithdrawn.toString()])
   }
 
   entity.save()
@@ -78,9 +82,13 @@ export function handleDonorWithdrawal(event: DonorWithdrawalEvent): void {
 
   let fundRunEntity = FundRun.load(Bytes.fromHexString("fundruns__").concat(Bytes.fromI32(event.params.fundRunId)));
   if(fundRunEntity !== null) {
+    log.debug("debug updating... fund run status before {}", [fundRunEntity.status.toString()])
+    log.debug("debug updating... fund run amountWithdrawn before {}", [fundRunEntity.amountWithdrawn.toString()])
     fundRunEntity.amountWithdrawn = fundRunEntity.amountWithdrawn.plus(entity.amount);
     if(fundRunEntity.status !== 1) fundRunEntity.status = 1;
     fundRunEntity.save();
+    log.debug("debug updating... fund run status after {}", [fundRunEntity.status.toString()])
+    log.debug("debug updating... fund run amountWithdrawn after {}", [fundRunEntity.amountWithdrawn.toString()])
   }
 
   entity.save()
@@ -122,8 +130,10 @@ export function handleFundRunStatusChange(
 
   let fundRunEntity = FundRun.load(Bytes.fromHexString("fundruns__").concat(Bytes.fromI32(event.params.fundRunId)));
   if(fundRunEntity !== null) {
+    log.debug("debug updating... fund run status before {}", [fundRunEntity.status.toString()])
     fundRunEntity.status = entity.status;
     fundRunEntity.save();
+    log.debug("debug updating... fund run status after {}", [fundRunEntity.status.toString()])
   }
 
   entity.save()
@@ -144,8 +154,10 @@ export function handleMultisigTransfer(event: MultisigTransferEvent): void {
 
   let proposalEntity = Proposal.load(Bytes.fromHexString("proposals_").concat(Bytes.fromI32(event.params.proposalId)))
   if(proposalEntity !== null) {
+    log.debug("debug updating... proposal status before {}", [proposalEntity.status.toString()])
     proposalEntity.status = 2;
     proposalEntity.save();
+    log.debug("debug updating... proposal status after {}", [proposalEntity.status.toString()])
   }
 
   entity.save()
