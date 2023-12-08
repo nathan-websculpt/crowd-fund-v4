@@ -1,5 +1,44 @@
 import { gql } from "@apollo/client";
 
+//for viewing a single Fund Run
+export const GQL_FUNDRUN_BY_ID = () => {
+  return gql`
+    query ($slug: Int!) {
+      fundRuns(where: { fundRunId: $slug }) {
+        fundRunId
+        owners
+        title
+        description
+        deadline
+        target
+        amountCollected
+        amountWithdrawn
+        status
+      }
+    }
+  `;
+};
+
+//for viewing the Fund Runs list
+//returns latest-first, 25 at a time
+export const GQL_FUNDRUNS = () => {
+  return gql`
+    query ($slug: Int!) {
+      fundRuns(orderBy: fundRunId, orderDirection: desc, first: 25, skip: $slug) {
+        fundRunId
+        owners
+        title
+        description
+        deadline
+        target
+        amountCollected
+        amountWithdrawn
+        status
+      }
+    }
+  `;
+};
+
 //for Finalization of a Proposal
 //returns all signatures for a Proposal (which are then sent to the contract)
 export const GQL_SIGNATURES = () => {

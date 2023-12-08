@@ -1,15 +1,16 @@
 import Link from "next/link";
 import { Spinner } from "../Spinner";
 import { FundRunDisplay } from "./FundRunDisplay";
-import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
+import { useQuery } from "@apollo/client";
+import { GQL_FUNDRUNS } from "~~/helpers/getQueries";
 
 export const FundRunsList = () => {
-  const { data: fundRuns, isLoading: isListLoading } = useScaffoldContractRead({
-    contractName: "CrowdFund",
-    functionName: "getFundRuns",
+  const { loading, error, data } = useQuery(GQL_FUNDRUNS(), {
+    variables: { slug: 0 }, //slug is the skip (for pagination later?)
+    pollInterval: 1000,
   });
 
-  if (isListLoading) {
+  if (loading) {
     return (
       <div className="flex flex-col gap-2 p-2 m-4 mx-auto border shadow-xl border-base-300 bg-base-200 sm:rounded-lg">
         <Spinner width="150px" height="150px" />
@@ -18,17 +19,17 @@ export const FundRunsList = () => {
   } else {
     return (
       <>
-        {fundRuns?.map(fund => (
+        {data?.fundRuns?.map(fund => (
           <div
-            key={fund.id.toString()}
+            key={fund.fundRunId.toString()}
             className="flex flex-col gap-2 p-2 m-4 border shadow-xl border-base-300 bg-base-200 sm:rounded-lg"
           >
             <FundRunDisplay
-              id={fund.id}
+              id={fund.fundRunId}
               title={fund.title}
               description={fund.description}
               target={fund.target}
-              deadline={fund.deadline.toString()}
+              deadline={fund.deadline.toString()} //TODO:
               amountCollected={fund.amountCollected}
               amountWithdrawn={fund.amountWithdrawn}
               status={fund.status}
@@ -36,7 +37,7 @@ export const FundRunsList = () => {
             <div className="flex justify-between">
               <div>
                 {fund.owners.length > 1 && (
-                  <Link href={`/crowdfund/vaults/${fund.id}`} passHref className="btn btn-primary">
+                  <Link href={`/crowdfund/vaults/${fund.fundRunId}`} passHref className="btn btn-primary">
                     <div className="tooltip tooltip-primary" data-tip="View Proposals in the Vault">
                       View Vault
                     </div>
@@ -45,7 +46,7 @@ export const FundRunsList = () => {
               </div>
 
               <div>
-                <Link href={`/crowdfund/${fund.id}`} passHref className="btn btn-primary">
+                <Link href={`/crowdfund/${fund.fundRunId}`} passHref className="btn btn-primary">
                   <div className="tooltip tooltip-primary" data-tip="donate...">
                     View Fund Run
                   </div>

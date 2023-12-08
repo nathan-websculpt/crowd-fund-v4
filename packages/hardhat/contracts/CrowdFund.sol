@@ -15,18 +15,17 @@ import { ECDSA } from "../node_modules/@openzeppelin/contracts/utils/cryptograph
  */
 
 contract CrowdFund is Ownable, ReentrancyGuard {
-	struct FundRun_ {
-		uint16 id; //not large enough in a prod scenario
-		address[] owners;
-		string title;
-		string description;
+	struct MultiSigRequest {
+		uint256 amount;
+		address to;
+		address proposedBy;
+		string reason;
+	}
+
+	struct FundRunValues {
 		uint256 target;
-		uint256 deadline;
 		uint256 amountCollected;
 		uint256 amountWithdrawn;
-		address[] donors;
-		uint256[] donations;
-		FundRunStatus status;
 	}
 
 	/**
@@ -39,11 +38,11 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		mapping(uint256 => uint256) donorMoneyLog; //mapping(fundRunId => donationAmount)
 	}
 
-	struct MultiSigRequest {
-		uint256 amount;
-		address to;
-		address proposedBy;
-		string reason;
+	enum FundRunStatus {
+		Created,
+		DeadlineMetMoneyGoalNotMet,
+		MoneyGoalMetDeadlineNotMet,
+		FullSuccess
 	}
 
 	enum ProposalStatus {
@@ -53,19 +52,16 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		Revoked
 	}
 
-	enum FundRunStatus {
-		Created,
-		DeadlineMetMoneyGoalNotMet,
-		MoneyGoalMetDeadlineNotMet,
-		FullSuccess
-	}
-
 	mapping(uint16 => uint256) public vaultNonces; //fundRunId => Nonce
-	mapping(uint256 => FundRun_) public fundRuns;
 	mapping(address => DonorsLog) public donorLogs; //a single donor will have all of their logs (across all Fund Runs they donated to) here
 
-	mapping(uint16 => address) public proposalCreator;
-	mapping(uint16 => ProposalStatus) public proposalStatus;
+	mapping(uint16 => address[]) public fundRunOwners;
+	mapping(uint16 => uint256) public fundRunDeadlines;
+	mapping(uint16 => FundRunValues) public fundRunValues;
+	mapping(uint16 => FundRunStatus) public fundRunStatuses;
+
+	mapping(uint16 => address) public proposalCreators;
+	mapping(uint16 => ProposalStatus) public proposalStatuses;
 	mapping(uint16 => address[]) public proposalSigners;
 
 	uint16 public numberOfFundRuns = 0;
@@ -77,11 +73,11 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 	uint16 private constant crowdFundDenominator = 10000;
 	string private constant MSG_PREFIX = "\x19Ethereum Signed Message:\n32";
 
-	event Donation(address donor, uint256 amount);
+	event Donation(uint16 fundRunId, address donor, uint256 amount);
 
-	event FundRunOwnerWithdrawal(uint256 amount);
+	event OwnerWithdrawal(uint16 fundRunId, address owner, uint256 amount);
 
-	event DonorWithdrawal(address donor, uint256 amount);
+	event DonorWithdrawal(uint16 fundRunId, address donor, uint256 amount);
 
 	event ContractOwnerWithdrawal(address contractOwner, uint256 amount);
 
@@ -91,10 +87,13 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		string title,
 		string description,
 		uint256 target,
-		uint256 donated,
-		uint256 withdrawn,
+		uint256 deadline,
+		uint256 amountCollected,
+		uint256 amountWithdrawn,
 		FundRunStatus status
 	);
+
+	event FundRunStatusChange(uint16 fundRunId, FundRunStatus status);
 
 	event Proposal(
 		uint16 proposalId,
@@ -141,12 +140,12 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 	modifier fundRunCompleted(uint16 id, bool mustBeCompleted) {
 		if (mustBeCompleted) {
 			require(
-				fundRuns[id].deadline < block.timestamp,
+				fundRunDeadlines[id] < block.timestamp,
 				"This Fund Run is not complete."
 			);
 		} else {
 			require(
-				fundRuns[id].deadline > block.timestamp,
+				fundRunDeadlines[id] > block.timestamp,
 				"This Fund Run has already completed."
 			);
 		}
@@ -156,12 +155,12 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 	modifier fundRunSucceeded(uint16 id, bool mustHaveSucceeded) {
 		if (mustHaveSucceeded) {
 			require(
-				fundRuns[id].amountCollected >= fundRuns[id].target,
+				fundRunValues[id].amountCollected >= fundRunValues[id].target,
 				"This Fund Run has not yet met its monetary goal."
 			);
 		} else {
 			require(
-				fundRuns[id].amountCollected < fundRuns[id].target,
+				fundRunValues[id].amountCollected < fundRunValues[id].target,
 				"This Fund Run has already met its monetary goal."
 			);
 		}
@@ -171,12 +170,12 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 	modifier isMultisig(uint16 id, bool mustBeMultisig) {
 		if (mustBeMultisig) {
 			require(
-				fundRuns[id].owners.length > 1,
+				fundRunOwners[id].length > 1,
 				"This is NOT a multisig Fund Run - Operation not allowed."
 			);
 		} else {
 			require(
-				fundRuns[id].owners.length == 1,
+				fundRunOwners[id].length == 1,
 				"This IS a multisig Fund Run - Operation not allowed."
 			);
 		}
@@ -190,13 +189,13 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 	) {
 		if (mustBeProposer) {
 			require(
-				proposalCreator[proposalId] == signer,
+				proposalCreators[proposalId] == signer,
 				"The address is NOT the creator of this proposal -- action not allowed."
 			);
 			_;
 		} else {
 			require(
-				proposalCreator[proposalId] != signer,
+				proposalCreators[proposalId] != signer,
 				"The address is the creator of this proposal -- creators of proposals can not support them -- action not allowed."
 			);
 			_;
@@ -205,7 +204,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 
 	modifier txNotSent(uint16 proposalId) {
 		require(
-			proposalStatus[proposalId] != ProposalStatus(2),
+			proposalStatuses[proposalId] != ProposalStatus(2),
 			"This Multisig Tx has already went through."
 		);
 		_;
@@ -213,7 +212,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 
 	modifier notRevoked(uint16 proposalId) {
 		require(
-			proposalStatus[proposalId] != ProposalStatus(3),
+			proposalStatuses[proposalId] != ProposalStatus(3),
 			"This Proposal has been revoked - action not allowed."
 		);
 		_;
@@ -235,19 +234,22 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 
 	function createMultisigProposal(
 		bytes calldata _signature,
-		uint16 _fundRunId,
+		uint16 _id,
 		MultiSigRequest calldata _tx
 	)
 		external
-		isMultisig(_fundRunId, true)
-		ownsThisFundRun(_fundRunId, msg.sender, true)
-		fundRunCompleted(_fundRunId, true)
-		fundRunSucceeded(_fundRunId, true)
+		isMultisig(_id, true)
+		ownsThisFundRun(_id, msg.sender, true)
+		fundRunCompleted(_id, true)
+		fundRunSucceeded(_id, true)
 	{
-		FundRun_ storage fundRun = fundRuns[_fundRunId];
-		require(fundRun.amountCollected > 0, "There is nothing to withdraw");
 		require(
-			fundRun.amountCollected > fundRun.amountWithdrawn,
+			fundRunValues[_id].amountCollected > 0,
+			"There is nothing to withdraw"
+		);
+		require(
+			fundRunValues[_id].amountCollected >
+				fundRunValues[_id].amountWithdrawn,
 			"This Fund Run is empty -- withdrawals may have already occurred."
 		);
 		require(
@@ -255,23 +257,24 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 			"The proposed transaction withdrawal amount must be greater than 0."
 		);
 		require(
-			fundRun.amountWithdrawn + _tx.amount <= fundRun.amountCollected,
+			fundRunValues[_id].amountWithdrawn + _tx.amount <=
+				fundRunValues[_id].amountCollected,
 			"This proposal would overdraw this Fund Run."
 		);
 		ProposalStatus thisStatus = ProposalStatus(0);
-		proposalCreator[numberOfMultisigProposals] = msg.sender;
-		proposalStatus[numberOfMultisigProposals] = thisStatus;
+		proposalCreators[numberOfMultisigProposals] = msg.sender;
+		proposalStatuses[numberOfMultisigProposals] = thisStatus;
 		proposalSigners[numberOfMultisigProposals].push(msg.sender);
 
 		emit Proposal(
 			numberOfMultisigProposals,
-			_fundRunId,
+			_id,
 			msg.sender,
 			_tx.amount,
 			_tx.to,
 			_tx.reason,
 			thisStatus,
-			fundRun.owners.length, //TODO: get value from user - total signatures required
+			fundRunOwners[_id].length, //TODO: get value from user - total signatures required
 			0
 		);
 
@@ -286,19 +289,19 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 
 	function supportMultisigProposal(
 		bytes calldata _signature,
-		uint16 _fundRunId,
+		uint16 _id,
 		uint16 _proposalId
 	)
 		external
-		isMultisig(_fundRunId, true)
-		ownsThisFundRun(_fundRunId, msg.sender, true)
+		isMultisig(_id, true)
+		ownsThisFundRun(_id, msg.sender, true)
 		createdProposal(_proposalId, msg.sender, false)
 		txNotSent(_proposalId)
 		notRevoked(_proposalId)
 		userHasNotSigned(_proposalId, msg.sender)
 	{
 		proposalSigners[_proposalId].push(msg.sender);
-		proposalStatus[_proposalId] = ProposalStatus(1);
+		proposalStatuses[_proposalId] = ProposalStatus(1);
 		emit ProposalSignature(_proposalId, msg.sender, _signature);
 	}
 
@@ -308,36 +311,36 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 	function multisigWithdraw(
 		MultiSigRequest calldata _tx,
 		uint256 _nonce,
-		uint16 _fundRunId,
+		uint16 _id,
 		uint16 _proposalId,
 		bytes[] calldata _signaturesList
 	)
 		external
 		nonReentrant
-		isMultisig(_fundRunId, true)
-		ownsThisFundRun(_fundRunId, msg.sender, true)
+		isMultisig(_id, true)
+		ownsThisFundRun(_id, msg.sender, true)
 		txNotSent(_proposalId)
 		notRevoked(_proposalId)
 	{
-		_verifyMultisigRequest(_tx, _nonce, _signaturesList, _fundRunId);
-		_multisigTransfer(_tx, _fundRunId, _proposalId);
+		_verifyMultisigRequest(_tx, _nonce, _signaturesList, _id);
+		_multisigTransfer(_tx, _id, _proposalId);
 	}
 
 	/**
 	 * @dev  Only the user who created a proposal can revoke it
 	 */
 	function revokeMultisigProposal(
-		uint16 _fundRunId,
+		uint16 _id,
 		uint16 _proposalId
 	)
 		external
-		isMultisig(_fundRunId, true)
-		ownsThisFundRun(_fundRunId, msg.sender, true)
+		isMultisig(_id, true)
+		ownsThisFundRun(_id, msg.sender, true)
 		createdProposal(_proposalId, msg.sender, true)
 		txNotSent(_proposalId)
 		notRevoked(_proposalId)
 	{
-		proposalStatus[_proposalId] = ProposalStatus(3);
+		proposalStatuses[_proposalId] = ProposalStatus(3);
 		emit ProposalRevoke(_proposalId);
 	}
 
@@ -371,19 +374,28 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 			"The co-owners and the creator of a Fund Run must all have different wallet addresses."
 		);
 
-		FundRun_ storage fundRun = fundRuns[numberOfFundRuns];
-		fundRun.id = numberOfFundRuns;
-		fundRun.owners = _owners;
-		fundRun.title = _title;
-		fundRun.description = _description;
-		fundRun.target = _target;
-		fundRun.deadline = fundRunDeadline;
-		fundRun.amountCollected = 0;
-		fundRun.amountWithdrawn = 0;
-		fundRun.status = FundRunStatus(0);
-		numberOfFundRuns++;
+		FundRunValues storage fundRunVals = fundRunValues[numberOfFundRuns];
+		fundRunVals.amountCollected = 0;
+		fundRunVals.target = 0;
+		fundRunVals.amountWithdrawn = 0;
 
-		emit FundRun(fundRun.id, fundRun.owners, fundRun.title, fundRun.target);
+		fundRunOwners[numberOfFundRuns] = _owners;
+		fundRunDeadlines[numberOfFundRuns] = fundRunDeadline;
+		fundRunStatuses[numberOfFundRuns] = FundRunStatus(0);
+
+		emit FundRun(
+			numberOfFundRuns,
+			_owners,
+			_title,
+			_description,
+			_target,
+			fundRunDeadline,
+			0,
+			0,
+			FundRunStatus(0)
+		);
+
+		numberOfFundRuns++;
 	}
 
 	function donateToFundRun(
@@ -397,11 +409,6 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		require(msg.value > 0, "Minimum payment amount not met.");
 		uint256 amount = msg.value;
 
-		FundRun_ storage fundRun = fundRuns[_id];
-
-		fundRun.donors.push(msg.sender);
-		fundRun.donations.push(amount);
-
 		/**
 		 * @dev next few lines are how a person can donate to multiple fund runs (multiple times)
 		 * while still keeping the donations logged separately for proper withdrawal
@@ -409,17 +416,18 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		 */
 		DonorsLog storage donorLog = donorLogs[msg.sender];
 		if (donorLog.donor != msg.sender) donorLog.donor = msg.sender;
-		uint256 previouslyDonated = donorLog.donorMoneyLog[fundRun.id];
-		donorLog.donorMoneyLog[fundRun.id] = amount + previouslyDonated;
-		uint256 newAmountCollected = fundRun.amountCollected + amount;
-		fundRun.amountCollected = newAmountCollected;
+		uint256 previouslyDonated = donorLog.donorMoneyLog[_id];
+		donorLog.donorMoneyLog[_id] = amount + previouslyDonated;
+		uint256 newAmountCollected = fundRunValues[_id].amountCollected +
+			amount;
+		fundRunValues[_id].amountCollected = newAmountCollected;
 
 		if (
-			fundRun.amountCollected >= fundRun.target &&
-			fundRun.status != FundRunStatus(2)
-		) fundRun.status = FundRunStatus(2);
+			fundRunValues[_id].amountCollected >= fundRunValues[_id].target &&
+			fundRunStatuses[_id] != FundRunStatus(2)
+		) fundRunStatuses[_id] = FundRunStatus(2);
 
-		emit Donation(msg.sender, amount);
+		emit Donation(_id, msg.sender, amount);
 	}
 
 	function fundRunOwnerWithdraw(
@@ -432,14 +440,17 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		fundRunCompleted(_id, true)
 		fundRunSucceeded(_id, true)
 	{
-		FundRun_ storage fundRun = fundRuns[_id];
-		require(fundRun.amountCollected > 0, "There is nothing to withdraw");
 		require(
-			fundRun.amountCollected > fundRun.amountWithdrawn,
+			fundRunValues[_id].amountCollected > 0,
+			"There is nothing to withdraw"
+		);
+		require(
+			fundRunValues[_id].amountCollected >
+				fundRunValues[_id].amountWithdrawn,
 			"This Fund Run is empty -- a withdrawal may have already occurred."
 		);
-		uint256 grossWithdrawAmount = fundRun.amountCollected -
-			fundRun.amountWithdrawn;
+		uint256 grossWithdrawAmount = fundRunValues[_id].amountCollected -
+			fundRunValues[_id].amountWithdrawn;
 		require(
 			grossWithdrawAmount > 0,
 			"There is nothing to withdraw -- a withdrawal may have already occurred."
@@ -452,25 +463,27 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		 * and ensure they are going to be less-than/equal-to the Fund Run's total balance ("amountCollected")
 		 */
 		require(
-			(grossWithdrawAmount + fundRun.amountWithdrawn) <=
-				fundRun.amountCollected,
+			(grossWithdrawAmount + fundRunValues[_id].amountWithdrawn) <=
+				fundRunValues[_id].amountCollected,
 			"This Fund Run is hereby prevented from being over-drawn."
 		);
 
 		//contract takes its cut
 		uint256 netWithdrawAmount = getNetWithdrawAmount(grossWithdrawAmount);
 
-		fundRun.amountWithdrawn = fundRun.amountWithdrawn + grossWithdrawAmount;
+		fundRunValues[_id].amountWithdrawn =
+			fundRunValues[_id].amountWithdrawn +
+			grossWithdrawAmount;
 
-		if (fundRun.status != FundRunStatus(3))
-			fundRun.status = FundRunStatus(3);
+		if (fundRunStatuses[_id] != FundRunStatus(3))
+			fundRunStatuses[_id] = FundRunStatus(3);
 
 		(bool success, ) = payable(msg.sender).call{ value: netWithdrawAmount }(
 			""
 		);
 
 		require(success, "Withdrawal reverted.");
-		emit FundRunOwnerWithdrawal(netWithdrawAmount);
+		emit OwnerWithdrawal(_id, msg.sender, netWithdrawAmount);
 	}
 
 	function fundRunDonorWithdraw(
@@ -482,9 +495,8 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		fundRunCompleted(_id, true)
 		fundRunSucceeded(_id, false)
 	{
-		FundRun_ storage fundRun = fundRuns[_id];
 		DonorsLog storage donorLog = donorLogs[msg.sender];
-		uint256 amountToWithdraw = donorLog.donorMoneyLog[fundRun.id];
+		uint256 amountToWithdraw = donorLog.donorMoneyLog[_id];
 		require(
 			amountToWithdraw > 0,
 			"There is nothing to withdraw - Have you already withdrawn?"
@@ -493,23 +505,25 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		///@dev ADD the would-be withdrawal amount to the actual withdrawn amount
 		///and ensure they are going to be less-than/equal-to the Fund Run's total balance ("amountCollected")
 		require(
-			(amountToWithdraw + fundRun.amountWithdrawn) <=
-				fundRun.amountCollected,
+			(amountToWithdraw + fundRunValues[_id].amountWithdrawn) <=
+				fundRunValues[_id].amountCollected,
 			"This Fund Run is hereby prevented from being over-drawn."
 		);
 
-		if (fundRun.status != FundRunStatus(1))
-			fundRun.status = FundRunStatus(1);
+		if (fundRunStatuses[_id] != FundRunStatus(1))
+			fundRunStatuses[_id] = FundRunStatus(1);
 
-		donorLog.donorMoneyLog[fundRun.id] = 0;
-		fundRun.amountWithdrawn = fundRun.amountWithdrawn + amountToWithdraw;
+		donorLog.donorMoneyLog[_id] = 0;
+		fundRunValues[_id].amountWithdrawn =
+			fundRunValues[_id].amountWithdrawn +
+			amountToWithdraw;
 
 		(bool success, ) = payable(msg.sender).call{ value: amountToWithdraw }(
 			""
 		);
 
 		require(success, "Withdrawal reverted.");
-		emit DonorWithdrawal(msg.sender, amountToWithdraw);
+		emit DonorWithdrawal(_id, msg.sender, amountToWithdraw);
 	}
 
 	/**
@@ -530,35 +544,19 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		emit ContractOwnerWithdrawal(msg.sender, amountToWithdraw);
 	}
 
-	function updateFundRunStatus(uint16 _fundRunId) external {
-		FundRun_ storage fundRun = fundRuns[_fundRunId];
-		if (fundRun.deadline < block.timestamp)
-			if (fundRun.amountCollected < fundRun.target)
-				fundRun.status = FundRunStatus(1);
-			else fundRun.status = FundRunStatus(3);
-		else if (fundRun.amountCollected < fundRun.target)
-			fundRun.status = FundRunStatus(0);
-		else fundRun.status = FundRunStatus(2);
-	}
-
-	/**
-	 * @dev Returns list of Fund Runs in reverse order (latest-first)
-	 */
-	function getFundRuns() external view returns (FundRun_[] memory) {
-		FundRun_[] memory allFundRuns = new FundRun_[](numberOfFundRuns);
-		for (uint16 i = 1; i < numberOfFundRuns + 1; i++) {
-			allFundRuns[i - 1] = fundRuns[numberOfFundRuns - i];
-		}
-		return allFundRuns;
-	}
-
-	function getFundRun(uint16 _id) external view returns (FundRun_ memory) {
-		return fundRuns[_id];
+	function updateFundRunStatus(uint16 _id) external {
+		if (fundRunDeadlines[_id] < block.timestamp)
+			if (fundRunValues[_id].amountCollected < fundRunValues[_id].target)
+				setFundRunStatus(_id, 1);
+			else setFundRunStatus(_id, 3);
+		else if (fundRunValues[_id].amountCollected < fundRunValues[_id].target)
+			setFundRunStatus(_id, 0);
+		else setFundRunStatus(_id, 2);
 	}
 
 	function timeLeft(uint16 _id) external view returns (uint256) {
-		require(block.timestamp < fundRuns[_id].deadline, "It's ovaaaa");
-		return fundRuns[_id].deadline - block.timestamp;
+		require(block.timestamp < fundRunDeadlines[_id], "It's ovaaaa");
+		return fundRunDeadlines[_id] - block.timestamp;
 	}
 
 	function getBalance()
@@ -569,20 +567,26 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		return address(this).balance;
 	}
 
-	function getNonce(uint16 _fundRunId) external view returns (uint256) {
-		return vaultNonces[_fundRunId];
+	function getNonce(uint16 _id) external view returns (uint256) {
+		return vaultNonces[_id];
+	}
+
+	function setFundRunStatus(uint16 _id, uint16 _newValue) private {
+		FundRunStatus newStatus = FundRunStatus(_newValue);
+		fundRunStatuses[_id] = newStatus;
+		emit FundRunStatusChange(_id, newStatus);
 	}
 
 	function _verifyMultisigRequest(
 		MultiSigRequest calldata _tx,
 		uint256 _nonce,
 		bytes[] calldata _signatures,
-		uint16 _fundRunId
+		uint16 _id
 	) private {
-		require(_nonce > vaultNonces[_fundRunId], "nonce already used");
+		require(_nonce > vaultNonces[_id], "nonce already used");
 		uint256 signaturesCount = _signatures.length;
 		require(
-			signaturesCount == fundRuns[_fundRunId].owners.length,
+			signaturesCount == fundRunOwners[_id].length, //TODO: eventually getting a "max signature count" from user
 			"not enough signers"
 		);
 		bytes32 digest = _processMultisigRequest(_tx, _nonce);
@@ -592,7 +596,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 			bytes memory signature = _signatures[i];
 			address signer = ECDSA.recover(digest, signature);
 			require(
-				isOwnerOfFundRun(signer, _fundRunId),
+				isOwnerOfFundRun(signer, _id),
 				"Possible Issues: Proposal completed, problem with signature, or you are not a co-owner of this Fund Run."
 			);
 			require(
@@ -601,7 +605,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 			);
 			initialSigner = signer;
 		}
-		vaultNonces[_fundRunId] = _nonce;
+		vaultNonces[_id] = _nonce;
 	}
 
 	function _processMultisigRequest(
@@ -615,13 +619,16 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 
 	function _multisigTransfer(
 		MultiSigRequest calldata _tx,
-		uint16 _fundRunId,
+		uint16 _id,
 		uint16 _proposalId
 	) private {
-		FundRun_ storage fundRun = fundRuns[_fundRunId];
-		require(fundRun.amountCollected > 0, "There is nothing to withdraw");
 		require(
-			fundRun.amountCollected > fundRun.amountWithdrawn,
+			fundRunValues[_id].amountCollected > 0,
+			"There is nothing to withdraw"
+		);
+		require(
+			fundRunValues[_id].amountCollected >
+				fundRunValues[_id].amountWithdrawn,
 			"This Fund Run is empty -- withdrawals may have already occurred."
 		);
 		require(
@@ -629,29 +636,27 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 			"The proposed transaction withdrawal amount is 0."
 		);
 		require(
-			fundRun.amountWithdrawn + _tx.amount <= fundRun.amountCollected,
+			fundRunValues[_id].amountWithdrawn + _tx.amount <=
+				fundRunValues[_id].amountCollected,
 			"This Fund Run is hereby prevented from being over-drawn."
 		);
 
 		//contract takes its cut
 		uint256 netWithdrawAmount = getNetWithdrawAmount(_tx.amount);
 
-		fundRun.amountWithdrawn = fundRun.amountWithdrawn + _tx.amount;
+		fundRunValues[_id].amountWithdrawn =
+			fundRunValues[_id].amountWithdrawn +
+			_tx.amount;
 
-		if (fundRun.status != FundRunStatus(3))
-			fundRun.status = FundRunStatus(3);
+		if (fundRunStatuses[_id] != FundRunStatus(3))
+			fundRunStatuses[_id] = FundRunStatus(3);
 
-		proposalStatus[_proposalId] = ProposalStatus(2);
+		proposalStatuses[_proposalId] = ProposalStatus(2);
 
 		(bool success, ) = payable(_tx.to).call{ value: netWithdrawAmount }("");
 
 		require(success, "Transfer not fulfilled");
-		emit MultisigTransfer(
-			_fundRunId,
-			_proposalId,
-			_tx.to,
-			netWithdrawAmount
-		);
+		emit MultisigTransfer(_id, _proposalId, _tx.to, netWithdrawAmount);
 	}
 
 	function getNetWithdrawAmount(
@@ -668,8 +673,8 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		address _addr,
 		uint16 _id
 	) private view returns (bool) {
-		for (uint16 i = 0; i < fundRuns[_id].owners.length; i++) {
-			if (fundRuns[_id].owners[i] == _addr) return true;
+		for (uint16 i = 0; i < fundRunOwners[_id].length; i++) {
+			if (fundRunOwners[_id][i] == _addr) return true;
 		}
 		return false;
 	}
@@ -700,9 +705,9 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 
 	//TODO: PRODTODO:: remove this _________________________________________>
 	function forceEnd(uint16 _id) external {
-		require(block.timestamp < fundRuns[_id].deadline, "It's ovaaaa");
-		uint256 diff = (fundRuns[_id].deadline - block.timestamp) + 5;
-		fundRuns[_id].deadline = diff;
+		require(block.timestamp < fundRunDeadlines[_id], "It's ovaaaa");
+		uint256 diff = (fundRunDeadlines[_id] - block.timestamp) + 5;
+		fundRunDeadlines[_id] = diff;
 	}
 	//TODO: PRODTODO:: END: remove this ^^^________________________^^^
 }
