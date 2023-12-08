@@ -89,7 +89,11 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		uint16 fundRunId,
 		address[] owners,
 		string title,
-		uint256 target
+		string description,
+		uint256 target,
+		uint256 donated,
+		uint256 withdrawn,
+		FundRunStatus status
 	);
 
 	event Proposal(
