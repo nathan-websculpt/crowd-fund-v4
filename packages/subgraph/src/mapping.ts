@@ -11,7 +11,7 @@ import {
   Proposal as ProposalEvent,
   ProposalRevoke as ProposalRevokeEvent,
   ProposalSignature as ProposalSignatureEvent
-} from "../generated/CrowdFundTestThirteen/CrowdFundTestThirteen"
+} from "../generated/CrowdFundTestFourteen/CrowdFundTestFourteen"
 import {
   ContractOwnerWithdrawal,
   Donation,
@@ -158,6 +158,11 @@ export function handleMultisigTransfer(event: MultisigTransferEvent): void {
     proposalEntity.status = 2;
     proposalEntity.save();
     log.debug("debug updating... proposal status after {}", [proposalEntity.status.toString()])
+    
+    let fundRunEntity = FundRun.load(Bytes.fromHexString("fundruns__").concat(Bytes.fromI32(event.params.fundRunId)));
+    if(fundRunEntity !== null) {
+      fundRunEntity.amountWithdrawn = fundRunEntity.amountWithdrawn.plus(event.params.amount);
+    }
   }
 
   entity.save()
@@ -267,6 +272,12 @@ export function handleProposalRevoke(event: ProposalRevokeEvent): void {
 
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
+
+  let proposalEntity = Proposal.load(Bytes.fromHexString("proposals_").concat(Bytes.fromI32(event.params.proposalId)))
+  if(proposalEntity !== null) {
+    proposalEntity.status = 3;
+    proposalEntity.save()
+  }
   entity.transactionHash = event.transaction.hash
 
   entity.save()
