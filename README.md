@@ -1,4 +1,11 @@
-# 🚀 🌑 Multisig Crowd Funds
+# 🚀 🌑 Multisig Crowd Funds on The Graph
+
+### 🚧 In Progress 🚧
+ - [V2](https://github.com/nathan-websculpt/crowd-fund-v2) and V3 will represent two extremes
+ - [V2](https://github.com/nathan-websculpt/crowd-fund-v2) stores everything on the contract
+ - V3 will store as little as possible on the contract (will now be using a subgraph)
+
+# 📌 
 
 A multisig “Crowdfunding” dApp
 

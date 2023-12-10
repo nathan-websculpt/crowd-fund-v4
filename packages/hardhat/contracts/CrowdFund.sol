@@ -6,11 +6,11 @@ import "../node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import { ECDSA } from "../node_modules/@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
 /**
- * @dev NOT PRODUCTION-READY ... FOR LEARNING PURPOSES ONLY
- * moving to subgraphs
- * .
- *
- *
+ * @dev (in progress) NOT PRODUCTION-READY ... FOR LEARNING PURPOSES ONLY
+ * FundRuns and Proposals are no longer structs (queried from subgraph on FE)
+ *  - V2 (https://github.com/nathan-websculpt/crowd-fund-v2) and V3 will represent two extremes
+ *	- V2 stores everything on the contract
+ *	- V3 will store as little as possible on the contract
  *
  */
 
@@ -52,17 +52,15 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		Revoked
 	}
 
-	mapping(uint16 => uint256) public vaultNonces; //fundRunId => Nonce
-	mapping(address => DonorsLog) public donorLogs; //a single donor will have all of their logs (across all Fund Runs they donated to) here
-
-	mapping(uint16 => address[]) public fundRunOwners;
+	mapping(uint16 => uint256) public vaultNonces;
 	mapping(uint16 => uint256) public fundRunDeadlines;
-	mapping(uint16 => FundRunValues) public fundRunValues;
-	mapping(uint16 => FundRunStatus) public fundRunStatuses;
-
 	mapping(uint16 => address) public proposalCreators;
-	mapping(uint16 => ProposalStatus) public proposalStatuses;
+	mapping(uint16 => address[]) public fundRunOwners;
 	mapping(uint16 => address[]) public proposalSigners;
+	mapping(uint16 => FundRunStatus) public fundRunStatuses;
+	mapping(uint16 => ProposalStatus) public proposalStatuses;
+	mapping(uint16 => FundRunValues) public fundRunValues;
+	mapping(address => DonorsLog) public donorLogs; //a single donor will have all of their logs (across all Fund Runs they donated to) here
 
 	uint16 public numberOfFundRuns = 0;
 	uint16 public numberOfMultisigProposals = 0;
@@ -75,7 +73,12 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 
 	event Donation(uint16 fundRunId, address donor, uint256 amount);
 
-	event OwnerWithdrawal(uint16 fundRunId, address owner, uint256 amount);
+	event OwnerWithdrawal(
+		uint16 fundRunId,
+		address owner,
+		uint256 netWithdrawAmount,
+		uint256 grossWithdrawAmount
+	);
 
 	event DonorWithdrawal(uint16 fundRunId, address donor, uint256 amount);
 
@@ -115,7 +118,8 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		uint16 proposalId,
 		uint16 fundRunId,
 		address to,
-		uint256 amount
+		uint256 netWithdrawAmount,
+		uint256 grossWithdrawAmount
 	);
 
 	modifier ownsThisFundRun(
@@ -483,7 +487,12 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		);
 
 		require(success, "Withdrawal reverted.");
-		emit OwnerWithdrawal(_id, msg.sender, netWithdrawAmount);
+		emit OwnerWithdrawal(
+			_id,
+			msg.sender,
+			netWithdrawAmount,
+			grossWithdrawAmount
+		);
 	}
 
 	function fundRunDonorWithdraw(
@@ -608,15 +617,6 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		vaultNonces[_id] = _nonce;
 	}
 
-	function _processMultisigRequest(
-		MultiSigRequest calldata _tx,
-		uint256 _nonce
-	) private pure returns (bytes32 _digest) {
-		bytes memory encoded = abi.encode(_tx);
-		_digest = keccak256(abi.encodePacked(encoded, _nonce));
-		_digest = keccak256(abi.encodePacked(MSG_PREFIX, _digest));
-	}
-
 	function _multisigTransfer(
 		MultiSigRequest calldata _tx,
 		uint16 _id,
@@ -656,7 +656,13 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		(bool success, ) = payable(_tx.to).call{ value: netWithdrawAmount }("");
 
 		require(success, "Transfer not fulfilled");
-		emit MultisigTransfer(_proposalId, _id, _tx.to, netWithdrawAmount);
+		emit MultisigTransfer(
+			_proposalId,
+			_id,
+			_tx.to,
+			netWithdrawAmount,
+			_tx.amount
+		);
 	}
 
 	function getNetWithdrawAmount(
@@ -677,6 +683,15 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 			if (fundRunOwners[_id][i] == _addr) return true;
 		}
 		return false;
+	}
+
+	function _processMultisigRequest(
+		MultiSigRequest calldata _tx,
+		uint256 _nonce
+	) private pure returns (bytes32 _digest) {
+		bytes memory encoded = abi.encode(_tx);
+		_digest = keccak256(abi.encodePacked(encoded, _nonce));
+		_digest = keccak256(abi.encodePacked(MSG_PREFIX, _digest));
 	}
 
 	/**

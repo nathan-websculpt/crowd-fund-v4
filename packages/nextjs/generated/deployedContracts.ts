@@ -906,7 +906,7 @@ const contracts = {
       name: "sepolia",
       contracts: {
         CrowdFund: {
-          address: "0xf98975Bb924ab09194776F3c8Ef1979d304f20D5",
+          address: "0x4F3832d6D10Ee49D60d9E2b9cd4857f093B7C4A4",
           abi: [
             {
               inputs: [
@@ -1092,7 +1092,13 @@ const contracts = {
                 {
                   indexed: false,
                   internalType: "uint256",
-                  name: "amount",
+                  name: "netWithdrawAmount",
+                  type: "uint256",
+                },
+                {
+                  indexed: false,
+                  internalType: "uint256",
+                  name: "grossWithdrawAmount",
                   type: "uint256",
                 },
               ],
@@ -1117,7 +1123,13 @@ const contracts = {
                 {
                   indexed: false,
                   internalType: "uint256",
-                  name: "amount",
+                  name: "netWithdrawAmount",
+                  type: "uint256",
+                },
+                {
+                  indexed: false,
+                  internalType: "uint256",
+                  name: "grossWithdrawAmount",
                   type: "uint256",
                 },
               ],

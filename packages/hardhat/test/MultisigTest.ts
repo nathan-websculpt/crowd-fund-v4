@@ -1,3 +1,5 @@
+//NOTE: tests not updated from V2 yet (will not work)
+
 //yarn test ./test/MultisigTest.ts
 import { ethers } from "hardhat";
 import { CrowdFund } from "../typechain-types";
