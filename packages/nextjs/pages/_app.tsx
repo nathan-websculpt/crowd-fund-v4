@@ -23,7 +23,8 @@ const ScaffoldEthApp = ({ Component, pageProps }: AppProps) => {
   const [isDarkTheme, setIsDarkTheme] = useState(true);
   const { isDarkMode } = useDarkMode();
 
-  const subgraphUri = "https://api.studio.thegraph.com/query/60402/cf-test-one/version/latest";
+  // const subgraphUri = "https://api.studio.thegraph.com/query/60402/cf-test-one/version/latest";
+  const subgraphUri = "https://api.studio.thegraph.com/query/60402/cf-test-one/0.6.9"; //PRODTODO::
   const apolloClient = new ApolloClient({
     uri: subgraphUri,
     cache: new InMemoryCache(),
