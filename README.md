@@ -5,7 +5,7 @@
  - [V2](https://github.com/nathan-websculpt/crowd-fund-v2) stores everything on the contract
  - V3 will store as little as possible on the contract (will now be using a subgraph)
 
-# 📌 
+# 📌 todo
 - [Current Contract](https://sepolia.etherscan.io/address/0xb102aAFabC33cA59C6f8Ae46c801215725f01c78)
 ... 0xb102aAFabC33cA59C6f8Ae46c801215725f01c78
 - [Current Site](https://crowd-fund-v3-nextjs.vercel.app/)
