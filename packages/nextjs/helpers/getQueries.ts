@@ -25,6 +25,7 @@ export const GQL_FUNDRUNS = () => {
   return gql`
     query ($slug: Int!) {
       fundRuns(orderBy: fundRunId, orderDirection: desc, first: 25, skip: $slug) {
+        id
         fundRunId
         owners
         title

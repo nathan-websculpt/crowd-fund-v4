@@ -3,7 +3,6 @@ import { SignaturesSubTable } from "./SignaturesSubTable";
 import { SingleProposal } from "./SingleProposal";
 
 interface ProposalRowProps {
-  id: string; //the ID from subgraph
   fundRunId: number;
   proposalId: number;
   status: number;
@@ -23,7 +22,6 @@ export const ProposalRow = (vp: ProposalRowProps) => {
         className={`text-sm ${vp.status == 0 ? "bg-secondary border-secondary" : ""}  ${
           vp.status == 1 ? "bg-accent border-accent" : ""
         } ${vp.status == 2 ? "bg-neutral border-neutral text-primary" : ""}`}
-        key={vp.proposalId}
       >
         <td className="w-1/12 cursor-pointer md:py-4" onClick={() => setRowOpen(!rowOpen)}>
           <svg
@@ -48,7 +46,7 @@ export const ProposalRow = (vp: ProposalRowProps) => {
           reason={vp.reason}
         />
       </tr>
-      <tr className={` ${rowOpen ? "rowOpen" : "hidden"} `} key={vp.id}>
+      <tr className={` ${rowOpen ? "rowOpen" : "hidden"} `}>
         {/* drillable, nested table */}
         <td colSpan={10}>
           <SignaturesSubTable signatures={vp.signatures} />

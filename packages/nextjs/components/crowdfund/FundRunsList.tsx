@@ -3,6 +3,7 @@ import { Spinner } from "../Spinner";
 import { FundRunDisplay } from "./FundRunDisplay";
 import { useQuery } from "@apollo/client";
 import { GQL_FUNDRUNS } from "~~/helpers/getQueries";
+import { useEffect } from "react";
 
 export const FundRunsList = () => {
   const { loading, error, data } = useQuery(GQL_FUNDRUNS(), {
@@ -21,7 +22,7 @@ export const FundRunsList = () => {
       <>
         {data?.fundRuns?.map(fund => (
           <div
-            key={fund.fundRunId.toString()}
+            key={fund.id.toString()}
             className="flex flex-col gap-2 p-2 m-4 border shadow-xl border-base-300 bg-base-200 sm:rounded-lg"
           >
             <FundRunDisplay

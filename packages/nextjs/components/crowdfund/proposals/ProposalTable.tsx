@@ -55,7 +55,7 @@ export const ProposalTable = (frVault: ProposalTableProps) => {
               <tbody>
                 {data?.proposals?.map(vp => (
                   <ProposalRow
-                    id={vp.id} //unique ID from subgraph
+                    key={vp.id} //unique ID from subgraph
                     proposalId={vp.proposalId}
                     fundRunId={vp.fundRunId}
                     status={vp.status}
