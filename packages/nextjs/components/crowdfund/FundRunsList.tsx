@@ -1,15 +1,25 @@
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Spinner } from "../Spinner";
 import { FundRunDisplay } from "./FundRunDisplay";
 import { useQuery } from "@apollo/client";
 import { GQL_FUNDRUNS } from "~~/helpers/getQueries";
-import { useEffect } from "react";
 
 export const FundRunsList = () => {
+  const [pageSize, setPageSize] = useState(10);
+  const [pageNum, setPageNum] = useState(0);
+
   const { loading, error, data } = useQuery(GQL_FUNDRUNS(), {
-    variables: { slug: 0 }, //slug is the skip (for pagination later?)
-    pollInterval: 1000,
+    variables: {
+      limit: pageSize,
+      offset: pageNum * pageSize,
+    },
+    pollInterval: 5000,
   });
+
+  useEffect(() => {
+    if (error !== undefined && error !== null) console.log("Query Error: ", error);
+  }, [error]);
 
   if (loading) {
     return (
@@ -20,6 +30,27 @@ export const FundRunsList = () => {
   } else {
     return (
       <>
+        <div className="flex justify-center gap-3 mb-3">
+          <span className="my-auto text-lg">Page {pageNum + 1}</span>
+          <select
+            className="px-4 py-2 text-xl bg-primary"
+            onChange={event => setPageSize(parseInt(event.target.value))}
+            value={pageSize.toString()}
+          >
+            <option value="10">Show 10</option>
+            <option value="25">Show 25</option>
+            <option value="1">Show 1</option>
+          </select>
+        </div>
+        <div className="flex justify-between">
+          <button disabled={!pageNum} className="btn btn-primary" onClick={() => setPageNum(prev => prev - 1)}>
+            Previous
+          </button>
+          <button className="btn btn-primary" onClick={() => setPageNum(prev => prev + 1)}>
+            Next
+          </button>
+        </div>
+
         {data?.fundRuns?.map(fund => (
           <div
             key={fund.id.toString()}

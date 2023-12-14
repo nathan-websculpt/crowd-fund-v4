@@ -23,8 +23,8 @@ export const GQL_FUNDRUN_BY_ID = () => {
 //returns latest-first, 25 at a time
 export const GQL_FUNDRUNS = () => {
   return gql`
-    query ($slug: Int!) {
-      fundRuns(orderBy: fundRunId, orderDirection: desc, first: 25, skip: $slug) {
+    query ($limit: Int!, $offset: Int!) {
+      fundRuns(orderBy: fundRunId, orderDirection: desc, first: $limit, skip: $offset) {
         id
         fundRunId
         owners

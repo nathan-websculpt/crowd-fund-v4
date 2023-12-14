@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
@@ -16,6 +17,10 @@ const FundRunPage: NextPage = () => {
     variables: { slug: parseInt(fundRun) },
     pollInterval: 1000,
   });
+
+  useEffect(() => {
+    if (error !== undefined && error !== null) console.log("Query Error: ", error);
+  }, [error]);
 
   if (loading) {
     return (

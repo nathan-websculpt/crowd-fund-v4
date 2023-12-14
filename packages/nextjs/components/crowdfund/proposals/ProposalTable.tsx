@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { ProposalRow } from "./ProposalRow";
 import { useQuery } from "@apollo/client";
 import { Spinner } from "~~/components/Spinner";
@@ -12,6 +13,10 @@ export const ProposalTable = (frVault: ProposalTableProps) => {
     variables: { slug: frVault.fundRunId },
     pollInterval: 1000,
   });
+
+  useEffect(() => {
+    if (error !== undefined && error !== null) console.log("Query Error: ", error);
+  }, [error]);
 
   if (loading) {
     return (

@@ -22,6 +22,10 @@ export const FinalizeProposal = (proposal: FinalizeProposalProps) => {
   const [getProposal, { loading, error, data }] = useLazyQuery(GQL_SIGNATURES());
 
   useEffect(() => {
+    if (error !== undefined && error !== null) console.log("Query Error: ", error);
+  }, [error]);
+
+  useEffect(() => {
     if (nonce !== undefined) {
       console.log("getting sigs");
       getProposal({ variables: { slug1: proposal.fundRunId, slug2: proposal.proposalId } });
@@ -70,13 +74,12 @@ export const FinalizeProposal = (proposal: FinalizeProposalProps) => {
       setNonce(undefined);
     },
   });
-  if (error) return `Error! ${error}`; //TODO: REMOVE
   return (
     <>
       <td className="w-1/12 text-center md:py-4">
         <div className="tooltip tooltip-primary tooltip-top" data-tip="Done co-signing? Send the transaction.">
-          <button className="w-full btn" onClick={() => finishProposal()} disabled={isLoading}>
-            {isLoading ? <span className="loading loading-spinner loading-sm"></span> : <>Finalize</>}
+          <button className="w-full btn" onClick={() => finishProposal()} disabled={isLoading || loading}>
+            {isLoading || loading ? <span className="loading loading-spinner loading-sm"></span> : <>Finalize</>}
           </button>
         </div>
       </td>

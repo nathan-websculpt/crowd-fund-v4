@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
 import { NextPage } from "next";
@@ -15,6 +16,10 @@ const VaultPage: NextPage = () => {
     variables: { slug: parseInt(vault) },
   });
 
+  useEffect(() => {
+    if (error !== undefined && error !== null) console.log("Query Error: ", error);
+  }, [error]);
+
   return (
     <>
       <MetaHeader title="Multisig Vault" />
@@ -25,12 +30,21 @@ const VaultPage: NextPage = () => {
               <CreateProposal fundRunId={data?.fundRuns[0].fundRunId} title={data?.fundRuns[0].title} />
             </div>
           </div>
-
-          <ProposalTable fundRunId={data?.fundRuns[0].fundRunId} />
+          {loading ? (
+            <>
+              <div className="flex flex-col gap-2 p-2 m-4 mx-auto border shadow-xl border-base-300 bg-base-200 sm:rounded-lg">
+                <h1 className="mx-auto">Loading Proposals</h1>
+                <Spinner width="150px" height="150px" />
+              </div>
+            </>
+          ) : (
+            <ProposalTable fundRunId={data?.fundRuns[0].fundRunId} />
+          )}
         </>
       ) : (
         <>
           <div className="flex flex-col gap-2 p-2 m-4 mx-auto border shadow-xl border-base-300 bg-base-200 sm:rounded-lg">
+            <h1 className="mx-auto">Loading Fund Runs</h1>
             <Spinner width="150px" height="150px" />
           </div>
         </>
