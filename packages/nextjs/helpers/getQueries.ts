@@ -59,6 +59,7 @@ export const GQL_PROPOSALS = () => {
   return gql`
     query ($slug: Int!) {
       proposals(where: { fundRunId: $slug, status_lt: 3 }) {
+        id
         proposalId
         fundRunId
         proposedBy
@@ -66,6 +67,11 @@ export const GQL_PROPOSALS = () => {
         to
         reason
         status
+        signatures {
+          id
+          signer
+          signature
+        }
       }
     }
   `;

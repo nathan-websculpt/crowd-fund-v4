@@ -4,7 +4,7 @@ import { NextPage } from "next";
 import { MetaHeader } from "~~/components/MetaHeader";
 import { Spinner } from "~~/components/Spinner";
 import { CreateProposal } from "~~/components/crowdfund/proposals/CreateProposal";
-import { ListProposals } from "~~/components/crowdfund/proposals/ListProposals";
+import { ProposalTable } from "~~/components/crowdfund/proposals/ProposalTable";
 import { GQL_FUNDRUN_BY_ID } from "~~/helpers/getQueries";
 
 const VaultPage: NextPage = () => {
@@ -26,7 +26,7 @@ const VaultPage: NextPage = () => {
             </div>
           </div>
 
-          <ListProposals fundRunId={data?.fundRuns[0].fundRunId} />
+          <ProposalTable fundRunId={data?.fundRuns[0].fundRunId} />
         </>
       ) : (
         <>

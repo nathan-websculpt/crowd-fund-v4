@@ -1,13 +1,13 @@
-import { SingleProposal } from "./SingleProposal";
+import { ProposalRow } from "./ProposalRow";
 import { useQuery } from "@apollo/client";
 import { Spinner } from "~~/components/Spinner";
 import { GQL_PROPOSALS } from "~~/helpers/getQueries";
 
-interface ListProposalProps {
+interface ProposalTableProps {
   fundRunId: number;
 }
 
-export const ListProposals = (frVault: ListProposalProps) => {
+export const ProposalTable = (frVault: ProposalTableProps) => {
   const { loading, error, data } = useQuery(GQL_PROPOSALS(), {
     variables: { slug: frVault.fundRunId },
     pollInterval: 1000,
@@ -40,6 +40,7 @@ export const ListProposals = (frVault: ListProposalProps) => {
             <table className="table w-full text-xl bg-base-100 md:table-md table-sm">
               <thead>
                 <tr className="text-sm rounded-xl text-base-content">
+                  <th className="bg-primary"></th>
                   <th className="bg-primary">Status</th>
                   <th className="bg-primary">ID</th>
                   <th className="bg-primary">Amount</th>
@@ -52,27 +53,19 @@ export const ListProposals = (frVault: ListProposalProps) => {
                 </tr>
               </thead>
               <tbody>
-                {data?.proposals?.map(vp =>
-                  vp.to !== "0x0000000000000000000000000000000000000000" &&
-                  vp.proposedBy !== "0x0000000000000000000000000000000000000000" ? (
-                    <tr
-                      className={`text-sm ${vp.status == 0 ? "bg-secondary border-secondary" : ""}  ${
-                        vp.status == 1 ? "bg-accent border-accent" : ""
-                      } ${vp.status == 2 ? "bg-neutral border-neutral text-primary" : ""}`}
-                      key={vp.proposalId.toString()}
-                    >
-                      <SingleProposal
-                        proposalId={vp.proposalId}
-                        fundRunId={frVault.fundRunId}
-                        status={vp.status}
-                        amount={vp.amount}
-                        to={vp.to}
-                        proposedBy={vp.proposedBy}
-                        reason={vp.reason}
-                      />
-                    </tr>
-                  ) : null,
-                )}
+                {data?.proposals?.map(vp => (
+                  <ProposalRow
+                    id={vp.id} //unique ID from subgraph
+                    proposalId={vp.proposalId}
+                    fundRunId={vp.fundRunId}
+                    status={vp.status}
+                    amount={vp.amount}
+                    to={vp.to}
+                    proposedBy={vp.proposedBy}
+                    reason={vp.reason}
+                    signatures={vp.signatures}
+                  />
+                ))}
               </tbody>
             </table>
           </div>
