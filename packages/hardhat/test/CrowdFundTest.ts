@@ -10,6 +10,12 @@ import { setTimeout } from "timers/promises";
 
 describe("CrowdFund", function () {
   let crowdFund: CrowdFund;
+
+  let owner: SignerWithAddress;
+  let bob: SignerWithAddress;
+  let alice: SignerWithAddress;
+  let john: SignerWithAddress;
+
   let totalContractBalance = parseEther("0");
   const alicesId = 1;
   const johnsId = 2;
@@ -53,25 +59,27 @@ describe("CrowdFund", function () {
     };
     return rslt;
   };
-
   describe("Deploying ...", function () {
     this.timeout(125000); //2-minute timeout, Fund Runs have 1-minute deadlines
 
     it("Should deploy CrowdFund", async function () {
-      const [owner] = await ethers.getSigners();
+      const [a, b, c, d] = await ethers.getSigners();
+      owner = a;
+      bob = b;
+      alice = c;
+      john = d;
+
       const crowdFundFactory = await ethers.getContractFactory("CrowdFund");
       crowdFund = (await crowdFundFactory.deploy(owner.address)) as CrowdFund;
       console.log("deployed CrowdFund at address: ", crowdFund.address);
     });
 
     it("Contract Owner transferred successfully upon deployment...", async function () {
-      const [owner] = await ethers.getSigners();
       await expect(await crowdFund.owner()).to.equal(owner.address);
     });
 
     describe("Making test Fund Runs (this may take a moment) ...", function () {
       it("Should make 3 test Fund Runs", async function () {
-        const [, bob, alice, john] = await ethers.getSigners();
         const deadlineToCreateWith = 1;
 
         await createFundRun(bob, "Bob's Fund Run", "Bob's Description", parseEther("1"), deadlineToCreateWith, [
@@ -89,30 +97,25 @@ describe("CrowdFund", function () {
     describe("Testing the ability for users to donate ...", function () {
       it("Should allow Bob to donate to Alice", async function () {
         const amountToDonate = parseEther("1");
-        const [, bob] = await ethers.getSigners();
         await donateToFundRun(bob, alicesId, amountToDonate);
       });
 
       it("Should allow John to donate to Alice", async function () {
         const amountToDonate = parseEther("1");
-        const [, , , john] = await ethers.getSigners();
         await donateToFundRun(john, alicesId, amountToDonate);
       });
 
       it("Should allow Bob to donate to John", async function () {
         const amountToDonate = parseEther("1");
-        const [, bob] = await ethers.getSigners();
         await donateToFundRun(bob, johnsId, amountToDonate);
       });
 
       it("Should allow Alice to donate to John", async function () {
         const amountToDonate = parseEther("1");
-        const [, , alice] = await ethers.getSigners();
         await donateToFundRun(alice, johnsId, amountToDonate);
       });
 
       it("Force-Ending Fund Runs...", async function () {
-        const [, bob, alice] = await ethers.getSigners();
         const endFundRun_Tx = await crowdFund.connect(alice).forceEnd(alicesId);
         endFundRun_Tx.wait();
         const endFundRun_Tx2 = await crowdFund.connect(bob).forceEnd(johnsId);
@@ -123,7 +126,6 @@ describe("CrowdFund", function () {
 
     describe("Handling withdrawals", function () {
       it("Should allow for Alice to do an 'Owner Withdrawal' because her Fund was successful", async function () {
-        const [, , alice] = await ethers.getSigners();
         const expected = getExpectedAmts(2);
         const expectedAmount = expected.lessCommission;
         console.log("\nALICE'S wallet balance PRE-withdrawal:  ", formatEther(await alice.getBalance()));
@@ -137,7 +139,6 @@ describe("CrowdFund", function () {
       });
 
       it("Should allow for Bob to do a 'Donor Withdrawal' from John's Fund Run", async function () {
-        const [, bob] = await ethers.getSigners();
         console.log("\nBOB'S wallet balance PRE-withdrawal:  ", formatEther(await bob.getBalance()));
         const tx = await crowdFund.connect(bob).fundRunDonorWithdraw(johnsId);
         await expect(tx).to.emit(crowdFund, "DonorWithdrawal");
@@ -149,8 +150,6 @@ describe("CrowdFund", function () {
       });
 
       it("Should allow for Alice to do a 'Donor Withdrawal' from John's Fund Run", async function () {
-        const [, , alice] = await ethers.getSigners();
-
         console.log("\nALICE'S wallet balance PRE-withdrawal:  ", formatEther(await alice.getBalance()));
         const tx = await crowdFund.connect(alice).fundRunDonorWithdraw(johnsId);
         await expect(tx).to.emit(crowdFund, "DonorWithdrawal");
@@ -164,8 +163,6 @@ describe("CrowdFund", function () {
 
     describe("Can Contract Owner withdraw ...", function () {
       it("Should allow contract owner to withdraw 0.005 ethers", async function () {
-        const [owner] = await ethers.getSigners();
-
         const contractBalance = await crowdFund.getBalance();
         console.log("__>>: total contract balance: ", formatEther(contractBalance));
 

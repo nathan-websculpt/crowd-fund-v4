@@ -12,6 +12,16 @@ describe("Multisig Test", function () {
   this.timeout(125000); //2-minute timeout, Fund Runs have 1-minute deadlines
   let crowdFund: CrowdFund;
 
+  let owner: SignerWithAddress;
+  let bob: SignerWithAddress;
+  let alice: SignerWithAddress;
+  let john: SignerWithAddress;
+  let chandler: SignerWithAddress;
+  let joey: SignerWithAddress;
+  let ross: SignerWithAddress;
+  let someoneElse: SignerWithAddress;
+  let someoneElseEntirely: SignerWithAddress;
+
   const getNonce = async (fundRunID: number) => (await crowdFund.getNonce(fundRunID)).add(1);
 
   const getDigest = async (nonce: BigNumber, amount: BigNumber, to: string, proposedBy: string, reason: string) => {
@@ -57,20 +67,28 @@ describe("Multisig Test", function () {
     this.timeout(125000); //2-minute timeout, Fund Runs have 1-minute deadlines
 
     it("Should deploy CrowdFund", async function () {
-      const [owner] = await ethers.getSigners();
+      const [a, b, c, d, e, f, g, h, j] = await ethers.getSigners();
+      owner = a;
+      bob = b;
+      alice = c;
+      john = d;
+      chandler = e;
+      joey = f;
+      ross = g;
+      someoneElse = h;
+      someoneElseEntirely = j;
+
       const crowdFundFactory = await ethers.getContractFactory("CrowdFund");
       crowdFund = (await crowdFundFactory.deploy(owner.address)) as CrowdFund;
       console.log("deployed CrowdFund at address: ", crowdFund.address);
     });
 
     it("Contract Owner transferred successfully upon deployment...", async function () {
-      const [owner] = await ethers.getSigners();
       await expect(await crowdFund.owner()).to.equal(owner.address);
     });
 
     describe("Making test Fund Runs (this may take a moment) ...", function () {
       it("Should make a REGULAR Fund Run", async function () {
-        const [, bob] = await ethers.getSigners();
         const deadlineToCreateWith = 1;
         await createFundRun(bob, "Bob's Fund Run", "Bob's Description", parseEther("1"), deadlineToCreateWith, [
           bob.address,
@@ -78,7 +96,6 @@ describe("Multisig Test", function () {
       });
 
       it("Should make a (2-Sig) MULTISIG Fund Run", async function () {
-        const [, , alice, john] = await ethers.getSigners();
         const deadlineToCreateWith = 1;
         const ownersArray = [alice.address, john.address];
         await createFundRun(
@@ -92,7 +109,6 @@ describe("Multisig Test", function () {
       });
 
       it("Should make a (3-sig) MULTISIG Fund Run", async function () {
-        const [, , , , chandler, joey, ross] = await ethers.getSigners();
         const deadlineToCreateWith = 1;
         const ownersArray = [chandler.address, joey.address, ross.address];
         await createFundRun(
@@ -107,7 +123,6 @@ describe("Multisig Test", function () {
 
       describe("Handling donations", function () {
         it("Should complete all donations to the (2-sig)", async function () {
-          const [, , , , , , , someoneElse] = await ethers.getSigners();
           const fundRunID = 1;
           const donationAmount = parseEther("1");
           const tx = await crowdFund.connect(someoneElse).donateToFundRun(fundRunID, { value: donationAmount });
@@ -115,7 +130,6 @@ describe("Multisig Test", function () {
         });
 
         it("Should complete all donations to the (3-sig)", async function () {
-          const [, , , , , , , , someoneElseEntirely] = await ethers.getSigners();
           const fundRunID = 2;
           const donationAmount = parseEther("1");
           const tx = await crowdFund.connect(someoneElseEntirely).donateToFundRun(fundRunID, { value: donationAmount });
@@ -123,8 +137,6 @@ describe("Multisig Test", function () {
         });
 
         it("Force-Ending Fund Runs...", async function () {
-          const [, bob, alice] = await ethers.getSigners();
-
           const endFundRun_Tx = await crowdFund.connect(alice).forceEnd(1);
           endFundRun_Tx.wait();
           const endFundRun_Tx2 = await crowdFund.connect(bob).forceEnd(2);
@@ -132,10 +144,8 @@ describe("Multisig Test", function () {
           await setTimeout(10500); //wait 10 more seconds -- exceed mining interval, or this breaks sporadically
         });
 
-        describe("Force-Ending Fund Runs ", function () {
+        describe("Making Proposals", function () {
           it("(2-sig wallet)...Alice proposes to pay John 0.25 Ethers", async function () {
-            const [, , alice, john] = await ethers.getSigners();
-
             const fundRunID = 1;
             const proposalID = 0;
             const transferAmount = parseEther("0.25");
@@ -151,20 +161,18 @@ describe("Multisig Test", function () {
             const nonce = await getNonce(fundRunID);
             const digest = await getDigest(nonce, transferAmount, john.address, alice.address, reason);
 
-            //sign digest; CREATING proposal; then store signature in contract
+            //sign digest; CREATING proposal;
             const aliceProposal_signature = await alice.signMessage(ethers.utils.arrayify(digest));
             const creationTx = await crowdFund
               .connect(alice)
               .createMultisigProposal(aliceProposal_signature, fundRunID, multisigReq);
-
             creationTx.wait();
 
-            //sign digest; SUPPORTING proposal; then store signature in contract
+            //sign digest; SUPPORTING proposal;
             const johnSupport_signature = await john.signMessage(ethers.utils.arrayify(digest));
             const supportingTxOne = await crowdFund
               .connect(john)
               .supportMultisigProposal(johnSupport_signature, fundRunID, proposalID);
-
             supportingTxOne.wait();
 
             const tx = await signMultisigWithdraw(
@@ -186,7 +194,6 @@ describe("Multisig Test", function () {
 
           //paying someone who is not the owner IS allowed, because a group can pay tertiary parties (like designers, etc)
           it("(2-sig wallet)...John proposes to pay Bob (who is not an owner) 0.75 Ethers", async function () {
-            const [, bob, alice, john] = await ethers.getSigners();
             const fundRunID = 1;
             const proposalID = 1;
             const transferAmount = parseEther("0.75");
@@ -200,14 +207,14 @@ describe("Multisig Test", function () {
             const nonce = await getNonce(fundRunID);
             const digest = await getDigest(nonce, transferAmount, bob.address, john.address, reason);
 
-            //sign digest; CREATING proposal; then store signature in contract
+            //sign digest; CREATING proposal;
             const johnProposal_signature = await john.signMessage(ethers.utils.arrayify(digest));
             const creationTx = await crowdFund
               .connect(john)
               .createMultisigProposal(johnProposal_signature, fundRunID, multisigReq);
             creationTx.wait();
 
-            //sign digest; SUPPORTING proposal; then store signature in contract
+            //sign digest; SUPPORTING proposal;
             const aliceSupport_signature = await alice.signMessage(ethers.utils.arrayify(digest));
             const supportingTxOne = await crowdFund
               .connect(alice)
@@ -232,8 +239,6 @@ describe("Multisig Test", function () {
           });
 
           it("(3-sig wallet)...The Chan-Chan Man proposes to pay Bob 0.5 Ethers", async function () {
-            const [, bob, , , chandler, joey, ross] = await ethers.getSigners();
-
             const fundRunID = 2;
             const proposalID = 2;
             const transferAmount = parseEther("0.5");
@@ -253,21 +258,21 @@ describe("Multisig Test", function () {
             const nonce = await getNonce(fundRunID);
             const digest = await getDigest(nonce, transferAmount, bob.address, chandler.address, reason);
 
-            //sign digest; CREATING proposal; then store signature in contract
+            //sign digest; CREATING proposal;
             const chandlerProposal_signature = await chandler.signMessage(ethers.utils.arrayify(digest));
             const creationTx = await crowdFund
               .connect(chandler)
               .createMultisigProposal(chandlerProposal_signature, fundRunID, multisigReq);
             creationTx.wait();
 
-            //sign digest; SUPPORTING proposal; then store signature in contract
+            //sign digest; SUPPORTING proposal;
             const joeySupport_signature = await joey.signMessage(ethers.utils.arrayify(digest));
             const supportingTxOne = await crowdFund
               .connect(joey)
               .supportMultisigProposal(joeySupport_signature, fundRunID, proposalID);
             supportingTxOne.wait();
 
-            //sign digest; SUPPORTING proposal; then store signature in contract
+            //sign digest; SUPPORTING proposal;
             const rossSupport_signature = await ross.signMessage(ethers.utils.arrayify(digest));
             const supportingTxTwo = await crowdFund
               .connect(ross)
@@ -292,8 +297,6 @@ describe("Multisig Test", function () {
           });
 
           it("(3-sig wallet)...Ross proposes to pay Alice 0.5 Ethers", async function () {
-            const [, , alice, , chandler, joey, ross] = await ethers.getSigners();
-
             const fundRunID = 2;
             const proposalID = 3;
             const transferAmount = parseEther("0.5");
@@ -308,21 +311,21 @@ describe("Multisig Test", function () {
             const nonce = await getNonce(fundRunID);
             const digest = await getDigest(nonce, transferAmount, alice.address, ross.address, reason);
 
-            //sign digest; SUPPORTING proposal; then store signature in contract
+            //sign digest; SUPPORTING proposal;
             const rossCreate_signature = await ross.signMessage(ethers.utils.arrayify(digest));
             const creationTx = await crowdFund
               .connect(ross)
               .createMultisigProposal(rossCreate_signature, fundRunID, multisigReq);
             creationTx.wait();
 
-            //sign digest; SUPPORTING proposal; then store signature in contract
+            //sign digest; SUPPORTING proposal;
             const joeySupport_signature = await joey.signMessage(ethers.utils.arrayify(digest));
             const supportingTxOne = await crowdFund
               .connect(joey)
               .supportMultisigProposal(joeySupport_signature, fundRunID, proposalID);
             supportingTxOne.wait();
 
-            //sign digest; CREATING proposal; then store signature in contract
+            //sign digest; CREATING proposal;
             const chandlerSupport_signature = await chandler.signMessage(ethers.utils.arrayify(digest));
             const supportingTxTwo = await crowdFund
               .connect(chandler)

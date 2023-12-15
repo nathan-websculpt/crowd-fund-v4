@@ -4,7 +4,6 @@ pragma solidity >=0.8.0 <0.9.0;
 import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 import "../node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import { ECDSA } from "../node_modules/@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
-import "hardhat/console.sol"; //TODO: REMOVE
 
 /**
  * @dev (in progress) NOT PRODUCTION-READY ... FOR LEARNING PURPOSES ONLY
@@ -143,11 +142,6 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 	}
 
 	modifier fundRunCompleted(uint16 id, bool mustBeCompleted) {
-		if(id == 1) {			
-			console.log("HARDHAT CONSOLE: Alice needs this to be true, or it isn't complete: ", fundRunDeadlines[id] < block.timestamp);
-		}
-		//^^^TODO: Remove
-
 		if (mustBeCompleted) {
 			require(
 				fundRunDeadlines[id] < block.timestamp,
@@ -239,9 +233,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 	}
 
 	constructor(address _contractOwner) {
-		_transferOwnership(_contractOwner);		
-		console.log("HARDHAT CONSOLE: Ownership transferred to: ", _contractOwner);
-
+		_transferOwnership(_contractOwner);
 	}
 
 	function createMultisigProposal(
@@ -452,7 +444,6 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		fundRunCompleted(_id, true)
 		fundRunSucceeded(_id, true)
 	{
-		console.log("HARDHAT CONSOLE__>  fundRunOwnerWithdraw  hit");
 		require(
 			fundRunValues[_id].amountCollected > 0,
 			"There is nothing to withdraw"
@@ -490,13 +481,10 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 
 		if (fundRunStatuses[_id] != FundRunStatus(3))
 			fundRunStatuses[_id] = FundRunStatus(3);
-		console.log("HARDHAT CONSOLE__>  bout to send");
 
 		(bool success, ) = payable(msg.sender).call{ value: netWithdrawAmount }(
 			""
 		);
-		console.log("HARDHAT CONSOLE__>  sent? ", success);
-
 
 		require(success, "Withdrawal reverted.");
 		emit OwnerWithdrawal(
