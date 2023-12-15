@@ -147,8 +147,6 @@ describe("CrowdFund", function () {
 
       it("Should allow for Alice to do a 'Donor Withdrawal' from John's Fund Run", async function () {
         const [, , alice] = await ethers.getSigners();
-        const endFundRun_Tx = await crowdFund.connect(alice).forceEnd(johnsId);
-        endFundRun_Tx.wait();
 
         console.log("\nALICE'S wallet balance PRE-withdrawal:  ", formatEther(await alice.getBalance()));
         const tx = await crowdFund.connect(alice).fundRunDonorWithdraw(johnsId);
