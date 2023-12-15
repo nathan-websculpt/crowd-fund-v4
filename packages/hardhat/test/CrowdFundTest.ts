@@ -1,12 +1,12 @@
-//NOTE: tests not updated from V2 yet
-
 //yarn test ./test/CrowdFundTest.ts
+
 import { ethers } from "hardhat";
 import { CrowdFund } from "../typechain-types";
 import { formatEther, parseEther } from "ethers/lib/utils";
 import { expect } from "chai";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { BigNumber } from "ethers";
+import { setTimeout } from "timers/promises";
 
 describe("CrowdFund", function () {
   let crowdFund: CrowdFund;
@@ -110,14 +110,20 @@ describe("CrowdFund", function () {
         const [, , alice] = await ethers.getSigners();
         await donateToFundRun(alice, johnsId, amountToDonate);
       });
-    });
 
-    describe("Force-Ending Fund Runs... ", function () {
-      it("Should allow for Alice to do an 'Owner Withdrawal' because her Fund was successful", async function () {
-        const [, , alice] = await ethers.getSigners();
+      it("Force-Ending Fund Runs...", async function () {
+        const [, bob, alice] = await ethers.getSigners();
         const endFundRun_Tx = await crowdFund.connect(alice).forceEnd(alicesId);
         endFundRun_Tx.wait();
+        const endFundRun_Tx2 = await crowdFund.connect(bob).forceEnd(johnsId);
+        endFundRun_Tx2.wait();
+        await setTimeout(10500); //wait 10 more seconds -- exceed mining interval, or this breaks sporadically
+      });
+    });
 
+    describe("Handling withdrawals", function () {
+      it("Should allow for Alice to do an 'Owner Withdrawal' because her Fund was successful", async function () {
+        const [, , alice] = await ethers.getSigners();
         const expected = getExpectedAmts(2);
         const expectedAmount = expected.lessCommission;
         console.log("\nALICE'S wallet balance PRE-withdrawal:  ", formatEther(await alice.getBalance()));
@@ -132,9 +138,6 @@ describe("CrowdFund", function () {
 
       it("Should allow for Bob to do a 'Donor Withdrawal' from John's Fund Run", async function () {
         const [, bob] = await ethers.getSigners();
-        const endFundRun_Tx = await crowdFund.connect(bob).forceEnd(johnsId);
-        endFundRun_Tx.wait();
-
         console.log("\nBOB'S wallet balance PRE-withdrawal:  ", formatEther(await bob.getBalance()));
         const tx = await crowdFund.connect(bob).fundRunDonorWithdraw(johnsId);
         await expect(tx).to.emit(crowdFund, "DonorWithdrawal");
