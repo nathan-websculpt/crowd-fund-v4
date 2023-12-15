@@ -3,12 +3,12 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum
-    name: CrowdFundTestFifteen
+    name: CrowdFundTestSixteen
     network: sepolia
     source:
-      address: "0x4F3832d6D10Ee49D60d9E2b9cd4857f093B7C4A4"
-      abi: CrowdFundTestFifteen
-      startBlock: 4860260
+      address: "0x29BB1313321dbA27Ad074DD6AD2943040319B439"
+      abi: CrowdFundTestSixteen
+      startBlock: 4892313
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -26,8 +26,8 @@ dataSources:
         - ProposalRevoke
         - ProposalSignature
       abis:
-        - name: CrowdFundTestFifteen
-          file: ./abis/CrowdFundTestFifteen.json
+        - name: CrowdFundTestSixteen
+          file: ./abis/CrowdFundTestSixteen.json
       eventHandlers:
         - event: ContractOwnerWithdrawal(address,uint256)
           handler: handleContractOwnerWithdrawal
@@ -51,4 +51,4 @@ dataSources:
           handler: handleProposalRevoke
         - event: ProposalSignature(uint16,address,bytes)
           handler: handleProposalSignature
-      file: ./src/crowd-fund-test-fifteen.ts
+      file: ./src/crowd-fund-test-sixteen.ts

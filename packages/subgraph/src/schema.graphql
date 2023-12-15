@@ -41,6 +41,7 @@ type FundRun @entity {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+  proposals: [Proposal!] @derivedFrom(field: "fundRun")
 }
 
 type FundRunStatusChange @entity(immutable: true) {
@@ -99,6 +100,7 @@ type Proposal @entity {
   blockTimestamp: BigInt!
   transactionHash: Bytes!
   signatures: [ProposalSignature!] @derivedFrom(field: "proposal")
+  fundRun: FundRun
 }
 
 type ProposalSignature @entity {

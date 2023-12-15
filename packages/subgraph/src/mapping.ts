@@ -11,7 +11,7 @@ import {
   Proposal as ProposalEvent,
   ProposalRevoke as ProposalRevokeEvent,
   ProposalSignature as ProposalSignatureEvent
-} from "../generated/CrowdFundTestFifteen/CrowdFundTestFifteen"
+} from "../generated/CrowdFundTestSixteen/CrowdFundTestSixteen"
 import {
   ContractOwnerWithdrawal,
   Donation,
@@ -126,7 +126,6 @@ export function handleFundRunStatusChange(
     fundRunEntity.save();
   }
 
-
   entity.save()
 }
 
@@ -215,6 +214,10 @@ export function handleProposal(event: ProposalEvent): void {
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
+
+  let fundRunEntity = FundRun.load(Bytes.fromHexString("fundruns__").concat(Bytes.fromI32(event.params.fundRunId)));
+  if(fundRunEntity !== null) 
+    entity.fundRun = fundRunEntity.id;  
 
   entity.save()
 }

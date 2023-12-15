@@ -561,6 +561,16 @@ export class FundRun extends Entity {
   set transactionHash(value: Bytes) {
     this.set("transactionHash", Value.fromBytes(value));
   }
+
+  get proposals(): ProposalLoader {
+    return new ProposalLoader(
+      "FundRun",
+      this.get("id")!
+        .toBytes()
+        .toHexString(),
+      "proposals"
+    );
+  }
 }
 
 export class FundRunStatusChange extends Entity {
@@ -1270,6 +1280,23 @@ export class Proposal extends Entity {
       "signatures"
     );
   }
+
+  get fundRun(): Bytes | null {
+    let value = this.get("fundRun");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set fundRun(value: Bytes | null) {
+    if (!value) {
+      this.unset("fundRun");
+    } else {
+      this.set("fundRun", Value.fromBytes(<Bytes>value));
+    }
+  }
 }
 
 export class ProposalSignature extends Entity {
@@ -1504,6 +1531,24 @@ export class ProposalRevoke extends Entity {
 
   set transactionHash(value: Bytes) {
     this.set("transactionHash", Value.fromBytes(value));
+  }
+}
+
+export class ProposalLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): Proposal[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<Proposal[]>(value);
   }
 }
 

@@ -77,3 +77,38 @@ export const GQL_PROPOSALS = () => {
     }
   `;
 };
+
+//for viewing 3-tier table
+//ALL Fund Runs
+export const GQL_FUNDRUNS_ALL = () => {
+  return gql`
+    query ($limit: Int!, $offset: Int!) {
+      fundRuns(orderBy: fundRunId, orderDirection: desc, first: $limit, skip: $offset) {
+        fundRunId
+        owners
+        title
+        description
+        deadline
+        target
+        amountCollected
+        amountWithdrawn
+        status
+        proposals {
+          id
+          proposalId
+          fundRunId
+          proposedBy
+          amount
+          to
+          reason
+          status
+          signatures {
+            id
+            signer
+            signature
+          }
+        }
+      }
+    }
+  `;
+};
