@@ -6,7 +6,7 @@ import { useQuery } from "@apollo/client";
 import { GQL_FUNDRUNS } from "~~/helpers/getQueries";
 
 export const FundRunsList = () => {
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(25);
   const [pageNum, setPageNum] = useState(0);
 
   const { loading, error, data } = useQuery(GQL_FUNDRUNS(), {
@@ -37,8 +37,8 @@ export const FundRunsList = () => {
             onChange={event => setPageSize(parseInt(event.target.value))}
             value={pageSize.toString()}
           >
-            <option value="10">Show 10</option>
             <option value="25">Show 25</option>
+            <option value="10">Show 10</option>
             <option value="1">Show 1</option>
           </select>
         </div>

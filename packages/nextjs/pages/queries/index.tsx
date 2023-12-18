@@ -6,7 +6,10 @@ const QueriesPage: NextPage = () => {
   return (
     <>
       <MetaHeader title="Query Data" />
-      <FundRunsTable />
+
+      <div className="container mx-auto my-10">
+        <FundRunsTable />
+      </div>
     </>
   );
 };
