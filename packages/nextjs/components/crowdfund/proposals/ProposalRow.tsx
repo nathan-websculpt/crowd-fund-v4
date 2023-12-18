@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { SignaturesSubTable } from "./SignaturesSubTable";
 import { SingleProposal } from "./SingleProposal";
+import { TSignature } from "~~/helpers/getTypes";
 
 interface ProposalRowProps {
   fundRunId: number;
@@ -10,7 +11,7 @@ interface ProposalRowProps {
   to: string;
   proposedBy: string;
   reason: string;
-  signatures: [];
+  signatures: TSignature[];
 }
 
 export const ProposalRow = (vp: ProposalRowProps) => {

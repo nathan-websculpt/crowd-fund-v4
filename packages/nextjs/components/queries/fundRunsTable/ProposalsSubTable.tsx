@@ -1,7 +1,8 @@
 import { ProposalRow } from "./ProposalRow";
+import { TProposal } from "~~/helpers/getTypes";
 
 interface ProposalsSubTableProps {
-  proposals: [];
+  proposals: TProposal[];
 }
 
 export const ProposalsSubTable = (thisFundRun: ProposalsSubTableProps) => {

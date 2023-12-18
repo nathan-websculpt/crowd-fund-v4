@@ -1,5 +1,7 @@
+import { TSignature } from "~~/helpers/getTypes";
+
 interface SignaturesSubTableProps {
-  signatures: [];
+  signatures: TSignature[];
 }
 
 export const SignaturesSubTable = (thisProposal: SignaturesSubTableProps) => {

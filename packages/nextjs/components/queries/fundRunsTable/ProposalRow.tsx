@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { SignaturesSubTable } from "./SignaturesSubTable";
 import { formatEther } from "viem";
+import { TSignature } from "~~/helpers/getTypes";
 
 interface ProposalsRowProps {
   id: string;
@@ -11,14 +12,14 @@ interface ProposalsRowProps {
   to: string;
   proposedBy: string;
   reason: string;
-  signatures: [];
+  signatures: TSignature[];
 }
 
 export const ProposalRow = (thisProposal: ProposalsRowProps) => {
   const [rowOpen, setRowOpen] = useState(false);
   return (
     <>
-      <tr key={thisProposal?.id}>
+      <tr>
         <td className="w-1/12 cursor-pointer md:py-4" onClick={() => setRowOpen(!rowOpen)}>
           <svg
             className={`w-6 h-6 z-40  ${rowOpen ? "rotate-90" : "rotate-0"}`}

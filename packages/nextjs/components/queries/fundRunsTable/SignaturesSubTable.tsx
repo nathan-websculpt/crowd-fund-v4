@@ -1,6 +1,8 @@
+import { TSignature } from "~~/helpers/getTypes";
+
 //IF THIS DOESN'T END UP CHANGING, IT CAN BE DELETED BECAUSE /proposals/SignaturesSubTable.tsx is the same
 interface SignaturesSubTableProps {
-  signatures: [];
+  signatures: TSignature[];
 }
 
 export const SignaturesSubTable = (thisProposal: SignaturesSubTableProps) => {

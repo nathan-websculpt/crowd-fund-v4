@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ProposalsSubTable } from "./ProposalsSubTable";
 import { formatEther } from "viem";
+import { TProposal } from "~~/helpers/getTypes";
 
 interface FundRunRowProps {
   status: number;
@@ -10,7 +11,7 @@ interface FundRunRowProps {
   target: bigint;
   donated: bigint;
   withdrawn: bigint;
-  proposals: [];
+  proposals: TProposal[];
 }
 
 export const FundRunRow = (fr: FundRunRowProps) => {
