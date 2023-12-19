@@ -137,3 +137,24 @@ export const GQL_PROPOSALS_Snapshot = () => {
     }
   `;
 };
+
+//queries page
+//for biewing snapshot of latest signers
+//LATEST SIGNERS
+export const GQL_SIGNERS_Snapshot = () => {
+  return gql`
+    query ($limit: Int!, $offset: Int!) {
+      proposalSignatures(orderBy: proposalId, orderDirection: desc, first: $limit, skip: $offset) {
+        id
+        proposalId
+        signer
+        proposal {
+          id
+          amount
+          to
+          reason
+        }
+      }
+    }
+  `;
+};

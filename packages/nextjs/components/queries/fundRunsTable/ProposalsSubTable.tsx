@@ -12,9 +12,9 @@ export const ProposalsSubTable = (thisFundRun: ProposalsSubTableProps) => {
         <thead>
           <tr className="text-sm rounded-xl text-base-content">
             <th className="bg-primary"></th>
-            <th className="bg-primary">Status</th>
-            <th className="bg-primary">ID</th>
-            <th className="bg-primary">Amount</th>
+            <th className="text-center bg-primary">Status</th>
+            <th className="text-center bg-primary">ID</th>
+            <th className="text-center bg-primary">Amount</th>
             <th className="bg-primary">To</th>
             <th className="bg-primary">Proposed By</th>
             <th className="bg-primary">Reason</th>
