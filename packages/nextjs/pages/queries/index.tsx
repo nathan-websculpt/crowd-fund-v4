@@ -7,7 +7,7 @@ const QueriesPage: NextPage = () => {
     <>
       <MetaHeader title="Query Data" />
 
-      <div className="container mx-auto my-10">
+      <div className="container mx-auto my-10 overflow-scroll">
         <FundRunsTable />
       </div>
     </>

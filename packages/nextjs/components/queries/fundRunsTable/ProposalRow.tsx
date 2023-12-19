@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { SignaturesSubTable } from "./SignaturesSubTable";
 import { formatEther } from "viem";
+import { Address } from "~~/components/scaffold-eth";
 import { TSignature } from "~~/helpers/getTypes";
 
 interface ProposalsRowProps {
@@ -19,8 +20,8 @@ export const ProposalRow = (thisProposal: ProposalsRowProps) => {
   const [rowOpen, setRowOpen] = useState(false);
   return (
     <>
-      <tr>
-        <td className="w-1/12 cursor-pointer md:py-4" onClick={() => setRowOpen(!rowOpen)}>
+      <tr key={thisProposal?.id}>
+        <td className="cursor-pointer" onClick={() => setRowOpen(!rowOpen)}>
           <svg
             className={`w-6 h-6 z-40  ${rowOpen ? "rotate-90" : "rotate-0"}`}
             xmlns="http://www.w3.org/2000/svg"
@@ -33,14 +34,22 @@ export const ProposalRow = (thisProposal: ProposalsRowProps) => {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 7l6 5-6 5V7z" fill="#ffffff" />
           </svg>
         </td>
-        <td className="w-1/12 md:py-4">{thisProposal?.status.toString()}</td>
-        <td className="w-1/12 md:py-4">{thisProposal?.proposalId.toString()}</td>
-        <td className="w-1/12 md:py-4">{formatEther(thisProposal?.amount)}</td>
-        <td className="w-1/12 md:py-4">{thisProposal?.to}</td>
-        <td className="w-1/12 md:py-4">{thisProposal?.proposedBy}</td>
-        <td className="w-1/12 md:py-4">{thisProposal?.reason}</td>
+        <td className="text-center">
+          {thisProposal?.status === 0 && <>😄</>}
+          {thisProposal?.status === 1 && <>🤝</>}
+          {thisProposal?.status === 2 && <>✅</>}
+        </td>
+        <td className="text-center">{thisProposal?.proposalId.toString()}</td>
+        <td className="text-center">{formatEther(thisProposal?.amount)}</td>
+        <td>
+          <Address address={thisProposal?.to} size="sm" />
+        </td>
+        <td>
+          <Address address={thisProposal?.proposedBy} size="sm" />
+        </td>
+        <td>{thisProposal?.reason}</td>
       </tr>
-      <tr className={` ${rowOpen ? "rowOpen" : "hidden"} `}>
+      <tr key={thisProposal?.id + thisProposal?.id} className={` ${rowOpen ? "rowOpen" : "hidden"} `}>
         {/* drillable, nested table */}
         <td colSpan={7}>
           <SignaturesSubTable signatures={thisProposal?.signatures} />

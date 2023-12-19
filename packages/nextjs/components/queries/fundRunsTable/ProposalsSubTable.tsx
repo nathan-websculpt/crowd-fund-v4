@@ -8,7 +8,7 @@ interface ProposalsSubTableProps {
 export const ProposalsSubTable = (thisFundRun: ProposalsSubTableProps) => {
   return (
     <>
-      <table className="table w-full text-xl bg-base-100 md:table-md table-sm">
+      <table className="table w-full text-xl table-auto bg-base-200 table-md">
         <thead>
           <tr className="text-sm rounded-xl text-base-content">
             <th className="bg-primary"></th>
@@ -24,7 +24,6 @@ export const ProposalsSubTable = (thisFundRun: ProposalsSubTableProps) => {
           {thisFundRun?.proposals?.map(proposal => (
             <>
               <ProposalRow
-                key={proposal.id}
                 id={proposal.id}
                 proposalId={proposal.proposalId}
                 status={proposal.status}

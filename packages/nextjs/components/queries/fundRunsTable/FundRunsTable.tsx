@@ -31,18 +31,19 @@ export const FundRunsTable = () => {
     return (
       <>
         <div className="flex justify-center gap-3 mb-3">
+          <span className="my-auto text-lg">ALL FUND RUNS</span>
           <select
             className="px-4 py-2 text-xl bg-primary"
             onChange={event => setPageSize(parseInt(event.target.value))}
             value={pageSize.toString()}
           >
-            <option value="25">Show 25</option>
-            <option value="10">Show 10</option>
-            <option value="1">Show 1</option>
+            <option value="25">Showing 25</option>
+            <option value="10">Showing 10</option>
+            <option value="1">Showing 1</option>
           </select>
         </div>
 
-        <table className="table w-full text-xl bg-base-100 md:table-md table-sm">
+        <table className="table w-full text-xl table-auto bg-base-100 md:table-lg table-xs">
           <thead>
             <tr className="text-sm rounded-xl text-base-content">
               <th className="bg-primary"></th>
@@ -52,22 +53,24 @@ export const FundRunsTable = () => {
               <th className="bg-primary">Description</th>
               <th className="bg-primary">Money Target</th>
               <th className="bg-primary">Donated</th>
-              <th className="text-center bg-primary">Withdrawn</th>
+              <th className="bg-primary">Withdrawn</th>
             </tr>
           </thead>
           <tbody>
             {data?.fundRuns?.map(fr => (
-              <FundRunRow
-                key={fr.id} //unique ID from subgraph
-                fundRunId={fr.fundRunId}
-                status={fr.status}
-                title={fr.title}
-                description={fr.description}
-                target={fr.target}
-                donated={fr.amountCollected}
-                withdrawn={fr.amountWithdrawn}
-                proposals={fr.proposals}
-              />
+              <>
+                <FundRunRow
+                  id={fr.id}
+                  fundRunId={fr.fundRunId}
+                  status={fr.status}
+                  title={fr.title}
+                  description={fr.description}
+                  target={fr.target}
+                  donated={fr.amountCollected}
+                  withdrawn={fr.amountWithdrawn}
+                  proposals={fr.proposals}
+                />
+              </>
             ))}
           </tbody>
         </table>

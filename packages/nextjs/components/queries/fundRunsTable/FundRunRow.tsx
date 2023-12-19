@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { ProposalsSubTable } from "./ProposalsSubTable";
 import { formatEther } from "viem";
+import { FundRunStatus } from "~~/components/crowdfund/FundRunStatus";
 import { TProposal } from "~~/helpers/getTypes";
 
 interface FundRunRowProps {
+  id: string;
   status: number;
   fundRunId: number;
   title: string;
@@ -19,12 +21,8 @@ export const FundRunRow = (fr: FundRunRowProps) => {
 
   return (
     <>
-      <tr
-        className={`text-sm ${fr.status == 0 ? "bg-secondary border-secondary" : ""}  ${
-          fr.status == 1 ? "bg-accent border-accent" : ""
-        } ${fr.status == 2 ? "bg-neutral border-neutral text-primary" : ""}`}
-      >
-        <td className="w-1/12 cursor-pointer md:py-4" onClick={() => setRowOpen(!rowOpen)}>
+      <tr key={fr.id}>
+        <td className="cursor-pointer" onClick={() => setRowOpen(!rowOpen)}>
           <svg
             className={`w-6 h-6 z-40  ${rowOpen ? "rotate-90" : "rotate-0"}`}
             xmlns="http://www.w3.org/2000/svg"
@@ -38,20 +36,18 @@ export const FundRunRow = (fr: FundRunRowProps) => {
           </svg>
         </td>
 
-        <td className="w-1/12 md:py-4">
-          {fr.status === 0 && <>😄</>}
-          {fr.status === 1 && <>🤝</>}
-          {fr.status === 2 && <>✅</>}
+        <td>
+          <FundRunStatus status={fr.status} />
         </td>
 
-        <td className="w-1/12 md:py-4">{fr.fundRunId.toString()}</td>
-        <td className="w-1/12 md:py-4">{fr.title}</td>
-        <td className="w-1/12 md:py-4">{fr.description}</td>
-        <td className="w-1/12 md:py-4">{formatEther(fr.target)}</td>
-        <td className="w-1/12 md:py-4">{formatEther(fr.donated)}</td>
-        <td className="w-1/12 md:py-4">{formatEther(fr.withdrawn)}</td>
+        <td className="text-center">{fr.fundRunId.toString()}</td>
+        <td>{fr.title}</td>
+        <td>{fr.description}</td>
+        <td className="text-center">{formatEther(fr.target)}</td>
+        <td className="text-center">{formatEther(fr.donated)}</td>
+        <td className="text-center">{formatEther(fr.withdrawn)}</td>
       </tr>
-      <tr className={` ${rowOpen ? "rowOpen" : "hidden"} `}>
+      <tr key={fr.id + fr.id} className={` ${rowOpen ? "rowOpen" : "hidden"} `}>
         {/* drillable, nested table */}
         <td colSpan={8}>
           <ProposalsSubTable proposals={fr.proposals} />
