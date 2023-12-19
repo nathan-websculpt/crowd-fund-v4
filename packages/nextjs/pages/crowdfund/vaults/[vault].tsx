@@ -17,7 +17,7 @@ const VaultPage: NextPage = () => {
   });
 
   useEffect(() => {
-    if (error !== undefined && error !== null) console.log("Query Error: ", error);
+    if (error !== undefined && error !== null) console.log("GQL_FUNDRUN_By_FundRunId Query Error: ", error);
   }, [error]);
 
   return (

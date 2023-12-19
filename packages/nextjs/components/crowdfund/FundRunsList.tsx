@@ -18,7 +18,7 @@ export const FundRunsList = () => {
   });
 
   useEffect(() => {
-    if (error !== undefined && error !== null) console.log("Query Error: ", error);
+    if (error !== undefined && error !== null) console.log("GQL_FUNDRUNS_For_Display Query Error: ", error);
   }, [error]);
 
   if (loading) {

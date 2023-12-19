@@ -22,7 +22,7 @@ export const FinalizeProposal = (proposal: FinalizeProposalProps) => {
   const [getProposal, { loading, error, data }] = useLazyQuery(GQL_SIGNATURES());
 
   useEffect(() => {
-    if (error !== undefined && error !== null) console.log("Query Error: ", error);
+    if (error !== undefined && error !== null) console.log("GQL_SIGNATURES Query Error: ", error);
   }, [error]);
 
   useEffect(() => {
