@@ -139,7 +139,7 @@ export const GQL_PROPOSALS_Snapshot = () => {
 };
 
 //queries page
-//for biewing snapshot of latest signers
+//for viewing snapshot of latest signers
 //LATEST SIGNERS
 export const GQL_SIGNERS_Snapshot = () => {
   return gql`
@@ -154,6 +154,21 @@ export const GQL_SIGNERS_Snapshot = () => {
           to
           reason
         }
+      }
+    }
+  `;
+};
+
+//queries page
+//DONATIONS GROUPED-BY FUND RUN
+export const GQL_DONATIONS = () => {
+  return gql`
+    query ($limit: Int!, $offset: Int!) {
+      donations(orderBy: fundRunId, orderDirection: desc, first: $limit, skip: $offset) {
+        id
+        fundRunId
+        donor
+        amount
       }
     }
   `;

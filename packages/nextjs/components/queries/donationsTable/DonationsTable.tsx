@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
-import { FundRunRow } from "./FundRunRow";
+import { DonationRow } from "./DonationRow";
 import { useQuery } from "@apollo/client";
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 import { Spinner } from "~~/components/Spinner";
-import { GQL_FUNDRUNS_Three_Tier } from "~~/helpers/getQueries";
+import { GQL_DONATIONS } from "~~/helpers/getQueries";
 
-export const FundRunsTable = () => {
+export const DonationsTable = () => {
   const [pageSize, setPageSize] = useState(25);
   const [pageNum, setPageNum] = useState(0);
 
-  const { loading, error, data } = useQuery(GQL_FUNDRUNS_Three_Tier(), {
+  const { loading, error, data } = useQuery(GQL_DONATIONS(), {
     variables: {
       limit: pageSize,
       offset: pageNum * pageSize,
@@ -18,7 +18,7 @@ export const FundRunsTable = () => {
   });
 
   useEffect(() => {
-    if (error !== undefined && error !== null) console.log("FundRunsTable.tsx Query Error: ", error);
+    if (error !== undefined && error !== null) console.log("DonationsTable.tsx Query Error: ", error);
   }, [error]);
 
   if (loading) {
@@ -31,7 +31,7 @@ export const FundRunsTable = () => {
     return (
       <>
         <div className="flex justify-center gap-3 mb-3">
-          <span className="my-auto text-lg">LATEST FUND RUNS</span>
+          <span className="my-auto text-lg">DONATIONS (BY FUND RUN)</span>
           <select
             className="px-4 py-2 text-xl bg-primary"
             onChange={event => setPageSize(parseInt(event.target.value))}
@@ -46,29 +46,19 @@ export const FundRunsTable = () => {
         <table className="table w-full text-xl table-auto bg-base-100 md:table-lg table-xs">
           <thead>
             <tr className="text-sm rounded-xl text-base-content">
-              <th className="bg-primary"></th>
-              <th className="bg-primary">Status</th>
-              <th className="bg-primary">ID</th>
-              <th className="bg-primary">Title</th>
-              <th className="bg-primary">Description</th>
-              <th className="bg-primary">Money Target</th>
-              <th className="bg-primary">Donated</th>
-              <th className="bg-primary">Withdrawn</th>
+              <th className="bg-primary">Donor</th>
+              <th className="bg-primary">Amount</th>
+              <th className="bg-primary">Fund Run ID</th>
             </tr>
           </thead>
           <tbody>
-            {data?.fundRuns?.map(fr => (
+            {data?.donations?.map(donation => (
               <>
-                <FundRunRow
-                  id={fr.id}
-                  fundRunId={fr.fundRunId}
-                  status={fr.status}
-                  title={fr.title}
-                  description={fr.description}
-                  target={fr.target}
-                  donated={fr.amountCollected}
-                  withdrawn={fr.amountWithdrawn}
-                  proposals={fr.proposals}
+                <DonationRow
+                  id={donation.id}
+                  donor={donation.donor}
+                  amount={donation.amount}
+                  fundRunId={donation.fundRunId}
                 />
               </>
             ))}
