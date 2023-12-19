@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 //for viewing a single Fund Run
-export const GQL_FUNDRUN_BY_ID = () => {
+export const GQL_FUNDRUN_By_FundRunId = () => {
   return gql`
     query ($slug: Int!) {
       fundRuns(where: { fundRunId: $slug }) {
@@ -19,9 +19,9 @@ export const GQL_FUNDRUN_BY_ID = () => {
   `;
 };
 
-//for viewing the Fund Runs list
-//returns latest-first, 25 at a time
-export const GQL_FUNDRUNS = () => {
+//for viewing the Fund Runs list on /browse-fund-runs
+//returns latest-first
+export const GQL_FUNDRUNS_For_Display = () => {
   return gql`
     query ($limit: Int!, $offset: Int!) {
       fundRuns(orderBy: fundRunId, orderDirection: desc, first: $limit, skip: $offset) {
@@ -40,47 +40,10 @@ export const GQL_FUNDRUNS = () => {
   `;
 };
 
-//for Finalization of a Proposal
-//returns all signatures for a Proposal (which are then sent to the contract)
-export const GQL_SIGNATURES = () => {
-  return gql`
-    query ($slug1: Int!, $slug2: Int!) {
-      proposals(where: { fundRunId: $slug1, proposalId: $slug2 }) {
-        signatures {
-          signature
-        }
-      }
-    }
-  `;
-};
-
-//for the table on Vaults page
-//will not return revoked proposals
-export const GQL_PROPOSALS = () => {
-  return gql`
-    query ($slug: Int!) {
-      proposals(where: { fundRunId: $slug, status_lt: 3 }) {
-        id
-        proposalId
-        fundRunId
-        proposedBy
-        amount
-        to
-        reason
-        status
-        signatures {
-          id
-          signer
-          signature
-        }
-      }
-    }
-  `;
-};
-
+//queries page
 //for viewing 3-tier table
 //ALL Fund Runs
-export const GQL_FUNDRUNS_ALL = () => {
+export const GQL_FUNDRUNS_Three_Tier = () => {
   return gql`
     query ($limit: Int!, $offset: Int!) {
       fundRuns(orderBy: fundRunId, orderDirection: desc, first: $limit, skip: $offset) {
@@ -107,6 +70,68 @@ export const GQL_FUNDRUNS_ALL = () => {
             signer
             signature
           }
+        }
+      }
+    }
+  `;
+};
+
+//for Finalization of a Proposal
+//returns all signatures for a Proposal (which are then sent to the contract)
+export const GQL_SIGNATURES = () => {
+  return gql`
+    query ($slug1: Int!, $slug2: Int!) {
+      proposals(where: { fundRunId: $slug1, proposalId: $slug2 }) {
+        signatures {
+          signature
+        }
+      }
+    }
+  `;
+};
+
+//for the table on Vaults page
+//will not return revoked proposals
+export const GQL_PROPOSALS_By_FundRunId = () => {
+  return gql`
+    query ($slug: Int!) {
+      proposals(where: { fundRunId: $slug, status_lt: 3 }) {
+        id
+        proposalId
+        fundRunId
+        proposedBy
+        amount
+        to
+        reason
+        status
+        signatures {
+          id
+          signer
+          signature
+        }
+      }
+    }
+  `;
+};
+
+//queries page
+//for viewing snapshot of latest proposals
+//LATEST PROPOSALS
+export const GQL_PROPOSALS_Snapshot = () => {
+  return gql`
+    query ($limit: Int!, $offset: Int!) {
+      proposals(orderBy: proposalId, orderDirection: desc, first: $limit, skip: $offset) {
+        id
+        proposedBy
+        amount
+        to
+        reason
+        status
+        fundRun {
+          id
+          title
+          amountCollected
+          amountWithdrawn
         }
       }
     }

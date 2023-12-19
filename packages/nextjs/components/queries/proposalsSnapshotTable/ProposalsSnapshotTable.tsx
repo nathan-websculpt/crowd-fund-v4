@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
-import { FundRunRow } from "./FundRunRow";
+import { ProposalSnapshotRow } from "./ProposalSnapshotRow";
 import { useQuery } from "@apollo/client";
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 import { Spinner } from "~~/components/Spinner";
-import { GQL_FUNDRUNS_Three_Tier } from "~~/helpers/getQueries";
+import { GQL_PROPOSALS_Snapshot } from "~~/helpers/getQueries";
 
-export const FundRunsTable = () => {
+export const ProposalsSnapshotTable = () => {
   const [pageSize, setPageSize] = useState(25);
   const [pageNum, setPageNum] = useState(0);
 
-  const { loading, error, data } = useQuery(GQL_FUNDRUNS_Three_Tier(), {
+  const { loading, error, data } = useQuery(GQL_PROPOSALS_Snapshot(), {
     variables: {
       limit: pageSize,
       offset: pageNum * pageSize,
@@ -18,7 +18,7 @@ export const FundRunsTable = () => {
   });
 
   useEffect(() => {
-    if (error !== undefined && error !== null) console.log("FundRunsTable.tsx Query Error: ", error);
+    if (error !== undefined && error !== null) console.log("ProposalsSnapshotTable.tsx Query Error: ", error);
   }, [error]);
 
   if (loading) {
@@ -31,7 +31,7 @@ export const FundRunsTable = () => {
     return (
       <>
         <div className="flex justify-center gap-3 mb-3">
-          <span className="my-auto text-lg">ALL FUND RUNS</span>
+          <span className="my-auto text-lg">LATEST PROPOSALS</span>
           <select
             className="px-4 py-2 text-xl bg-primary"
             onChange={event => setPageSize(parseInt(event.target.value))}
@@ -46,29 +46,28 @@ export const FundRunsTable = () => {
         <table className="table w-full text-xl table-auto bg-base-100 md:table-lg table-xs">
           <thead>
             <tr className="text-sm rounded-xl text-base-content">
-              <th className="bg-primary"></th>
               <th className="bg-primary">Status</th>
-              <th className="bg-primary">ID</th>
-              <th className="bg-primary">Title</th>
-              <th className="bg-primary">Description</th>
-              <th className="bg-primary">Money Target</th>
-              <th className="bg-primary">Donated</th>
-              <th className="bg-primary">Withdrawn</th>
+              <th className="bg-primary">To</th>
+              <th className="bg-primary">Proposed By</th>
+              <th className="bg-primary">Amount</th>
+              <th className="bg-primary">Reason</th>
+              <th className="bg-primary">Fund Run Title</th>
+              <th className="bg-primary">Remaining Ether</th>
             </tr>
           </thead>
           <tbody>
-            {data?.fundRuns?.map(fr => (
+            {data?.proposals?.map(proposal => (
               <>
-                <FundRunRow
-                  id={fr.id}
-                  fundRunId={fr.fundRunId}
-                  status={fr.status}
-                  title={fr.title}
-                  description={fr.description}
-                  target={fr.target}
-                  donated={fr.amountCollected}
-                  withdrawn={fr.amountWithdrawn}
-                  proposals={fr.proposals}
+                <ProposalSnapshotRow
+                  id={proposal.id}
+                  proposalId={proposal.proposalId}
+                  status={proposal.status}
+                  amount={proposal.amount}
+                  to={proposal.to}
+                  proposedBy={proposal.proposedBy}
+                  reason={proposal.reason}
+                  fundRunTitle={proposal.fundRun.title}
+                  remainingEther={BigInt(proposal.fundRun.amountCollected) - BigInt(proposal.fundRun.amountWithdrawn)}
                 />
               </>
             ))}

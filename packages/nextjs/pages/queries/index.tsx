@@ -1,6 +1,7 @@
 import { NextPage } from "next";
 import { MetaHeader } from "~~/components/MetaHeader";
 import { FundRunsTable } from "~~/components/queries/fundRunsTable/FundRunsTable";
+import { ProposalsSnapshotTable } from "~~/components/queries/proposalsSnapshotTable/ProposalsSnapshotTable";
 
 const QueriesPage: NextPage = () => {
   return (
@@ -9,6 +10,10 @@ const QueriesPage: NextPage = () => {
 
       <div className="container mx-auto my-10 overflow-scroll">
         <FundRunsTable />
+      </div>
+
+      <div className="container mx-auto my-10 overflow-scroll">
+        <ProposalsSnapshotTable />
       </div>
     </>
   );

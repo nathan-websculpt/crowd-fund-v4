@@ -6,13 +6,13 @@ import { MetaHeader } from "~~/components/MetaHeader";
 import { Spinner } from "~~/components/Spinner";
 import { CreateProposal } from "~~/components/crowdfund/proposals/CreateProposal";
 import { ProposalTable } from "~~/components/crowdfund/proposals/ProposalTable";
-import { GQL_FUNDRUN_BY_ID } from "~~/helpers/getQueries";
+import { GQL_FUNDRUN_By_FundRunId } from "~~/helpers/getQueries";
 
 const VaultPage: NextPage = () => {
   const router = useRouter();
   const { vault } = router.query as { vault?: `${string}` }; //fundRunId
 
-  const { loading, error, data } = useQuery(GQL_FUNDRUN_BY_ID(), {
+  const { loading, error, data } = useQuery(GQL_FUNDRUN_By_FundRunId(), {
     variables: { slug: parseInt(vault) },
   });
 

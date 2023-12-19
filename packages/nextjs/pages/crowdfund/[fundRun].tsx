@@ -7,13 +7,13 @@ import { MetaHeader } from "~~/components/MetaHeader";
 import { Spinner } from "~~/components/Spinner";
 import { FundRunDisplay } from "~~/components/crowdfund/FundRunDisplay";
 import { FundRunDonate } from "~~/components/crowdfund/FundRunDonate";
-import { GQL_FUNDRUN_BY_ID } from "~~/helpers/getQueries";
+import { GQL_FUNDRUN_By_FundRunId } from "~~/helpers/getQueries";
 
 const FundRunPage: NextPage = () => {
   const router = useRouter();
   const { fundRun } = router.query as { fundRun?: `${string}` };
 
-  const { loading, error, data } = useQuery(GQL_FUNDRUN_BY_ID(), {
+  const { loading, error, data } = useQuery(GQL_FUNDRUN_By_FundRunId(), {
     variables: { slug: parseInt(fundRun) },
     pollInterval: 1000,
   });

@@ -2,14 +2,14 @@ import { useEffect } from "react";
 import { ProposalRow } from "./ProposalRow";
 import { useQuery } from "@apollo/client";
 import { Spinner } from "~~/components/Spinner";
-import { GQL_PROPOSALS } from "~~/helpers/getQueries";
+import { GQL_PROPOSALS_By_FundRunId } from "~~/helpers/getQueries";
 
 interface ProposalTableProps {
   fundRunId: number;
 }
 
 export const ProposalTable = (frVault: ProposalTableProps) => {
-  const { loading, error, data } = useQuery(GQL_PROPOSALS(), {
+  const { loading, error, data } = useQuery(GQL_PROPOSALS_By_FundRunId(), {
     variables: { slug: frVault.fundRunId },
     pollInterval: 1000,
   });

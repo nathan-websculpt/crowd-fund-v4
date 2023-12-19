@@ -3,13 +3,13 @@ import Link from "next/link";
 import { Spinner } from "../Spinner";
 import { FundRunDisplay } from "./FundRunDisplay";
 import { useQuery } from "@apollo/client";
-import { GQL_FUNDRUNS } from "~~/helpers/getQueries";
+import { GQL_FUNDRUNS_For_Display } from "~~/helpers/getQueries";
 
 export const FundRunsList = () => {
   const [pageSize, setPageSize] = useState(25);
   const [pageNum, setPageNum] = useState(0);
 
-  const { loading, error, data } = useQuery(GQL_FUNDRUNS(), {
+  const { loading, error, data } = useQuery(GQL_FUNDRUNS_For_Display(), {
     variables: {
       limit: pageSize,
       offset: pageNum * pageSize,
