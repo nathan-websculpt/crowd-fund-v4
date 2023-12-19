@@ -54,15 +54,14 @@ export const SignersSnapshotTable = () => {
           </thead>
           <tbody>
             {data?.proposalSignatures?.map(sig => (
-              <>
-                <SignerSnapshotRow
-                  id={sig.id}
-                  signer={sig.signer}
-                  to={sig.proposal.to}
-                  amount={sig.proposal.amount}
-                  reason={sig.proposal.reason}
-                />
-              </>
+              <SignerSnapshotRow
+                key={sig?.id}
+                id={sig?.id}
+                signer={sig?.signer}
+                to={sig?.proposal.to}
+                amount={sig?.proposal.amount}
+                reason={sig?.proposal.reason}
+              />
             ))}
           </tbody>
         </table>

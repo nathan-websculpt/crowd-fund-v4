@@ -53,14 +53,13 @@ export const DonationsTable = () => {
           </thead>
           <tbody>
             {data?.donations?.map(donation => (
-              <>
-                <DonationRow
-                  id={donation.id}
-                  donor={donation.donor}
-                  amount={donation.amount}
-                  fundRunId={donation.fundRunId}
-                />
-              </>
+              <DonationRow
+                key={donation?.id}
+                id={donation?.id}
+                donor={donation?.donor}
+                amount={donation?.amount}
+                fundRunId={donation?.fundRunId}
+              />
             ))}
           </tbody>
         </table>

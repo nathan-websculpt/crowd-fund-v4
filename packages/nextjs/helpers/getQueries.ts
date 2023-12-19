@@ -47,6 +47,7 @@ export const GQL_FUNDRUNS_Three_Tier = () => {
   return gql`
     query ($limit: Int!, $offset: Int!) {
       fundRuns(orderBy: fundRunId, orderDirection: desc, first: $limit, skip: $offset) {
+        id
         fundRunId
         owners
         title

@@ -12,7 +12,7 @@ interface SignerSnapshotRowProps {
 export const SignerSnapshotRow = (thisSig: SignerSnapshotRowProps) => {
   return (
     <>
-      <tr key={thisSig?.id}>
+      <tr>
         <td>
           <Address address={thisSig?.signer} size="sm" />
         </td>

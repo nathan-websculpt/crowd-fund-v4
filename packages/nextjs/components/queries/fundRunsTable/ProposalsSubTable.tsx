@@ -22,18 +22,17 @@ export const ProposalsSubTable = (thisFundRun: ProposalsSubTableProps) => {
         </thead>
         <tbody>
           {thisFundRun?.proposals?.map(proposal => (
-            <>
-              <ProposalRow
-                id={proposal.id}
-                proposalId={proposal.proposalId}
-                status={proposal.status}
-                amount={proposal.amount}
-                to={proposal.to}
-                proposedBy={proposal.proposedBy}
-                reason={proposal.reason}
-                signatures={proposal.signatures}
-              />
-            </>
+            <ProposalRow
+              key={proposal?.id}
+              id={proposal?.id}
+              proposalId={proposal?.proposalId}
+              status={proposal?.status}
+              amount={proposal?.amount}
+              to={proposal?.to}
+              proposedBy={proposal?.proposedBy}
+              reason={proposal?.reason}
+              signatures={proposal?.signatures}
+            />
           ))}
         </tbody>
       </table>

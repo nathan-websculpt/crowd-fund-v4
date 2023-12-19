@@ -11,7 +11,7 @@ interface DonationRowProps {
 export const DonationRow = (thisDonation: DonationRowProps) => {
   return (
     <>
-      <tr key={thisDonation?.id}>
+      <tr>
         <td>
           <Address address={thisDonation?.donor} size="sm" />
         </td>

@@ -20,7 +20,7 @@ export const ProposalRow = (thisProposal: ProposalsRowProps) => {
   const [rowOpen, setRowOpen] = useState(false);
   return (
     <>
-      <tr key={thisProposal?.id}>
+      <tr>
         <td className="cursor-pointer" onClick={() => setRowOpen(!rowOpen)}>
           <svg
             className={`w-6 h-6 z-40  ${rowOpen ? "rotate-90" : "rotate-0"}`}
@@ -38,6 +38,7 @@ export const ProposalRow = (thisProposal: ProposalsRowProps) => {
           {thisProposal?.status === 0 && <>😄</>}
           {thisProposal?.status === 1 && <>🤝</>}
           {thisProposal?.status === 2 && <>✅</>}
+          {thisProposal?.status === 3 && <>❌</>}
         </td>
         <td className="text-center">{thisProposal?.proposalId.toString()}</td>
         <td className="text-center">{formatEther(thisProposal?.amount)}</td>
@@ -49,7 +50,7 @@ export const ProposalRow = (thisProposal: ProposalsRowProps) => {
         </td>
         <td>{thisProposal?.reason}</td>
       </tr>
-      <tr key={thisProposal?.id + thisProposal?.id} className={` ${rowOpen ? "rowOpen" : "hidden"} `}>
+      <tr className={` ${rowOpen ? "rowOpen" : "hidden"} `}>
         {/* drillable, nested table */}
         <td colSpan={7}>
           <SignaturesSubTable signatures={thisProposal?.signatures} />

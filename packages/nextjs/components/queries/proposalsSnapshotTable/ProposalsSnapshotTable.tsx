@@ -57,19 +57,18 @@ export const ProposalsSnapshotTable = () => {
           </thead>
           <tbody>
             {data?.proposals?.map(proposal => (
-              <>
-                <ProposalSnapshotRow
-                  id={proposal.id}
-                  proposalId={proposal.proposalId}
-                  status={proposal.status}
-                  amount={proposal.amount}
-                  to={proposal.to}
-                  proposedBy={proposal.proposedBy}
-                  reason={proposal.reason}
-                  fundRunTitle={proposal.fundRun.title}
-                  remainingEther={BigInt(proposal.fundRun.amountCollected) - BigInt(proposal.fundRun.amountWithdrawn)}
-                />
-              </>
+              <ProposalSnapshotRow
+                key={proposal?.id}
+                id={proposal?.id}
+                proposalId={proposal?.proposalId}
+                status={proposal?.status}
+                amount={proposal?.amount}
+                to={proposal?.to}
+                proposedBy={proposal?.proposedBy}
+                reason={proposal?.reason}
+                fundRunTitle={proposal?.fundRun.title}
+                remainingEther={BigInt(proposal?.fundRun.amountCollected) - BigInt(proposal?.fundRun.amountWithdrawn)}
+              />
             ))}
           </tbody>
         </table>

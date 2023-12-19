@@ -16,7 +16,7 @@ interface ProposalSnapshotRowProps {
 export const ProposalSnapshotRow = (thisProposal: ProposalSnapshotRowProps) => {
   return (
     <>
-      <tr key={thisProposal?.id}>
+      <tr>
         <td className="text-center">
           {thisProposal?.status === 0 && <>😄</>}
           {thisProposal?.status === 1 && <>🤝</>}

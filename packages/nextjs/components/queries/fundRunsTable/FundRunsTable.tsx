@@ -58,19 +58,18 @@ export const FundRunsTable = () => {
           </thead>
           <tbody>
             {data?.fundRuns?.map(fr => (
-              <>
-                <FundRunRow
-                  id={fr.id}
-                  fundRunId={fr.fundRunId}
-                  status={fr.status}
-                  title={fr.title}
-                  description={fr.description}
-                  target={fr.target}
-                  donated={fr.amountCollected}
-                  withdrawn={fr.amountWithdrawn}
-                  proposals={fr.proposals}
-                />
-              </>
+              <FundRunRow
+                key={fr?.id}
+                id={fr?.id}
+                fundRunId={fr?.fundRunId}
+                status={fr?.status}
+                title={fr?.title}
+                description={fr?.description}
+                target={fr?.target}
+                donated={fr?.amountCollected}
+                withdrawn={fr?.amountWithdrawn}
+                proposals={fr?.proposals}
+              />
             ))}
           </tbody>
         </table>

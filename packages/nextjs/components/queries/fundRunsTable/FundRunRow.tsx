@@ -21,7 +21,7 @@ export const FundRunRow = (fr: FundRunRowProps) => {
 
   return (
     <>
-      <tr key={fr.id}>
+      <tr>
         <td className="cursor-pointer" onClick={() => setRowOpen(!rowOpen)}>
           <svg
             className={`w-6 h-6 z-40  ${rowOpen ? "rotate-90" : "rotate-0"}`}
@@ -37,20 +37,20 @@ export const FundRunRow = (fr: FundRunRowProps) => {
         </td>
 
         <td>
-          <FundRunStatus status={fr.status} />
+          <FundRunStatus status={fr?.status} />
         </td>
 
-        <td className="text-center">{fr.fundRunId.toString()}</td>
-        <td>{fr.title}</td>
-        <td>{fr.description}</td>
-        <td className="text-center">{formatEther(fr.target)}</td>
-        <td className="text-center">{formatEther(fr.donated)}</td>
-        <td className="text-center">{formatEther(fr.withdrawn)}</td>
+        <td className="text-center">{fr?.fundRunId.toString()}</td>
+        <td>{fr?.title}</td>
+        <td>{fr?.description}</td>
+        <td className="text-center">{formatEther(fr?.target)}</td>
+        <td className="text-center">{formatEther(fr?.donated)}</td>
+        <td className="text-center">{formatEther(fr?.withdrawn)}</td>
       </tr>
-      <tr key={fr.id + fr.id} className={` ${rowOpen ? "rowOpen" : "hidden"} `}>
+      <tr className={` ${rowOpen ? "rowOpen" : "hidden"} `}>
         {/* drillable, nested table */}
         <td colSpan={8}>
-          <ProposalsSubTable proposals={fr.proposals} />
+          <ProposalsSubTable proposals={fr?.proposals} />
         </td>
       </tr>
     </>
