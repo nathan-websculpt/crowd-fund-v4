@@ -2,6 +2,7 @@ import { FinalizeProposal } from "./FinalizeProposal";
 import { RevokeProposal } from "./RevokeProposal";
 import { SupportProposal } from "./SupportProposal";
 import { formatEther } from "viem";
+import { Address } from "~~/components/scaffold-eth";
 
 interface DisplayProposalProps {
   fundRunId: number;
@@ -23,8 +24,12 @@ export const SingleProposal = (proposal: DisplayProposalProps) => {
 
       <td className="w-1/12 md:py-4">{proposal.proposalId.toString()}</td>
       <td className="w-1/12 md:py-4">{formatEther(proposal.amount)}</td>
-      <td className="w-1/12 md:py-4">{proposal.to}</td>
-      <td className="w-1/12 md:py-4">{proposal.proposedBy}</td>
+      <td className="w-1/12 md:py-4">
+        <Address address={proposal?.to} size="sm" />
+      </td>
+      <td className="w-1/12 md:py-4">
+        <Address address={proposal?.proposedBy} size="sm" />
+      </td>
       <td className="w-1/12 md:py-4">{proposal.reason}</td>
       {proposal.status !== 2 ? (
         <>
