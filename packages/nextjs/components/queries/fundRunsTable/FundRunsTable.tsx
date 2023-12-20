@@ -62,6 +62,7 @@ export const FundRunsTable = () => {
                 key={fr?.id}
                 id={fr?.id}
                 fundRunId={fr?.fundRunId}
+                owners={fr?.owners}
                 status={fr?.status}
                 title={fr?.title}
                 description={fr?.description}

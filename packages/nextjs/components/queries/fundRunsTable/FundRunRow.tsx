@@ -8,6 +8,7 @@ interface FundRunRowProps {
   id: string;
   status: number;
   fundRunId: number;
+  owners: string[];
   title: string;
   description: string;
   target: bigint;
@@ -22,24 +23,27 @@ export const FundRunRow = (fr: FundRunRowProps) => {
   return (
     <>
       <tr>
-        <td className="cursor-pointer" onClick={() => setRowOpen(!rowOpen)}>
-          <svg
-            className={`w-6 h-6 z-40  ${rowOpen ? "rotate-90" : "rotate-0"}`}
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 7l6 5-6 5V7z" fill="#ffffff" />
-          </svg>
-        </td>
+        {fr?.owners?.length == 1 ? (
+          <td></td>
+        ) : (
+          <td className="cursor-pointer" onClick={() => setRowOpen(!rowOpen)}>
+            <svg
+              className={`w-6 h-6 z-40  ${rowOpen ? "rotate-90" : "rotate-0"}`}
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 7l6 5-6 5V7z" fill="#ffffff" />
+            </svg>
+          </td>
+        )}
 
         <td>
           <FundRunStatus status={fr?.status} />
         </td>
-
         <td className="text-center">{fr?.fundRunId.toString()}</td>
         <td>{fr?.title}</td>
         <td>{fr?.description}</td>
