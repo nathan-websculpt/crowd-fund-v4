@@ -1,6 +1,7 @@
 import { NextPage } from "next";
 import { MetaHeader } from "~~/components/MetaHeader";
 import { DonationsTable } from "~~/components/queries/donationsTable/DonationsTable";
+import { DonorWithdrawalsTable } from "~~/components/queries/donorWithdrawalsTable/DonorWithdrawalsTable";
 import { FundRunsTable } from "~~/components/queries/fundRunsTable/FundRunsTable";
 import { OwnerWithdrawalsTable } from "~~/components/queries/ownerWithdrawalsTable/ownerWithdrawalsTable";
 import { ProposalsSnapshotTable } from "~~/components/queries/proposalsSnapshotTable/ProposalsSnapshotTable";
@@ -29,6 +30,10 @@ const QueriesPage: NextPage = () => {
 
       <div className="container mx-auto my-10 overflow-scroll">
         <OwnerWithdrawalsTable />
+      </div>
+
+      <div className="container mx-auto my-10 overflow-scroll">
+        <DonorWithdrawalsTable />
       </div>
     </>
   );
