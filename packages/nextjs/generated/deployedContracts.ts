@@ -924,7 +924,7 @@ const contracts = {
       name: "sepolia",
       contracts: {
         CrowdFund: {
-          address: "0x29BB1313321dbA27Ad074DD6AD2943040319B439",
+          address: "0xa5BAF105bad838cf1Cd4518dc59ba51Df283aab0",
           abi: [
             {
               inputs: [
