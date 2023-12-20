@@ -2,7 +2,7 @@ import React, { useCallback, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { BanknotesIcon, Bars3Icon, BugAntIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon } from "@heroicons/react/24/outline";
 import { FaucetButton, RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
 import { useOutsideClick } from "~~/hooks/scaffold-eth";
 
@@ -44,28 +44,16 @@ export const Header = () => {
         {/* TODO: PRODTODO:: remove this ^^^ */}
       </li>
       <li>
-        <NavLink href="/crowdfund/browse-fund-runs">
-          <BanknotesIcon className="w-6 h-6 text-gray-500" />
-          View Fund Runs
-        </NavLink>
+        <NavLink href="/crowdfund/browse-fund-runs">View Fund Runs</NavLink>
       </li>
       <li>
-        <NavLink href="/debug">
-          <BugAntIcon className="w-4 h-4" />
-          Debug Contracts
-        </NavLink>
+        <NavLink href="/debug">Debug Contracts</NavLink>
       </li>
       <li>
-        <NavLink href="/queries">
-          <MagnifyingGlassIcon className="w-4 h-4" />
-          Queries
-        </NavLink>
+        <NavLink href="/queries">Queries</NavLink>
       </li>
       <li>
-        <NavLink href="/blockexplorer">
-          <MagnifyingGlassIcon className="w-4 h-4" />
-          Block Explorer
-        </NavLink>
+        <NavLink href="/blockexplorer">Block Explorer</NavLink>
       </li>
     </>
   );
