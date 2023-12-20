@@ -209,6 +209,8 @@ export const GQL_DONOR_WITHDRAWALS = () => {
         fundRun {
           id
           title
+          amountCollected
+          amountWithdrawn
         }
       }
     }

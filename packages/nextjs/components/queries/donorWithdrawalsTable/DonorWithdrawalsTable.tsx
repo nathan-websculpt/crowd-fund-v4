@@ -48,12 +48,19 @@ export const DonorWithdrawalsTable = () => {
             <tr className="text-sm rounded-xl text-base-content">
               <th className="bg-primary">Donor</th>
               <th className="bg-primary">Amount Withdrawn</th>
+              <th className="bg-primary">Remaining in Fund Run</th>
               <th className="bg-primary">Fund Run Title</th>
             </tr>
           </thead>
           <tbody>
             {data?.donorWithdrawals?.map(w => (
-              <DonorWithdrawalsRow key={w?.id} donor={w?.donor} amount={w?.amount} fundRunTitle={w?.fundRun?.title} />
+              <DonorWithdrawalsRow
+                key={w?.id}
+                donor={w?.donor}
+                amount={w?.amount}
+                fundRunTitle={w?.fundRun?.title}
+                amountRemaining={BigInt(w?.fundRun.amountCollected) - BigInt(w?.fundRun.amountWithdrawn)}
+              />
             ))}
           </tbody>
         </table>
