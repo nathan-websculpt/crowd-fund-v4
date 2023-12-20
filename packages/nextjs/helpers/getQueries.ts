@@ -161,15 +161,55 @@ export const GQL_SIGNERS_Snapshot = () => {
 };
 
 //queries page
-//DONATIONS GROUPED-BY FUND RUN
+//DONATIONS ORDERED-BY FUND RUN
 export const GQL_DONATIONS = () => {
   return gql`
     query ($limit: Int!, $offset: Int!) {
       donations(orderBy: fundRunId, orderDirection: desc, first: $limit, skip: $offset) {
         id
-        fundRunId
         donor
         amount
+        fundRun {
+          id
+          title
+        }
+      }
+    }
+  `;
+};
+
+//queries page
+//OWNER-WITHDRAWALS ORDERED-BY FUND RUN
+export const GQL_OWNER_WITHDRAWALS = () => {
+  return gql`
+    query ($limit: Int!, $offset: Int!) {
+      ownerWithdrawals(orderBy: fundRunId, orderDirection: desc, first: $limit, skip: $offset) {
+        id
+        owner
+        grossWithdrawAmount
+        netWithdrawAmount
+        fundRun {
+          id
+          title
+        }
+      }
+    }
+  `;
+};
+
+//queries page
+//DONOR-WITHDRAWALS ORDERED-BY FUND RUN
+export const GQL_DONOR_WITHDRAWALS = () => {
+  return gql`
+    query ($limit: Int!, $offset: Int!) {
+      donorWithdrawals(orderBy: fundRunId, orderDirection: desc, first: $limit, skip: $offset) {
+        id
+        donor
+        amount
+        fundRun {
+          id
+          title
+        }
       }
     }
   `;

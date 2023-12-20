@@ -3,9 +3,9 @@ import { Address } from "~~/components/scaffold-eth";
 
 interface DonationRowProps {
   id: string;
-  fundRunId: number;
   donor: string;
   amount: bigint;
+  fundRunTitle: string;
 }
 
 export const DonationRow = (thisDonation: DonationRowProps) => {
@@ -16,7 +16,7 @@ export const DonationRow = (thisDonation: DonationRowProps) => {
           <Address address={thisDonation?.donor} size="sm" />
         </td>
         <td>{formatEther(thisDonation?.amount)}</td>
-        <td>{thisDonation?.fundRunId}</td>
+        <td>{thisDonation?.fundRunTitle}</td>
       </tr>
     </>
   );

@@ -48,7 +48,7 @@ export const DonationsTable = () => {
             <tr className="text-sm rounded-xl text-base-content">
               <th className="bg-primary">Donor</th>
               <th className="bg-primary">Amount</th>
-              <th className="bg-primary">Fund Run ID</th>
+              <th className="bg-primary">Fund Run Title</th>
             </tr>
           </thead>
           <tbody>
@@ -58,7 +58,7 @@ export const DonationsTable = () => {
                 id={donation?.id}
                 donor={donation?.donor}
                 amount={donation?.amount}
-                fundRunId={donation?.fundRunId}
+                fundRunTitle={donation?.fundRun?.title}
               />
             ))}
           </tbody>
