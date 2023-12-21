@@ -241,6 +241,23 @@ export class Donation extends Entity {
   set transactionHash(value: Bytes) {
     this.set("transactionHash", Value.fromBytes(value));
   }
+
+  get fundRun(): Bytes | null {
+    let value = this.get("fundRun");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set fundRun(value: Bytes | null) {
+    if (!value) {
+      this.unset("fundRun");
+    } else {
+      this.set("fundRun", Value.fromBytes(<Bytes>value));
+    }
+  }
 }
 
 export class DonorWithdrawal extends Entity {
@@ -362,6 +379,23 @@ export class DonorWithdrawal extends Entity {
 
   set transactionHash(value: Bytes) {
     this.set("transactionHash", Value.fromBytes(value));
+  }
+
+  get fundRun(): Bytes | null {
+    let value = this.get("fundRun");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set fundRun(value: Bytes | null) {
+    if (!value) {
+      this.unset("fundRun");
+    } else {
+      this.set("fundRun", Value.fromBytes(<Bytes>value));
+    }
   }
 }
 
@@ -962,6 +996,23 @@ export class OwnerWithdrawal extends Entity {
 
   set transactionHash(value: Bytes) {
     this.set("transactionHash", Value.fromBytes(value));
+  }
+
+  get fundRun(): Bytes | null {
+    let value = this.get("fundRun");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set fundRun(value: Bytes | null) {
+    if (!value) {
+      this.unset("fundRun");
+    } else {
+      this.set("fundRun", Value.fromBytes(<Bytes>value));
+    }
   }
 }
 

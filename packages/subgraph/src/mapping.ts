@@ -11,7 +11,7 @@ import {
   Proposal as ProposalEvent,
   ProposalRevoke as ProposalRevokeEvent,
   ProposalSignature as ProposalSignatureEvent
-} from "../generated/CrowdFundTestSixteen/CrowdFundTestSixteen"
+} from "../generated/mapping/mapping"
 import {
   ContractOwnerWithdrawal,
   Donation,
@@ -58,9 +58,9 @@ export function handleDonation(event: DonationEvent): void {
   if(fundRunEntity !== null) {
     fundRunEntity.amountCollected = fundRunEntity.amountCollected.plus(entity.amount);
     if(fundRunEntity.status !== 2) fundRunEntity.status = 2;
+    entity.fundRun = fundRunEntity.id;
     fundRunEntity.save();
   }
-
   entity.save()
 }
 
@@ -80,6 +80,7 @@ export function handleDonorWithdrawal(event: DonorWithdrawalEvent): void {
   if(fundRunEntity !== null) {
     fundRunEntity.amountWithdrawn = fundRunEntity.amountWithdrawn.plus(entity.amount);
     if(fundRunEntity.status !== 1) fundRunEntity.status = 1;
+    entity.fundRun = fundRunEntity.id;
     fundRunEntity.save();
   }
 
@@ -175,6 +176,7 @@ export function handleOwnerWithdrawal(event: OwnerWithdrawalEvent): void {
   if(fundRunEntity !== null) {
     fundRunEntity.amountWithdrawn = fundRunEntity.amountWithdrawn.plus(entity.grossWithdrawAmount);
     fundRunEntity.status = 3;
+    entity.fundRun = fundRunEntity.id;
     fundRunEntity.save();
   }
 

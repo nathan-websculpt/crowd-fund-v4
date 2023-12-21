@@ -7,7 +7,7 @@ type ContractOwnerWithdrawal @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type Donation @entity(immutable: true) {
+type Donation @entity {
   id: Bytes!
   fundRunId: Int! # uint16
   donor: Bytes! # address
@@ -15,9 +15,10 @@ type Donation @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+  fundRun: FundRun
 }
 
-type DonorWithdrawal @entity(immutable: true) {
+type DonorWithdrawal @entity {
   id: Bytes!
   fundRunId: Int! # uint16
   donor: Bytes! # address
@@ -25,6 +26,7 @@ type DonorWithdrawal @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+  fundRun: FundRun
 }
 
 type FundRun @entity {
@@ -65,7 +67,7 @@ type MultisigTransfer @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type OwnerWithdrawal @entity(immutable: true) {
+type OwnerWithdrawal @entity {
   id: Bytes!
   fundRunId: Int! # uint16
   owner: Bytes! # address
@@ -74,6 +76,7 @@ type OwnerWithdrawal @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+  fundRun: FundRun
 }
 
 type OwnershipTransferred @entity(immutable: true) {
