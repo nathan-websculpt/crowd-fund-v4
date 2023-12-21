@@ -35,7 +35,7 @@ The repo will pull-down configured for localhost, where you can run these tests.
  - \packages\hardhat\hardhat.config.ts
  - \packages\nextjs\scaffold.config.ts
 
-Or you can use the [subgraph](https://github.com/nathan-websculpt/crowd-fund-v3/tree/main/packages/subgraph/src) directory as an example to make your own subgraph in the [Subgraph Studio](https://thegraph.com/studio/)
+Or you can use the [subgraph directory](https://github.com/nathan-websculpt/crowd-fund-v3/tree/main/packages/subgraph/src) as an example that you can use when making your own subgraph in the [Subgraph Studio](https://thegraph.com/studio/)
 
 ## 🙂 Overview
 
