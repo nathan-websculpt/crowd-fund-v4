@@ -31,7 +31,7 @@ The repo will pull-down configured for localhost, where you can run these tests.
  ```
  yarn test ./test/MultisigTest.ts
  ```
- Note that you can also test against the Sepolia Contract by changing the default/target network **FROM** *localhost* **TO** *sepolia* in the following (2) files: 
+ Note that you can also test against the Contract that is deployed to Sepolia by changing the default/target network **FROM** *localhost* **TO** *sepolia* in the following (2) files: 
  - \packages\hardhat\hardhat.config.ts
  - \packages\nextjs\scaffold.config.ts
 
