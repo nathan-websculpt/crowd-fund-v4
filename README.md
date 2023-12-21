@@ -1,19 +1,16 @@
 # 🚀 🌑 Multisig Crowd Funds on The Graph
 
-### 🚧 In Progress 🚧
- - [V2](https://github.com/nathan-websculpt/crowd-fund-v2) and V3 will represent two extremes
- - [V2](https://github.com/nathan-websculpt/crowd-fund-v2) stores everything on the contract
- - V3 will store as little as possible on the contract (will now be using a subgraph)
 
 # 📌 todo
-- [Current Contract](https://sepolia.etherscan.io/address/0xb102aAFabC33cA59C6f8Ae46c801215725f01c78)
-... 0xb102aAFabC33cA59C6f8Ae46c801215725f01c78
+- [Current Contract](https://sepolia.etherscan.io/address/0xa5BAF105bad838cf1Cd4518dc59ba51Df283aab0)
+... 0xa5BAF105bad838cf1Cd4518dc59ba51Df283aab0
 - [Current Site](https://crowd-fund-v3-nextjs.vercel.app/)
 
 
 A multisig “Crowdfunding” dApp
-
-In progress, may break: you may want to [use V2 instead](https://github.com/nathan-websculpt/crowd-fund-v2)
+ - [V2](https://github.com/nathan-websculpt/crowd-fund-v2) and V3 will represent two extremes
+ - [V2](https://github.com/nathan-websculpt/crowd-fund-v2) stores everything on the contract
+ - V3 will store as little as possible on the contract (will now be using a subgraph)
 
 ⚙️ Built with [Scaffold-ETH 2](#Contents), using NextJS, RainbowKit, Hardhat, Wagmi, and Typescript.
 
