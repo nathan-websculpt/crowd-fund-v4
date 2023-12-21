@@ -31,6 +31,20 @@ https://github.com/nathan-websculpt/crowd-fund-v3/assets/58645278/a2969b7f-65bd-
 
 ## 🙂 Overview
 
+### 🔗 *CrowdFund.sol* and the *subgraph*
+
+#### 🚧🚧🚧There are major changes to the contract from [V2](https://github.com/nathan-websculpt/crowd-fund-v2/blob/main/packages/hardhat/contracts/CrowdFund.sol)🚧🚧🚧
+
+- V2 **structs** replaced by events
+  - which are mapped to Entities that we query from a subgraph later
+  - one-to-many relationships
+    - Fund Runs _> Proposals
+    - Proposals _> Signers/Signatures
+  - [schema.graphql](https://github.com/nathan-websculpt/crowd-fund-v3/blob/main/packages/subgraph/src/schema.graphql)
+  - [mapping.ts](https://github.com/nathan-websculpt/crowd-fund-v3/blob/main/packages/subgraph/src/mapping.ts)
+  - [view queries (code)](https://github.com/nathan-websculpt/crowd-fund-v3/blob/main/packages/nextjs/helpers/getQueries.ts)
+  - [view queries (live)](https://crowd-fund-v3-nextjs.vercel.app/queries)
+
 ### 📜 *The 'rules-of-use' for Single-Wallet "Fund Runs":*
 
 - Crowd Fund is a way for users to create **“Fund Runs”** that other users can donate to.
@@ -54,14 +68,6 @@ https://github.com/nathan-websculpt/crowd-fund-v3/assets/58645278/a2969b7f-65bd-
     - "We want to **pay *0x0789*** 0.7 Ether for *'Coding like the wind'*"
 - A Multisig Vault is intended to be safer, since it takes multiple approvals for any funds to transfer
 - These Vaults offer donors a granular view of where their funds ended up
-
-### 🔗 *CrowdFund.sol* and the *subgraph*
-- Major changes to the contract from [V2](https://github.com/nathan-websculpt/crowd-fund-v2/blob/main/packages/hardhat/contracts/CrowdFund.sol)
-- V2 **structs** replaced by events
-  - which are mapped to Entities that we query from a subgraph later
-  - one-to-many relationships
-    - Fund Runs _> Proposals
-    - Proposals _> Signers/Signatures
 
 ## 🧐 Before You Start
 
