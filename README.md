@@ -18,6 +18,9 @@
 ## ✅  Demo 📱
 https://github.com/nathan-websculpt/crowd-fund-v3/assets/58645278/a2969b7f-65bd-4757-bd5d-3be426946afc
 
+## Testing
+
+The repo will pull-down configured for localhost, where you can run these tests.
 
 ### 🧶 Yarn Tests
  - 🗝️ 🔒 Single-Owner Tests
@@ -28,6 +31,11 @@ https://github.com/nathan-websculpt/crowd-fund-v3/assets/58645278/a2969b7f-65bd-
  ```
  yarn test ./test/MultisigTest.ts
  ```
+ Note that you can also test against the Sepolia Contract by changing the default/target network **FROM** *localhost* **TO** *sepolia* in the following (2) files: 
+ - \packages\hardhat\hardhat.config.ts
+ - \packages\nextjs\scaffold.config.ts
+
+Or you can use the [subgraph](https://github.com/nathan-websculpt/crowd-fund-v3/tree/main/packages/subgraph) directory as an example to make your own subgraph in the [Subgraph Studio](https://thegraph.com/studio/)
 
 ## 🙂 Overview
 
