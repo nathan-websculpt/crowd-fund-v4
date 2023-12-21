@@ -1,16 +1,16 @@
 # 🚀 🌑 Multisig Crowd Funds on The Graph
 
 
-# 📌 todo
+### 📌 Overview
 - [Current Contract](https://sepolia.etherscan.io/address/0xa5BAF105bad838cf1Cd4518dc59ba51Df283aab0)
-... 0xa5BAF105bad838cf1Cd4518dc59ba51Df283aab0
+  - 0xa5BAF105bad838cf1Cd4518dc59ba51Df283aab0
 - [Current Site](https://crowd-fund-v3-nextjs.vercel.app/)
-
-
-A multisig “Crowdfunding” dApp
- - [V2](https://github.com/nathan-websculpt/crowd-fund-v2) and V3 will represent two extremes
- - [V2](https://github.com/nathan-websculpt/crowd-fund-v2) stores everything on the contract
- - V3 will store as little as possible on the contract (will now be using a subgraph)
+- [View a Vault](https://crowd-fund-v3-nextjs.vercel.app/crowdfund/vaults/7)
+- [View Query Data](https://crowd-fund-v3-nextjs.vercel.app/queries)
+- 😁 What's New? 😁
+  - [V2](https://github.com/nathan-websculpt/crowd-fund-v2) and V3 (this one) will represent two extremes
+  - [V2](https://github.com/nathan-websculpt/crowd-fund-v2) stores everything on the contract
+  - V3 will store as little as possible on the contract (will now be using a subgraph)
 
 ⚙️ Built with [Scaffold-ETH 2](#Contents), using NextJS, RainbowKit, Hardhat, Wagmi, and Typescript.
 
@@ -30,15 +30,6 @@ https://github.com/nathan-websculpt/crowd-fund-v3/assets/58645278/a2969b7f-65bd-
  ```
 
 ## 🙂 Overview
-
-### 🔎🔎🔎 *Changes from [Crowd Fund V1](https://github.com/nathan-websculpt/crowd-fund):*
-
-- Fund Runs can now be created with **multiple owners** 🔐
-- Unlike Single-Owner Vaults, transactions from a Multisig Vault *must be approved* by **all of the Vault's Owners**
-- Multisig Vaults can be made for 2 or 3 owners
-- Proposals can be viewed/created/supported/revoked from `'/crowdfund/vaults/{FundRunId}'`
-- New Proposals can only be revoked by the CREATOR of the Proposal
-- Frontend is now completely migrated to [Viem](https://viem.sh/docs/ethers-migration.html)
 
 ### 📜 *The 'rules-of-use' for Single-Wallet "Fund Runs":*
 
@@ -64,27 +55,13 @@ https://github.com/nathan-websculpt/crowd-fund-v3/assets/58645278/a2969b7f-65bd-
 - A Multisig Vault is intended to be safer, since it takes multiple approvals for any funds to transfer
 - These Vaults offer donors a granular view of where their funds ended up
 
-### 🔗 *CrowdFund.sol*
-- Contract now takes 0.25% profit of all withdrawals out of *successful* Fund Runs
-  - (does not take from donors)
-- The **FundRun** *struct* will hold the Fund Run's data
-  - While a second *struct* (**DonorsLog**) maintains a mapping of *fundRunId* =>   *donationAmount*
-    - Therefore, a user's (a donor's) address will then map to their **DonorsLog** (which - itself - is keeping all of the user's donations [to various Fund Runs] separated)
-- **Multisig Vaults** 🗝️🗝️🗝️ 🔒
-  - The **MultiSigRequest** *struct* will be used as the Tx/Tuple for signing
-  - The **MultiSigVault** *struct* has additional data: *proposalId* and *status*
-  - Send a **MultiSigRequest** (along with the *signature* and *fundRunId*) to `createMultisigProposal()` to create a new proposal
-  - `supportMultisigProposal()` simply pushes the *signature* and the *msg.sender* to arrays on the **mappings**: *signatureList* and *signerList*
-  - `_verifyMultisigRequest()` occurs before any funds are sent
-    - uses a **MultiSigRequest** *(along with the nonce)* to re-create a digest that will be recovered/checked using EACH signature in *signatureList*
-      - `ECDSA.recover(digest, signature)`
-  - Each Vault has its own **incrementing nonce**
-    - This means that proposals do need to be created/sent in order, but Vaults do not interfere with one another
-    - Stale proposals preventing transactions can be revoked
-  - **Revoking Proposals:** Only the user who created a proposal can revoke it
-  - since the signatures are stored on the contract...
-    - ...this version should work out-of-the-box on your machine
-      - moving signatures off-chain for V3
+### 🔗 *CrowdFund.sol* and the *subgraph*
+- Major changes to the contract from [V2](https://github.com/nathan-websculpt/crowd-fund-v2/blob/main/packages/hardhat/contracts/CrowdFund.sol)
+- V2 **structs** replaced by events
+  - which are mapped to Entities that we query from a subgraph later
+  - one-to-many relationships
+    - Fund Runs _> Proposals
+    - Proposals _> Signers/Signatures
 
 ## 🧐 Before You Start
 
