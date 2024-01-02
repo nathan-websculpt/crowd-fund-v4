@@ -118,25 +118,51 @@ export const GQL_PROPOSALS_By_FundRunId = () => {
 //queries page
 //for viewing snapshot of latest proposals
 //LATEST PROPOSALS
-export const GQL_PROPOSALS_Snapshot = () => {
-  return gql`
-    query ($limit: Int!, $offset: Int!) {
-      proposals(orderBy: proposalId, orderDirection: desc, first: $limit, skip: $offset) {
-        id
-        proposedBy
-        amount
-        to
-        reason
-        status
-        fundRun {
+export const GQL_PROPOSALS_Snapshot = (searchInput: string) => {
+  if (searchInput.trim().length === 0)
+    return gql`
+      query ($limit: Int!, $offset: Int!) {
+        proposals(orderBy: proposalId, orderDirection: desc, first: $limit, skip: $offset) {
           id
-          title
-          amountCollected
-          amountWithdrawn
+          proposedBy
+          amount
+          to
+          reason
+          status
+          fundRun {
+            id
+            title
+            amountCollected
+            amountWithdrawn
+          }
         }
       }
-    }
-  `;
+    `;
+  else
+    return gql`
+      query ($limit: Int!, $offset: Int!, $searchBy: String) {
+        proposals(
+          where: { or: [{ proposedBy_contains: $searchBy }, { to_contains: $searchBy }] }
+          orderBy: proposalId
+          orderDirection: desc
+          first: $limit
+          skip: $offset
+        ) {
+          id
+          proposedBy
+          amount
+          to
+          reason
+          status
+          fundRun {
+            id
+            title
+            amountCollected
+            amountWithdrawn
+          }
+        }
+      }
+    `;
 };
 
 //queries page
