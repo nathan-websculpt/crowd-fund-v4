@@ -211,20 +211,41 @@ export const GQL_SIGNERS_Snapshot = (searchInput: string) => {
 
 //queries page
 //DONATIONS ORDERED-BY FUND RUN
-export const GQL_DONATIONS = () => {
-  return gql`
-    query ($limit: Int!, $offset: Int!) {
-      donations(orderBy: fundRunId, orderDirection: desc, first: $limit, skip: $offset) {
-        id
-        donor
-        amount
-        fundRun {
+export const GQL_DONATIONS = (searchInput: string) => {
+  if (searchInput.trim().length === 0)
+    return gql`
+      query ($limit: Int!, $offset: Int!) {
+        donations(orderBy: fundRunId, orderDirection: desc, first: $limit, skip: $offset) {
           id
-          title
+          donor
+          amount
+          fundRun {
+            id
+            title
+          }
         }
       }
-    }
-  `;
+    `;
+  else
+    return gql`
+      query ($limit: Int!, $offset: Int!, $searchBy: String) {
+        donations(
+          where: { fundRun_: { title_contains_nocase: $searchBy } }
+          orderBy: fundRunId
+          orderDirection: desc
+          first: $limit
+          skip: $offset
+        ) {
+          id
+          donor
+          amount
+          fundRun {
+            id
+            title
+          }
+        }
+      }
+    `;
 };
 
 //queries page
