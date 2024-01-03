@@ -6,14 +6,13 @@ import { Spinner } from "~~/components/Spinner";
 import { GQL_PROPOSALS_Snapshot } from "~~/helpers/getQueries";
 
 export const ProposalsSnapshotTable = () => {
+  const client = useApolloClient();
   //odd str length will break (won't convert to bytes)
   const [readiedSearchInput, setReadiedSearchInput] = useState("");
   //readiedSearchInput is set when userSearchInput has an even str length
   const [userSearchInput, setUserSearchInput] = useState("");
   const [pageSize, setPageSize] = useState(25);
   const [pageNum, setPageNum] = useState(0);
-  const client = useApolloClient();
-
   const [data, setData] = useState({});
   const [queryLoading, setQueryLoading] = useState(false);
 
@@ -22,7 +21,7 @@ export const ProposalsSnapshotTable = () => {
   }, [pageSize, pageNum, readiedSearchInput]);
 
   useEffect(() => {
-    //IF your str length is an odd number, you will see the following Apollo ERR
+    //IF you query with a str length that is an odd number, you will see the following Apollo ERR
     // ApolloError: Failed to decode `Bytes` value: `Odd number of digits`
     if (userSearchInput.trim() !== "0x" && userSearchInput.trim().length % 2 === 0)
       setReadiedSearchInput(userSearchInput);
@@ -75,7 +74,7 @@ export const ProposalsSnapshotTable = () => {
 
   return (
     <>
-      <div className="flex justify-between mb-3">
+      <div className="flex justify-between pt-5 mb-3">
         <div className="flex gap-3">
           <span className="my-auto text-lg">LATEST PROPOSALS</span>
           <select
@@ -89,20 +88,16 @@ export const ProposalsSnapshotTable = () => {
           </select>
         </div>
 
-        <div className="flex gap-3">
+        <div className="flex w-5/12 gap-3">
           <input
-            className="px-5 bg-secondary text-secondary-content"
+            className="w-full pl-4 bg-secondary text-secondary-content"
             placeholder="Search by Wallet Address ... "
             value={userSearchInput}
             onChange={e => setUserSearchInput(e.target.value)}
           ></input>
-          <button className="px-4 py-2 text-xl bg-primary" onClick={() => preQuery()}>
+          <button className="px-8 py-2 text-xl bg-primary" onClick={() => preQuery()}>
             SEARCH
           </button>
-        </div>
-
-        <div className="flex gap-3">
-          <span className="my-auto text-lg">REFRESH</span>
           <button className="px-4 py-2 text-xl bg-primary" onClick={() => refreshTbl(true)}>
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
               <path
