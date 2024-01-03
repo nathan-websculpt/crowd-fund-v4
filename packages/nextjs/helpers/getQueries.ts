@@ -168,22 +168,45 @@ export const GQL_PROPOSALS_Snapshot = (searchInput: string) => {
 //queries page
 //for viewing snapshot of latest signers
 //LATEST SIGNERS
-export const GQL_SIGNERS_Snapshot = () => {
-  return gql`
-    query ($limit: Int!, $offset: Int!) {
-      proposalSignatures(orderBy: proposalId, orderDirection: desc, first: $limit, skip: $offset) {
-        id
-        proposalId
-        signer
-        proposal {
+export const GQL_SIGNERS_Snapshot = (searchInput: string) => {
+  if (searchInput.trim().length === 0)
+    return gql`
+      query ($limit: Int!, $offset: Int!) {
+        proposalSignatures(orderBy: proposalId, orderDirection: desc, first: $limit, skip: $offset) {
           id
-          amount
-          to
-          reason
+          proposalId
+          signer
+          proposal {
+            id
+            amount
+            to
+            reason
+          }
         }
       }
-    }
-  `;
+    `;
+  else
+    return gql`
+      query ($limit: Int!, $offset: Int!, $searchBy: String) {
+        proposalSignatures(
+          where: { or: [{ signer_contains: $searchBy }, { proposal_: { to_contains: $searchBy } }] }
+          orderBy: proposalId
+          orderDirection: desc
+          first: $limit
+          skip: $offset
+        ) {
+          id
+          proposalId
+          signer
+          proposal {
+            id
+            amount
+            to
+            reason
+          }
+        }
+      }
+    `;
 };
 
 //queries page
