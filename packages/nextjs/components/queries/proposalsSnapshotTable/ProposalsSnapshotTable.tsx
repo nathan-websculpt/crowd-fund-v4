@@ -1,62 +1,80 @@
 import { useEffect, useState } from "react";
 import { ProposalSnapshotRow } from "./ProposalSnapshotRow";
-import { useLazyQuery } from "@apollo/client";
+import { useApolloClient } from "@apollo/client";
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 import { Spinner } from "~~/components/Spinner";
 import { GQL_PROPOSALS_Snapshot } from "~~/helpers/getQueries";
 
 export const ProposalsSnapshotTable = () => {
-  const [searchInput, setSearchInput] = useState("");
+  //odd str length will break (won't convert to bytes)
+  const [readiedSearchInput, setReadiedSearchInput] = useState("");
+  //readiedSearchInput is set when userSearchInput has an even str length
+  const [userSearchInput, setUserSearchInput] = useState("");
   const [pageSize, setPageSize] = useState(25);
   const [pageNum, setPageNum] = useState(0);
+  const client = useApolloClient();
 
-  const [executeSearch, { error, data, loading }] = useLazyQuery(GQL_PROPOSALS_Snapshot(searchInput));
-
-  const [loaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    if (error !== undefined && error !== null) console.log("ProposalsSnapshotTable.tsx Query Error: ", error);
-  }, [error]);
+  const [data, setData] = useState({});
+  const [queryLoading, setQueryLoading] = useState(false);
 
   useEffect(() => {
-    doQuery();
-  }, [pageSize, pageNum]);
+    preQuery();
+  }, [pageSize, pageNum, readiedSearchInput]);
 
-  const doQuery = () => {
-    if (searchInput === "") {
-      executeSearch({
-        variables: {
-          limit: pageSize,
-          offset: pageNum * pageSize,
-        },
+  useEffect(() => {
+    //IF your str length is an odd number, you will see the following Apollo ERR
+    // ApolloError: Failed to decode `Bytes` value: `Odd number of digits`
+    if (userSearchInput.trim() !== "0x" && userSearchInput.trim().length % 2 === 0)
+      setReadiedSearchInput(userSearchInput);
+  }, [userSearchInput]);
+
+  const preQuery = async () => {
+    console.log("querying...");
+    if (readiedSearchInput.trim().length === 0) {
+      doQuery({
+        limit: pageSize,
+        offset: pageNum * pageSize,
       });
     } else {
-      executeSearch({
-        variables: {
-          limit: pageSize,
-          offset: pageNum * pageSize,
-          searchBy: searchInput,
-        },
+      doQuery({
+        limit: pageSize,
+        offset: pageNum * pageSize,
+        searchBy: readiedSearchInput,
       });
     }
   };
 
-  if (!loaded) {
-    executeSearch({
-      variables: {
-        limit: pageSize,
-        offset: pageNum * pageSize,
-      },
-    });
-    setLoaded(true);
-  }
-
-  const refreshTbl = (clearSearch: boolean) => {
-    if (clearSearch) setSearchInput("");
-    setPageNum(0);
+  //NOTE: useLazyQuery gets executed again IF ANY of the Options change
+  //^^^https://github.com/apollographql/apollo-client/issues/5912#issuecomment-797060422
+  //Here, I am just using the Apollo Client directly in order to allow:
+  //     - the table to initially load with data
+  //     - then, the filtering of the data via the Search Bar
+  const doQuery = async (options: object) => {
+    setQueryLoading(true);
+    await client
+      .query({
+        query: GQL_PROPOSALS_Snapshot(readiedSearchInput),
+        variables: options,
+        fetchPolicy: "no-cache",
+      })
+      .then(d => {
+        setData(d.data);
+      })
+      .catch(e => {
+        console.log("QUERY ERROR: ", e);
+      });
+    setQueryLoading(false);
   };
 
-  if (loading) {
+  const refreshTbl = (clearSearch: boolean) => {
+    if (clearSearch) {
+      setUserSearchInput("");
+      setReadiedSearchInput("");
+    }
+    if (pageNum !== 0) setPageNum(0);
+  };
+
+  if (queryLoading) {
     return (
       <div className="flex justify-center w-full min-w-full gap-2 p-2 m-4 border shadow-xl border-base-300 bg-base-200 sm:rounded-lg">
         <Spinner width="150px" height="150px" />
@@ -83,13 +101,12 @@ export const ProposalsSnapshotTable = () => {
             <input
               className="px-5 bg-secondary text-secondary-content"
               placeholder="Search by Wallet Address ... "
-              value={searchInput}
-              onChange={e => setSearchInput(e.target.value)}
+              value={userSearchInput}
+              onChange={e => setUserSearchInput(e.target.value)}
             ></input>
-            <button className="px-4 py-2 text-xl bg-primary" onClick={() => doQuery()}>
+            <button className="px-4 py-2 text-xl bg-primary" onClick={() => preQuery()}>
               SEARCH
             </button>
-            {/* <span className="my-auto text-lg">SEARCH</span> */}
           </div>
 
           <div className="flex gap-3">
