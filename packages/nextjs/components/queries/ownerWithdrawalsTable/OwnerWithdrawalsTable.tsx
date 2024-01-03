@@ -30,7 +30,7 @@ export const OwnerWithdrawalsTable = () => {
   } else {
     return (
       <>
-        <div className="flex justify-center gap-3 mb-3">
+        <div className="flex gap-3 mb-3">
           <span className="my-auto text-lg">OWNER WITHDRAWALS</span>
           <select
             className="px-4 py-2 text-xl bg-primary"
