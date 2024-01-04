@@ -1,7 +1,11 @@
 [
   {
     "inputs": [
-      { "internalType": "address", "name": "_contractOwner", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "_contractOwner",
+        "type": "address"
+      }
     ],
     "stateMutability": "nonpayable",
     "type": "constructor"
@@ -350,11 +354,31 @@
   },
   {
     "inputs": [
-      { "internalType": "string", "name": "_title", "type": "string" },
-      { "internalType": "string", "name": "_description", "type": "string" },
-      { "internalType": "uint256", "name": "_target", "type": "uint256" },
-      { "internalType": "uint16", "name": "_deadline", "type": "uint16" },
-      { "internalType": "address[]", "name": "_owners", "type": "address[]" }
+      {
+        "internalType": "string",
+        "name": "_title",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_description",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_target",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_deadline",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address[]",
+        "name": "_owners",
+        "type": "address[]"
+      }
     ],
     "name": "createFundRun",
     "outputs": [],
@@ -363,18 +387,38 @@
   },
   {
     "inputs": [
-      { "internalType": "bytes", "name": "_signature", "type": "bytes" },
-      { "internalType": "uint16", "name": "_id", "type": "uint16" },
+      {
+        "internalType": "bytes",
+        "name": "_signature",
+        "type": "bytes"
+      },
+      {
+        "internalType": "uint16",
+        "name": "_id",
+        "type": "uint16"
+      },
       {
         "components": [
-          { "internalType": "uint256", "name": "amount", "type": "uint256" },
-          { "internalType": "address", "name": "to", "type": "address" },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "to",
+            "type": "address"
+          },
           {
             "internalType": "address",
             "name": "proposedBy",
             "type": "address"
           },
-          { "internalType": "string", "name": "reason", "type": "string" }
+          {
+            "internalType": "string",
+            "name": "reason",
+            "type": "string"
+          }
         ],
         "internalType": "struct CrowdFund.MultiSigRequest",
         "name": "_tx",
@@ -387,44 +431,90 @@
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "uint16", "name": "_id", "type": "uint16" }],
+    "inputs": [
+      {
+        "internalType": "uint16",
+        "name": "_id",
+        "type": "uint16"
+      }
+    ],
     "name": "donateToFundRun",
     "outputs": [],
     "stateMutability": "payable",
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "name": "donorLogs",
     "outputs": [
-      { "internalType": "address", "name": "donor", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "donor",
+        "type": "address"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "uint16", "name": "_id", "type": "uint16" }],
+    "inputs": [
+      {
+        "internalType": "uint16",
+        "name": "_id",
+        "type": "uint16"
+      }
+    ],
     "name": "forceEnd",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "uint16", "name": "", "type": "uint16" }],
+    "inputs": [
+      {
+        "internalType": "uint16",
+        "name": "",
+        "type": "uint16"
+      }
+    ],
     "name": "fundRunDeadlines",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "uint16", "name": "_id", "type": "uint16" }],
+    "inputs": [
+      {
+        "internalType": "uint16",
+        "name": "_id",
+        "type": "uint16"
+      }
+    ],
     "name": "fundRunDonorWithdraw",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "uint16", "name": "_id", "type": "uint16" }],
+    "inputs": [
+      {
+        "internalType": "uint16",
+        "name": "_id",
+        "type": "uint16"
+      }
+    ],
     "name": "fundRunOwnerWithdraw",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -432,16 +522,36 @@
   },
   {
     "inputs": [
-      { "internalType": "uint16", "name": "", "type": "uint16" },
-      { "internalType": "uint256", "name": "", "type": "uint256" }
+      {
+        "internalType": "uint16",
+        "name": "",
+        "type": "uint16"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
     ],
     "name": "fundRunOwners",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "uint16", "name": "", "type": "uint16" }],
+    "inputs": [
+      {
+        "internalType": "uint16",
+        "name": "",
+        "type": "uint16"
+      }
+    ],
     "name": "fundRunStatuses",
     "outputs": [
       {
@@ -454,10 +564,20 @@
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "uint16", "name": "", "type": "uint16" }],
+    "inputs": [
+      {
+        "internalType": "uint16",
+        "name": "",
+        "type": "uint16"
+      }
+    ],
     "name": "fundRunValues",
     "outputs": [
-      { "internalType": "uint256", "name": "target", "type": "uint256" },
+      {
+        "internalType": "uint256",
+        "name": "target",
+        "type": "uint256"
+      },
       {
         "internalType": "uint256",
         "name": "amountCollected",
@@ -486,9 +606,21 @@
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "uint16", "name": "_id", "type": "uint16" }],
+    "inputs": [
+      {
+        "internalType": "uint16",
+        "name": "_id",
+        "type": "uint16"
+      }
+    ],
     "name": "getNonce",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
@@ -496,22 +628,46 @@
     "inputs": [
       {
         "components": [
-          { "internalType": "uint256", "name": "amount", "type": "uint256" },
-          { "internalType": "address", "name": "to", "type": "address" },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "to",
+            "type": "address"
+          },
           {
             "internalType": "address",
             "name": "proposedBy",
             "type": "address"
           },
-          { "internalType": "string", "name": "reason", "type": "string" }
+          {
+            "internalType": "string",
+            "name": "reason",
+            "type": "string"
+          }
         ],
         "internalType": "struct CrowdFund.MultiSigRequest",
         "name": "_tx",
         "type": "tuple"
       },
-      { "internalType": "uint256", "name": "_nonce", "type": "uint256" },
-      { "internalType": "uint16", "name": "_id", "type": "uint16" },
-      { "internalType": "uint16", "name": "_proposalId", "type": "uint16" },
+      {
+        "internalType": "uint256",
+        "name": "_nonce",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint16",
+        "name": "_id",
+        "type": "uint16"
+      },
+      {
+        "internalType": "uint16",
+        "name": "_proposalId",
+        "type": "uint16"
+      },
       {
         "internalType": "bytes[]",
         "name": "_signaturesList",
@@ -526,43 +682,93 @@
   {
     "inputs": [],
     "name": "numberOfFundRuns",
-    "outputs": [{ "internalType": "uint16", "name": "", "type": "uint16" }],
+    "outputs": [
+      {
+        "internalType": "uint16",
+        "name": "",
+        "type": "uint16"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "numberOfMultisigProposals",
-    "outputs": [{ "internalType": "uint16", "name": "", "type": "uint16" }],
+    "outputs": [
+      {
+        "internalType": "uint16",
+        "name": "",
+        "type": "uint16"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "owner",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{ "internalType": "uint16", "name": "", "type": "uint16" }],
-    "name": "proposalCreators",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "uint16", "name": "", "type": "uint16" },
-      { "internalType": "uint256", "name": "", "type": "uint256" }
+      {
+        "internalType": "uint16",
+        "name": "",
+        "type": "uint16"
+      }
     ],
-    "name": "proposalSigners",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "name": "proposalCreators",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "uint16", "name": "", "type": "uint16" }],
+    "inputs": [
+      {
+        "internalType": "uint16",
+        "name": "",
+        "type": "uint16"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "proposalSigners",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint16",
+        "name": "",
+        "type": "uint16"
+      }
+    ],
     "name": "proposalStatuses",
     "outputs": [
       {
@@ -583,8 +789,16 @@
   },
   {
     "inputs": [
-      { "internalType": "uint16", "name": "_id", "type": "uint16" },
-      { "internalType": "uint16", "name": "_proposalId", "type": "uint16" }
+      {
+        "internalType": "uint16",
+        "name": "_id",
+        "type": "uint16"
+      },
+      {
+        "internalType": "uint16",
+        "name": "_proposalId",
+        "type": "uint16"
+      }
     ],
     "name": "revokeMultisigProposal",
     "outputs": [],
@@ -593,9 +807,21 @@
   },
   {
     "inputs": [
-      { "internalType": "bytes", "name": "_signature", "type": "bytes" },
-      { "internalType": "uint16", "name": "_id", "type": "uint16" },
-      { "internalType": "uint16", "name": "_proposalId", "type": "uint16" }
+      {
+        "internalType": "bytes",
+        "name": "_signature",
+        "type": "bytes"
+      },
+      {
+        "internalType": "uint16",
+        "name": "_id",
+        "type": "uint16"
+      },
+      {
+        "internalType": "uint16",
+        "name": "_proposalId",
+        "type": "uint16"
+      }
     ],
     "name": "supportMultisigProposal",
     "outputs": [],
@@ -603,22 +829,44 @@
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "uint16", "name": "_id", "type": "uint16" }],
+    "inputs": [
+      {
+        "internalType": "uint16",
+        "name": "_id",
+        "type": "uint16"
+      }
+    ],
     "name": "timeLeft",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "totalProfitsTaken",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "newOwner", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
     ],
     "name": "transferOwnership",
     "outputs": [],
@@ -626,16 +874,34 @@
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "uint16", "name": "_id", "type": "uint16" }],
+    "inputs": [
+      {
+        "internalType": "uint16",
+        "name": "_id",
+        "type": "uint16"
+      }
+    ],
     "name": "updateFundRunStatus",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "uint16", "name": "", "type": "uint16" }],
+    "inputs": [
+      {
+        "internalType": "uint16",
+        "name": "",
+        "type": "uint16"
+      }
+    ],
     "name": "vaultNonces",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   }

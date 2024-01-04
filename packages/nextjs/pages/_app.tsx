@@ -24,7 +24,7 @@ const ScaffoldEthApp = ({ Component, pageProps }: AppProps) => {
   const { isDarkMode } = useDarkMode();
 
   // const subgraphUri = "https://api.studio.thegraph.com/query/60402/crowd-fund-v3/version/latest";
-  const subgraphUri = "https://api.studio.thegraph.com/query/60402/crowd-fund-v3/0.0.1"; //PRODTODO::
+  const subgraphUri = "https://api.studio.thegraph.com/query/60402/crowd-fund-v3/0.0.2"; //PRODTODO::
   const apolloClient = new ApolloClient({
     uri: subgraphUri,
     cache: new InMemoryCache(),

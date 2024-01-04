@@ -822,8 +822,8 @@ export class CreateFundRunCall__Inputs {
     return this._call.inputValues[2].value.toBigInt();
   }
 
-  get _deadline(): i32 {
-    return this._call.inputValues[3].value.toI32();
+  get _deadline(): BigInt {
+    return this._call.inputValues[3].value.toBigInt();
   }
 
   get _owners(): Array<Address> {

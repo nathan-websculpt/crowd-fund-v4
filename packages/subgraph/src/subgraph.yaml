@@ -6,9 +6,9 @@ dataSources:
     name: mapping
     network: sepolia
     source:
-      address: "0xa5BAF105bad838cf1Cd4518dc59ba51Df283aab0"
+      address: "0xEE74bF7713E32aB505db854197E5051C941Dc20c"
       abi: mapping
-      startBlock: 4925329
+      startBlock: 5021040
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

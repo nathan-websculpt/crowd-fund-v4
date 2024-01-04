@@ -57,7 +57,6 @@ export function handleDonation(event: DonationEvent): void {
   let fundRunEntity = FundRun.load(Bytes.fromHexString("fundruns__").concat(Bytes.fromI32(event.params.fundRunId)));
   if(fundRunEntity !== null) {
     fundRunEntity.amountCollected = fundRunEntity.amountCollected.plus(entity.amount);
-    if(fundRunEntity.status !== 2) fundRunEntity.status = 2;
     entity.fundRun = fundRunEntity.id;
     fundRunEntity.save();
   }
@@ -79,7 +78,6 @@ export function handleDonorWithdrawal(event: DonorWithdrawalEvent): void {
   let fundRunEntity = FundRun.load(Bytes.fromHexString("fundruns__").concat(Bytes.fromI32(event.params.fundRunId)));
   if(fundRunEntity !== null) {
     fundRunEntity.amountWithdrawn = fundRunEntity.amountWithdrawn.plus(entity.amount);
-    if(fundRunEntity.status !== 1) fundRunEntity.status = 1;
     entity.fundRun = fundRunEntity.id;
     fundRunEntity.save();
   }
@@ -122,10 +120,8 @@ export function handleFundRunStatusChange(
   entity.transactionHash = event.transaction.hash
 
   let fundRunEntity = FundRun.load(Bytes.fromHexString("fundruns__").concat(Bytes.fromI32(event.params.fundRunId)));
-  if(fundRunEntity !== null) {
-    fundRunEntity.status = entity.status;
+  if(fundRunEntity !== null) 
     fundRunEntity.save();
-  }
 
   entity.save()
 }
@@ -175,7 +171,6 @@ export function handleOwnerWithdrawal(event: OwnerWithdrawalEvent): void {
   let fundRunEntity = FundRun.load(Bytes.fromHexString("fundruns__").concat(Bytes.fromI32(event.params.fundRunId)));
   if(fundRunEntity !== null) {
     fundRunEntity.amountWithdrawn = fundRunEntity.amountWithdrawn.plus(entity.grossWithdrawAmount);
-    fundRunEntity.status = 3;
     entity.fundRun = fundRunEntity.id;
     fundRunEntity.save();
   }
