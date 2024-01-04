@@ -924,7 +924,7 @@ const contracts = {
       name: "sepolia",
       contracts: {
         CrowdFund: {
-          address: "0xa5BAF105bad838cf1Cd4518dc59ba51Df283aab0",
+          address: "0xEE74bF7713E32aB505db854197E5051C941Dc20c",
           abi: [
             {
               inputs: [
@@ -1297,9 +1297,9 @@ const contracts = {
                   type: "uint256",
                 },
                 {
-                  internalType: "uint16",
+                  internalType: "uint256",
                   name: "_deadline",
-                  type: "uint16",
+                  type: "uint256",
                 },
                 {
                   internalType: "address[]",

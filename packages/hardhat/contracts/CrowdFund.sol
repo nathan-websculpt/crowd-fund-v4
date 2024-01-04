@@ -281,7 +281,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 			_tx.to,
 			_tx.reason,
 			thisStatus,
-			fundRunOwners[_id].length, //TODO: get value from user - total signatures required
+			fundRunOwners[_id].length, //TODO: later on ... get value from user - total signatures required
 			0
 		);
 
