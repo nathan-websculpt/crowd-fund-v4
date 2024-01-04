@@ -57,7 +57,7 @@ export const CreateFundRun = () => {
     setError(true);
   };
 
-  function handleBigIntChange(newVal: string): void {
+  function handleTargetInputChange(newVal: string): void {
     const _v = newVal.trim();
     if (_v.length === 0 || _v === ".") {
       setTargetInput(0n);
@@ -68,12 +68,12 @@ export const CreateFundRun = () => {
     }
   }
 
-  function handleNumberChange(newVal: string): void {
+  function handleDeadlineChange(newVal: string): void {
     const _v = newVal.trim();
     if (_v.length === 0) {
       setDeadlineInput(0);
       setDeadlineDisplay(_v);
-    } else if (isValidInteger(IntegerVariant.UINT16, _v, true)) {
+    } else if (isValidInteger(IntegerVariant.UINT256, _v, true)) {
       setDeadlineInput(parseInt(_v));
       setDeadlineDisplay(_v);
     }
@@ -104,9 +104,6 @@ export const CreateFundRun = () => {
       return;
     } else if (targetInput <= 0 || deadlineInput <= 0) {
       newErr("A goal and a deadline are both required fields.");
-      return;
-    } else if (deadlineInput > 65535) {
-      newErr("The Deadline must be less than 65,535 ... it is a uint16 in the contract");
       return;
     }
 
@@ -197,7 +194,7 @@ export const CreateFundRun = () => {
                   placeholder="Target Amount"
                   className="px-3 py-3 border rounded-lg bg-base-200 border-base-300"
                   value={targetDisplay}
-                  onChange={e => handleBigIntChange(e.target.value)}
+                  onChange={e => handleTargetInputChange(e.target.value)}
                 />
               </div>
 
@@ -207,7 +204,7 @@ export const CreateFundRun = () => {
                   placeholder="Deadline"
                   className="px-3 py-3 border rounded-lg bg-base-200 border-base-300"
                   value={deadlineDisplay}
-                  onChange={e => handleNumberChange(e.target.value)}
+                  onChange={e => handleDeadlineChange(e.target.value)}
                 />
               </div>
             </div>

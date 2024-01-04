@@ -120,8 +120,10 @@ export function handleFundRunStatusChange(
   entity.transactionHash = event.transaction.hash
 
   let fundRunEntity = FundRun.load(Bytes.fromHexString("fundruns__").concat(Bytes.fromI32(event.params.fundRunId)));
-  if(fundRunEntity !== null) 
+  if(fundRunEntity !== null) {    
+    fundRunEntity.status = entity.status;
     fundRunEntity.save();
+  }
 
   entity.save()
 }
