@@ -355,7 +355,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 		string memory _title,
 		string memory _description,
 		uint256 _target,
-		uint16 _deadline,
+		uint256 _deadline,
 		address[] memory _owners
 	) external {
 		uint256 fundRunDeadline = block.timestamp + _deadline * 60;
@@ -429,10 +429,8 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 			amount;
 		fundRunValues[_id].amountCollected = newAmountCollected;
 
-		if (
-			fundRunValues[_id].amountCollected >= fundRunValues[_id].target &&
-			fundRunStatuses[_id] != FundRunStatus(2)
-		) fundRunStatuses[_id] = FundRunStatus(2);
+		if (fundRunValues[_id].amountCollected >= fundRunValues[_id].target)
+			setFundRunStatus(_id, 2);
 
 		emit Donation(_id, msg.sender, amount);
 	}
@@ -482,8 +480,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 			fundRunValues[_id].amountWithdrawn +
 			grossWithdrawAmount;
 
-		if (fundRunStatuses[_id] != FundRunStatus(3))
-			fundRunStatuses[_id] = FundRunStatus(3);
+		setFundRunStatus(_id, 3);
 
 		(bool success, ) = payable(msg.sender).call{ value: netWithdrawAmount }(
 			""
@@ -522,8 +519,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 			"This Fund Run is hereby prevented from being over-drawn."
 		);
 
-		if (fundRunStatuses[_id] != FundRunStatus(1))
-			fundRunStatuses[_id] = FundRunStatus(1);
+		setFundRunStatus(_id, 1);
 
 		donorLog.donorMoneyLog[_id] = 0;
 		fundRunValues[_id].amountWithdrawn =
@@ -585,8 +581,10 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 
 	function setFundRunStatus(uint16 _id, uint16 _newValue) private {
 		FundRunStatus newStatus = FundRunStatus(_newValue);
-		fundRunStatuses[_id] = newStatus;
-		emit FundRunStatusChange(_id, newStatus);
+		if (fundRunStatuses[_id] != newStatus) {
+			fundRunStatuses[_id] = newStatus;
+			emit FundRunStatusChange(_id, newStatus);
+		}
 	}
 
 	function _verifyMultisigRequest(
@@ -651,8 +649,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 			fundRunValues[_id].amountWithdrawn +
 			_tx.amount;
 
-		if (fundRunStatuses[_id] != FundRunStatus(3))
-			fundRunStatuses[_id] = FundRunStatus(3);
+		setFundRunStatus(_id, 3);
 
 		proposalStatuses[_proposalId] = ProposalStatus(2);
 
