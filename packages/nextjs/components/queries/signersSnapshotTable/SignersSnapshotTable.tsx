@@ -64,12 +64,18 @@ export const SignersSnapshotTable = () => {
     setQueryLoading(false);
   };
 
-  const refreshTbl = (clearSearch: boolean) => {
-    if (clearSearch) {
-      setUserSearchInput("");
+  const refreshTbl = () => {
+    let didRefresh = false;
+    setUserSearchInput("");
+    if (readiedSearchInput !== "") {
       setReadiedSearchInput("");
+      didRefresh = true;
     }
-    if (pageNum !== 0) setPageNum(0);
+    if (pageNum !== 0) {
+      setPageNum(0);
+      didRefresh = true;
+    }
+    if (!didRefresh) preQuery();
   };
 
   return (
@@ -98,7 +104,7 @@ export const SignersSnapshotTable = () => {
           <button className="px-8 py-2 text-xl bg-primary" onClick={() => preQuery()}>
             SEARCH
           </button>
-          <button className="px-4 py-2 text-xl bg-primary" onClick={() => refreshTbl(true)}>
+          <button className="px-4 py-2 text-xl bg-primary" onClick={() => refreshTbl()}>
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
               <path
                 fill="white"
