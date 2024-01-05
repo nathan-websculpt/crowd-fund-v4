@@ -12,27 +12,27 @@ const QueriesPage: NextPage = () => {
     <>
       <MetaHeader title="Query Data" />
 
-      <div className="container mx-auto my-10 overflow-scroll">
+      <div className="container mx-auto my-10 overflow-auto">
         <FundRunsTable />
       </div>
 
-      <div className="container mx-auto my-10 overflow-scroll">
+      <div className="container mx-auto my-10 overflow-auto">
         <ProposalsSnapshotTable />
       </div>
 
-      <div className="container mx-auto my-10 overflow-scroll">
+      <div className="container mx-auto my-10 overflow-auto">
         <SignersSnapshotTable />
       </div>
 
-      <div className="container mx-auto my-10 overflow-scroll">
+      <div className="container mx-auto my-10 overflow-auto">
         <DonationsTable />
       </div>
 
-      <div className="container mx-auto my-10 overflow-scroll">
+      <div className="container mx-auto my-10 overflow-auto">
         <OwnerWithdrawalsTable />
       </div>
 
-      <div className="container mx-auto my-10 overflow-scroll">
+      <div className="container mx-auto my-10 overflow-auto">
         <DonorWithdrawalsTable />
       </div>
     </>
