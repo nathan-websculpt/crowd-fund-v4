@@ -2,8 +2,8 @@
 
 
 ### 📌 Overview
-- [Current Contract](https://sepolia.etherscan.io/address/0xa5BAF105bad838cf1Cd4518dc59ba51Df283aab0)
-  - 0xa5BAF105bad838cf1Cd4518dc59ba51Df283aab0
+- [Current Contract](https://sepolia.etherscan.io/address/0xbF7766D1488Fe89337174847D533052fc17B475b)
+  - 0xbF7766D1488Fe89337174847D533052fc17B475b
 - [Current Site](https://crowd-fund-v3-nextjs.vercel.app/)
 - [View a Vault](https://crowd-fund-v3-nextjs.vercel.app/crowdfund/vaults/7)
 - [View Query Data](https://crowd-fund-v3-nextjs.vercel.app/queries)
