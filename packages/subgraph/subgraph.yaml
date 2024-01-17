@@ -1,26 +1,55 @@
 specVersion: 0.0.4
-description: Greetings
+description: CrowdFundSubGraph
 repository: https://github.com/scaffold-eth/se-2/packages/subgraph/
 schema:
   file: ./src/schema.graphql
 dataSources:
   - kind: ethereum/contract
-    name: YourContract
+    name: CrowdFund
     network: localhost
     source:
-      abi: YourContract
-      address: "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+      abi: CrowdFund
+      address: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - Greeting
-        - Sender
+        - ContractOwnerWithdrawal
+        - Donation
+        - DonorWithdrawal
+        - FundRun
+        - FundRunStatusChange
+        - MultisigTransfer
+        - OwnerWithdrawal
+        - OwnershipTransferred
+        - Proposal
+        - ProposalRevoke
+        - ProposalSignature
       abis:
-        - name: YourContract
-          file: ./abis/localhost_YourContract.json
+        - name: CrowdFund
+          file: ./abis/localhost_CrowdFund.json
       eventHandlers:
-        - event: GreetingChange(indexed address,string,bool,uint256)
-          handler: handleGreetingChange
+        - event: ContractOwnerWithdrawal(address,uint256)
+          handler: handleContractOwnerWithdrawal
+        - event: Donation(uint16,address,uint256)
+          handler: handleDonation
+        - event: DonorWithdrawal(uint16,address,uint256)
+          handler: handleDonorWithdrawal
+        - event: FundRun(uint16,address[],string,string,uint256,uint256,uint256,uint256,uint8)
+          handler: handleFundRun
+        - event: FundRunStatusChange(uint16,uint8)
+          handler: handleFundRunStatusChange
+        - event: MultisigTransfer(uint16,uint16,address,uint256,uint256)
+          handler: handleMultisigTransfer
+        - event: OwnerWithdrawal(uint16,address,uint256,uint256)
+          handler: handleOwnerWithdrawal
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: Proposal(uint16,uint16,address,uint256,address,string,uint8,uint256,uint16)
+          handler: handleProposal
+        - event: ProposalRevoke(uint16)
+          handler: handleProposalRevoke
+        - event: ProposalSignature(uint16,address,bytes)
+          handler: handleProposalSignature
       file: ./src/mapping.ts

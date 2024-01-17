@@ -1,17 +1,126 @@
-type Greeting @entity {
-  id: ID!
-  sender: Sender!
-  greeting: String!
-  premium: Boolean
-  value: BigInt
-  createdAt: BigInt!
-  transactionHash: String!
+type ContractOwnerWithdrawal @entity(immutable: true) {
+  id: Bytes!
+  contractOwner: Bytes! # address
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
 }
 
-type Sender @entity {
-  id: ID!
-  address: Bytes!
-  greetings: [Greeting!] @derivedFrom(field: "sender")
-  createdAt: BigInt!
-  greetingCount: BigInt!
+type Donation @entity {
+  id: Bytes!
+  fundRunId: Int! # uint16
+  donor: Bytes! # address
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  fundRun: FundRun
+}
+
+type DonorWithdrawal @entity {
+  id: Bytes!
+  fundRunId: Int! # uint16
+  donor: Bytes! # address
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  fundRun: FundRun
+}
+
+type FundRun @entity {
+  id: Bytes!
+  fundRunId: Int! # uint16
+  owners: [Bytes!]! # address[]
+  title: String! # string
+  description: String! # string
+  target: BigInt! # uint256
+  deadline: BigInt! # uint256
+  amountCollected: BigInt! # uint256
+  amountWithdrawn: BigInt! # uint256
+  status: Int! # uint8
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  proposals: [Proposal!] @derivedFrom(field: "fundRun")
+}
+
+type FundRunStatusChange @entity(immutable: true) {
+  id: Bytes!
+  fundRunId: Int! # uint16
+  status: Int! # uint8
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type MultisigTransfer @entity(immutable: true) {
+  id: Bytes!
+  proposalId: Int! # uint16
+  fundRunId: Int! # uint16
+  to: Bytes! # address
+  netWithdrawAmount: BigInt! # uint256
+  grossWithdrawAmount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type OwnerWithdrawal @entity {
+  id: Bytes!
+  fundRunId: Int! # uint16
+  owner: Bytes! # address
+  netWithdrawAmount: BigInt! # uint256
+  grossWithdrawAmount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  fundRun: FundRun
+}
+
+type OwnershipTransferred @entity(immutable: true) {
+  id: Bytes!
+  previousOwner: Bytes! # address
+  newOwner: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Proposal @entity {
+  id: Bytes!
+  proposalId: Int! # uint16
+  fundRunId: Int! # uint16
+  proposedBy: Bytes! # address
+  amount: BigInt! # uint256
+  to: Bytes! # address
+  reason: String! # string
+  status: Int! # uint8
+  signaturesRequired: BigInt! # uint256
+  signaturesCount: Int! # uint16
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  signatures: [ProposalSignature!] @derivedFrom(field: "proposal")
+  fundRun: FundRun
+}
+
+type ProposalSignature @entity {
+  id: Bytes!
+  proposalId: Int! # uint16
+  signer: Bytes! # address
+  signature: Bytes! # bytes
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  proposal: Proposal
+}
+
+type ProposalRevoke @entity(immutable: true) {
+  id: Bytes!
+  proposalId: Int! # uint16
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
 }

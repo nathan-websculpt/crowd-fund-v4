@@ -336,7 +336,7 @@ export class ProposalSignature__Params {
   }
 }
 
-export class mapping__fundRunValuesResult {
+export class CrowdFund__fundRunValuesResult {
   value0: BigInt;
   value1: BigInt;
   value2: BigInt;
@@ -368,9 +368,9 @@ export class mapping__fundRunValuesResult {
   }
 }
 
-export class mapping extends ethereum.SmartContract {
-  static bind(address: Address): mapping {
-    return new mapping("mapping", address);
+export class CrowdFund extends ethereum.SmartContract {
+  static bind(address: Address): CrowdFund {
+    return new CrowdFund("CrowdFund", address);
   }
 
   donorLogs(param0: Address): Address {
@@ -467,14 +467,14 @@ export class mapping extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toI32());
   }
 
-  fundRunValues(param0: i32): mapping__fundRunValuesResult {
+  fundRunValues(param0: i32): CrowdFund__fundRunValuesResult {
     let result = super.call(
       "fundRunValues",
       "fundRunValues(uint16):(uint256,uint256,uint256)",
       [ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(param0))]
     );
 
-    return new mapping__fundRunValuesResult(
+    return new CrowdFund__fundRunValuesResult(
       result[0].toBigInt(),
       result[1].toBigInt(),
       result[2].toBigInt()
@@ -483,7 +483,7 @@ export class mapping extends ethereum.SmartContract {
 
   try_fundRunValues(
     param0: i32
-  ): ethereum.CallResult<mapping__fundRunValuesResult> {
+  ): ethereum.CallResult<CrowdFund__fundRunValuesResult> {
     let result = super.tryCall(
       "fundRunValues",
       "fundRunValues(uint16):(uint256,uint256,uint256)",
@@ -494,7 +494,7 @@ export class mapping extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(
-      new mapping__fundRunValuesResult(
+      new CrowdFund__fundRunValuesResult(
         value[0].toBigInt(),
         value[1].toBigInt(),
         value[2].toBigInt()
