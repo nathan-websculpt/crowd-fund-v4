@@ -23,8 +23,7 @@ const ScaffoldEthApp = ({ Component, pageProps }: AppProps) => {
   const [isDarkTheme, setIsDarkTheme] = useState(true);
   const { isDarkMode } = useDarkMode();
 
-  // const subgraphUri = "https://api.studio.thegraph.com/query/60402/crowd-fund-v3/version/latest";
-  const subgraphUri = "https://api.studio.thegraph.com/query/60402/crowd-fund-v3/0.0.4"; //PRODTODO::
+  const subgraphUri = "http://localhost:8000/subgraphs/name/scaffold-eth/crowdfund"; //PRODTODO::
   const apolloClient = new ApolloClient({
     uri: subgraphUri,
     cache: new InMemoryCache(),
