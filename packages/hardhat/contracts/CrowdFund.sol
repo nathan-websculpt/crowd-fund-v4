@@ -7,14 +7,7 @@ import { ECDSA } from "../node_modules/@openzeppelin/contracts/utils/cryptograph
 
 /**
  * @dev NOT PRODUCTION-READY ... FOR LEARNING PURPOSES ONLY
- * FundRuns and Proposals are no longer structs (now queried from subgraph on FE)
- *  - V2 (https://github.com/nathan-websculpt/crowd-fund-v2/blob/main/packages/hardhat/contracts/CrowdFund.sol) and V3 (this one) will represent two extremes
- *	- V2 stores everything on the contract
- *	- V3 will store as little as possible on the contract (using subgraph/GraphQL)
- *	  - ENTITIES
- *      - One-to-Many relationship on Fund Runs _> Proposals
- *      - One-to-Many relationship on Proposals _> Signatures
- *      - Donations, Owner Withdrawals, and Donor Withdrawals relate back to their Fund Run
+ * 
  */
 
 contract CrowdFund is Ownable, ReentrancyGuard {
