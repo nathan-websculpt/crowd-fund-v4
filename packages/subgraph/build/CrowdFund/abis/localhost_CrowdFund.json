@@ -65,31 +65,6 @@
       },
       {
         "indexed": false,
-        "internalType": "address",
-        "name": "donor",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "DonorWithdrawal",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint16",
-        "name": "fundRunId",
-        "type": "uint16"
-      },
-      {
-        "indexed": false,
         "internalType": "address[]",
         "name": "owners",
         "type": "address[]"
@@ -109,18 +84,6 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "target",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "deadline",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
         "name": "amountCollected",
         "type": "uint256"
       },
@@ -129,34 +92,9 @@
         "internalType": "uint256",
         "name": "amountWithdrawn",
         "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "enum CrowdFund.FundRunStatus",
-        "name": "status",
-        "type": "uint8"
       }
     ],
     "name": "FundRun",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint16",
-        "name": "fundRunId",
-        "type": "uint16"
-      },
-      {
-        "indexed": false,
-        "internalType": "enum CrowdFund.FundRunStatus",
-        "name": "status",
-        "type": "uint8"
-      }
-    ],
-    "name": "FundRunStatusChange",
     "type": "event"
   },
   {
@@ -194,37 +132,6 @@
       }
     ],
     "name": "MultisigTransfer",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint16",
-        "name": "fundRunId",
-        "type": "uint16"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "owner",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "netWithdrawAmount",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "grossWithdrawAmount",
-        "type": "uint256"
-      }
-    ],
-    "name": "OwnerWithdrawal",
     "type": "event"
   },
   {
@@ -365,16 +272,6 @@
         "type": "string"
       },
       {
-        "internalType": "uint256",
-        "name": "_target",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_deadline",
-        "type": "uint256"
-      },
-      {
         "internalType": "address[]",
         "name": "_owners",
         "type": "address[]"
@@ -466,64 +363,6 @@
     "inputs": [
       {
         "internalType": "uint16",
-        "name": "_id",
-        "type": "uint16"
-      }
-    ],
-    "name": "forceEnd",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint16",
-        "name": "",
-        "type": "uint16"
-      }
-    ],
-    "name": "fundRunDeadlines",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint16",
-        "name": "_id",
-        "type": "uint16"
-      }
-    ],
-    "name": "fundRunDonorWithdraw",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint16",
-        "name": "_id",
-        "type": "uint16"
-      }
-    ],
-    "name": "fundRunOwnerWithdraw",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint16",
         "name": "",
         "type": "uint16"
       },
@@ -552,32 +391,8 @@
         "type": "uint16"
       }
     ],
-    "name": "fundRunStatuses",
-    "outputs": [
-      {
-        "internalType": "enum CrowdFund.FundRunStatus",
-        "name": "",
-        "type": "uint8"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint16",
-        "name": "",
-        "type": "uint16"
-      }
-    ],
     "name": "fundRunValues",
     "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "target",
-        "type": "uint256"
-      },
       {
         "internalType": "uint256",
         "name": "amountCollected",
@@ -829,25 +644,6 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint16",
-        "name": "_id",
-        "type": "uint16"
-      }
-    ],
-    "name": "timeLeft",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [],
     "name": "totalProfitsTaken",
     "outputs": [
@@ -869,19 +665,6 @@
       }
     ],
     "name": "transferOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint16",
-        "name": "_id",
-        "type": "uint16"
-      }
-    ],
-    "name": "updateFundRunStatus",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

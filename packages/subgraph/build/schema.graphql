@@ -18,41 +18,18 @@ type Donation @entity {
   fundRun: FundRun
 }
 
-type DonorWithdrawal @entity {
-  id: Bytes!
-  fundRunId: Int! # uint16
-  donor: Bytes! # address
-  amount: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-  fundRun: FundRun
-}
-
 type FundRun @entity {
   id: Bytes!
   fundRunId: Int! # uint16
   owners: [Bytes!]! # address[]
   title: String! # string
   description: String! # string
-  target: BigInt! # uint256
-  deadline: BigInt! # uint256
   amountCollected: BigInt! # uint256
   amountWithdrawn: BigInt! # uint256
-  status: Int! # uint8
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
   proposals: [Proposal!] @derivedFrom(field: "fundRun")
-}
-
-type FundRunStatusChange @entity(immutable: true) {
-  id: Bytes!
-  fundRunId: Int! # uint16
-  status: Int! # uint8
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
 }
 
 type MultisigTransfer @entity(immutable: true) {
@@ -65,18 +42,6 @@ type MultisigTransfer @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
-}
-
-type OwnerWithdrawal @entity {
-  id: Bytes!
-  fundRunId: Int! # uint16
-  owner: Bytes! # address
-  netWithdrawAmount: BigInt! # uint256
-  grossWithdrawAmount: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-  fundRun: FundRun
 }
 
 type OwnershipTransferred @entity(immutable: true) {

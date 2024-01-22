@@ -1,8 +1,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { IntegerVariant, isValidInteger } from "../scaffold-eth";
-import { DonorWithdrawBtn } from "./DonorWithdrawBtn";
-import { OwnerWithdrawBtn } from "./OwnerWithdrawBtn";
 import { useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 import { notification } from "~~/utils/scaffold-eth";
 
@@ -53,16 +51,11 @@ export const FundRunDonate = (fundRun: FundRunProps) => {
       </div>
 
       <div className="flex flex-col justify-center gap-8 pt-6 mt-8 mb-5 border-t-4 sm:flex-row sm:flex-wrap">
-        {fundRun.owners.length === 1 ? (
-          <OwnerWithdrawBtn fundRunId={fundRun.id} />
-        ) : (
-          <Link href={`/crowdfund/vaults/${fundRun.id}`} passHref className="px-12 btn btn-primary">
-            <div className="tooltip tooltip-primary" data-tip="View Proposals in the Vault">
-              View Vault
-            </div>
-          </Link>
-        )}
-        <DonorWithdrawBtn fundRunId={fundRun.id} />
+        <Link href={`/crowdfund/vaults/${fundRun.id}`} passHref className="px-12 btn btn-primary">
+          <div className="tooltip tooltip-primary" data-tip="View Proposals in the Vault">
+            View Vault
+          </div>
+        </Link>
       </div>
     </>
   );

@@ -5,7 +5,7 @@ const contracts = {
       name: "localhost",
       contracts: {
         CrowdFund: {
-          address: "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+          address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
           abi: [
             {
               inputs: [
@@ -73,31 +73,6 @@ const contracts = {
                 },
                 {
                   indexed: false,
-                  internalType: "address",
-                  name: "donor",
-                  type: "address",
-                },
-                {
-                  indexed: false,
-                  internalType: "uint256",
-                  name: "amount",
-                  type: "uint256",
-                },
-              ],
-              name: "DonorWithdrawal",
-              type: "event",
-            },
-            {
-              anonymous: false,
-              inputs: [
-                {
-                  indexed: false,
-                  internalType: "uint16",
-                  name: "fundRunId",
-                  type: "uint16",
-                },
-                {
-                  indexed: false,
                   internalType: "address[]",
                   name: "owners",
                   type: "address[]",
@@ -117,18 +92,6 @@ const contracts = {
                 {
                   indexed: false,
                   internalType: "uint256",
-                  name: "target",
-                  type: "uint256",
-                },
-                {
-                  indexed: false,
-                  internalType: "uint256",
-                  name: "deadline",
-                  type: "uint256",
-                },
-                {
-                  indexed: false,
-                  internalType: "uint256",
                   name: "amountCollected",
                   type: "uint256",
                 },
@@ -138,33 +101,8 @@ const contracts = {
                   name: "amountWithdrawn",
                   type: "uint256",
                 },
-                {
-                  indexed: false,
-                  internalType: "enum CrowdFund.FundRunStatus",
-                  name: "status",
-                  type: "uint8",
-                },
               ],
               name: "FundRun",
-              type: "event",
-            },
-            {
-              anonymous: false,
-              inputs: [
-                {
-                  indexed: false,
-                  internalType: "uint16",
-                  name: "fundRunId",
-                  type: "uint16",
-                },
-                {
-                  indexed: false,
-                  internalType: "enum CrowdFund.FundRunStatus",
-                  name: "status",
-                  type: "uint8",
-                },
-              ],
-              name: "FundRunStatusChange",
               type: "event",
             },
             {
@@ -202,37 +140,6 @@ const contracts = {
                 },
               ],
               name: "MultisigTransfer",
-              type: "event",
-            },
-            {
-              anonymous: false,
-              inputs: [
-                {
-                  indexed: false,
-                  internalType: "uint16",
-                  name: "fundRunId",
-                  type: "uint16",
-                },
-                {
-                  indexed: false,
-                  internalType: "address",
-                  name: "owner",
-                  type: "address",
-                },
-                {
-                  indexed: false,
-                  internalType: "uint256",
-                  name: "netWithdrawAmount",
-                  type: "uint256",
-                },
-                {
-                  indexed: false,
-                  internalType: "uint256",
-                  name: "grossWithdrawAmount",
-                  type: "uint256",
-                },
-              ],
-              name: "OwnerWithdrawal",
               type: "event",
             },
             {
@@ -373,16 +280,6 @@ const contracts = {
                   type: "string",
                 },
                 {
-                  internalType: "uint256",
-                  name: "_target",
-                  type: "uint256",
-                },
-                {
-                  internalType: "uint256",
-                  name: "_deadline",
-                  type: "uint256",
-                },
-                {
                   internalType: "address[]",
                   name: "_owners",
                   type: "address[]",
@@ -474,64 +371,6 @@ const contracts = {
               inputs: [
                 {
                   internalType: "uint16",
-                  name: "_id",
-                  type: "uint16",
-                },
-              ],
-              name: "forceEnd",
-              outputs: [],
-              stateMutability: "nonpayable",
-              type: "function",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "uint16",
-                  name: "",
-                  type: "uint16",
-                },
-              ],
-              name: "fundRunDeadlines",
-              outputs: [
-                {
-                  internalType: "uint256",
-                  name: "",
-                  type: "uint256",
-                },
-              ],
-              stateMutability: "view",
-              type: "function",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "uint16",
-                  name: "_id",
-                  type: "uint16",
-                },
-              ],
-              name: "fundRunDonorWithdraw",
-              outputs: [],
-              stateMutability: "nonpayable",
-              type: "function",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "uint16",
-                  name: "_id",
-                  type: "uint16",
-                },
-              ],
-              name: "fundRunOwnerWithdraw",
-              outputs: [],
-              stateMutability: "nonpayable",
-              type: "function",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "uint16",
                   name: "",
                   type: "uint16",
                 },
@@ -560,32 +399,8 @@ const contracts = {
                   type: "uint16",
                 },
               ],
-              name: "fundRunStatuses",
-              outputs: [
-                {
-                  internalType: "enum CrowdFund.FundRunStatus",
-                  name: "",
-                  type: "uint8",
-                },
-              ],
-              stateMutability: "view",
-              type: "function",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "uint16",
-                  name: "",
-                  type: "uint16",
-                },
-              ],
               name: "fundRunValues",
               outputs: [
-                {
-                  internalType: "uint256",
-                  name: "target",
-                  type: "uint256",
-                },
                 {
                   internalType: "uint256",
                   name: "amountCollected",
@@ -837,25 +652,6 @@ const contracts = {
               type: "function",
             },
             {
-              inputs: [
-                {
-                  internalType: "uint16",
-                  name: "_id",
-                  type: "uint16",
-                },
-              ],
-              name: "timeLeft",
-              outputs: [
-                {
-                  internalType: "uint256",
-                  name: "",
-                  type: "uint256",
-                },
-              ],
-              stateMutability: "view",
-              type: "function",
-            },
-            {
               inputs: [],
               name: "totalProfitsTaken",
               outputs: [
@@ -877,19 +673,6 @@ const contracts = {
                 },
               ],
               name: "transferOwnership",
-              outputs: [],
-              stateMutability: "nonpayable",
-              type: "function",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "uint16",
-                  name: "_id",
-                  type: "uint16",
-                },
-              ],
-              name: "updateFundRunStatus",
               outputs: [],
               stateMutability: "nonpayable",
               type: "function",

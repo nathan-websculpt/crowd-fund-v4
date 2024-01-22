@@ -60,11 +60,8 @@ export const FundRunsList = () => {
               id={fund.fundRunId}
               title={fund.title}
               description={fund.description}
-              target={fund.target}
-              deadline={fund.deadline.toString()} //TODO:
               amountCollected={fund.amountCollected}
               amountWithdrawn={fund.amountWithdrawn}
-              status={fund.status}
             />
             <div className="flex justify-between">
               <div>

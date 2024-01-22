@@ -2,11 +2,8 @@ import { Bytes, log, BigInt } from "@graphprotocol/graph-ts"
 import {
   ContractOwnerWithdrawal as ContractOwnerWithdrawalEvent,
   Donation as DonationEvent,
-  DonorWithdrawal as DonorWithdrawalEvent,
   FundRun as FundRunEvent,
-  FundRunStatusChange as FundRunStatusChangeEvent,
   MultisigTransfer as MultisigTransferEvent,
-  OwnerWithdrawal as OwnerWithdrawalEvent,
   OwnershipTransferred as OwnershipTransferredEvent,
   Proposal as ProposalEvent,
   ProposalRevoke as ProposalRevokeEvent,
@@ -15,11 +12,8 @@ import {
 import {   
   ContractOwnerWithdrawal,
   Donation,
-  DonorWithdrawal,
   FundRun,
-  FundRunStatusChange,
   MultisigTransfer,
-  OwnerWithdrawal,
   OwnershipTransferred,
   Proposal,
   ProposalRevoke,
@@ -63,28 +57,6 @@ export function handleDonation(event: DonationEvent): void {
   entity.save()
 }
 
-export function handleDonorWithdrawal(event: DonorWithdrawalEvent): void {
-  let entity = new DonorWithdrawal(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.fundRunId = event.params.fundRunId
-  entity.donor = event.params.donor
-  entity.amount = event.params.amount
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  let fundRunEntity = FundRun.load(Bytes.fromHexString("fundruns__").concat(Bytes.fromI32(event.params.fundRunId)));
-  if(fundRunEntity !== null) {
-    fundRunEntity.amountWithdrawn = fundRunEntity.amountWithdrawn.plus(entity.amount);
-    entity.fundRun = fundRunEntity.id;
-    fundRunEntity.save();
-  }
-
-  entity.save()
-}
-
 export function handleFundRun(event: FundRunEvent): void {
   let entity = new FundRun(
     Bytes.fromHexString("fundruns__").concat(Bytes.fromI32(event.params.fundRunId))
@@ -93,37 +65,12 @@ export function handleFundRun(event: FundRunEvent): void {
   entity.owners = changetype<Bytes[]>(event.params.owners)
   entity.title = event.params.title
   entity.description = event.params.description
-  entity.target = event.params.target
-  entity.deadline = event.params.deadline
   entity.amountCollected = event.params.amountCollected
   entity.amountWithdrawn = event.params.amountWithdrawn
-  entity.status = event.params.status
 
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
-
-  entity.save()
-}
-
-export function handleFundRunStatusChange(
-  event: FundRunStatusChangeEvent
-): void {
-  let entity = new FundRunStatusChange(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.fundRunId = event.params.fundRunId
-  entity.status = event.params.status
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  let fundRunEntity = FundRun.load(Bytes.fromHexString("fundruns__").concat(Bytes.fromI32(event.params.fundRunId)));
-  if(fundRunEntity !== null) {
-    fundRunEntity.status = entity.status;
-    fundRunEntity.save();
-  }
 
   entity.save()
 }
@@ -152,29 +99,6 @@ export function handleMultisigTransfer(event: MultisigTransferEvent): void {
       fundRunEntity.amountWithdrawn = fundRunEntity.amountWithdrawn.plus(event.params.grossWithdrawAmount);
       fundRunEntity.save();
     }
-  }
-
-  entity.save()
-}
-
-export function handleOwnerWithdrawal(event: OwnerWithdrawalEvent): void {
-  let entity = new OwnerWithdrawal(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.fundRunId = event.params.fundRunId
-  entity.owner = event.params.owner
-  entity.netWithdrawAmount = event.params.netWithdrawAmount
-  entity.grossWithdrawAmount = event.params.grossWithdrawAmount
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  let fundRunEntity = FundRun.load(Bytes.fromHexString("fundruns__").concat(Bytes.fromI32(event.params.fundRunId)));
-  if(fundRunEntity !== null) {
-    fundRunEntity.amountWithdrawn = fundRunEntity.amountWithdrawn.plus(entity.grossWithdrawAmount);
-    entity.fundRun = fundRunEntity.id;
-    fundRunEntity.save();
   }
 
   entity.save()

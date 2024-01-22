@@ -47,13 +47,11 @@ export const FundRunsTable = () => {
           <thead>
             <tr className="text-sm rounded-xl text-base-content">
               <th className="bg-primary"></th>
-              <th className="bg-primary">Status</th>
               <th className="bg-primary">ID</th>
               <th className="bg-primary">Title</th>
               <th className="bg-primary">Description</th>
-              <th className="bg-primary">Money Target</th>
-              <th className="bg-primary">Donated</th>
-              <th className="bg-primary">Withdrawn</th>
+              <th className="text-center bg-primary">Donated</th>
+              <th className="text-center bg-primary">Withdrawn</th>
             </tr>
           </thead>
           <tbody>
@@ -66,7 +64,6 @@ export const FundRunsTable = () => {
                 status={fr?.status}
                 title={fr?.title}
                 description={fr?.description}
-                target={fr?.target}
                 donated={fr?.amountCollected}
                 withdrawn={fr?.amountWithdrawn}
                 proposals={fr?.proposals}

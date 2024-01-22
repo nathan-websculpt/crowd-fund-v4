@@ -58,32 +58,6 @@ export class Donation__Params {
   }
 }
 
-export class DonorWithdrawal extends ethereum.Event {
-  get params(): DonorWithdrawal__Params {
-    return new DonorWithdrawal__Params(this);
-  }
-}
-
-export class DonorWithdrawal__Params {
-  _event: DonorWithdrawal;
-
-  constructor(event: DonorWithdrawal) {
-    this._event = event;
-  }
-
-  get fundRunId(): i32 {
-    return this._event.parameters[0].value.toI32();
-  }
-
-  get donor(): Address {
-    return this._event.parameters[1].value.toAddress();
-  }
-
-  get amount(): BigInt {
-    return this._event.parameters[2].value.toBigInt();
-  }
-}
-
 export class FundRun extends ethereum.Event {
   get params(): FundRun__Params {
     return new FundRun__Params(this);
@@ -113,46 +87,12 @@ export class FundRun__Params {
     return this._event.parameters[3].value.toString();
   }
 
-  get target(): BigInt {
+  get amountCollected(): BigInt {
     return this._event.parameters[4].value.toBigInt();
   }
 
-  get deadline(): BigInt {
-    return this._event.parameters[5].value.toBigInt();
-  }
-
-  get amountCollected(): BigInt {
-    return this._event.parameters[6].value.toBigInt();
-  }
-
   get amountWithdrawn(): BigInt {
-    return this._event.parameters[7].value.toBigInt();
-  }
-
-  get status(): i32 {
-    return this._event.parameters[8].value.toI32();
-  }
-}
-
-export class FundRunStatusChange extends ethereum.Event {
-  get params(): FundRunStatusChange__Params {
-    return new FundRunStatusChange__Params(this);
-  }
-}
-
-export class FundRunStatusChange__Params {
-  _event: FundRunStatusChange;
-
-  constructor(event: FundRunStatusChange) {
-    this._event = event;
-  }
-
-  get fundRunId(): i32 {
-    return this._event.parameters[0].value.toI32();
-  }
-
-  get status(): i32 {
-    return this._event.parameters[1].value.toI32();
+    return this._event.parameters[5].value.toBigInt();
   }
 }
 
@@ -187,36 +127,6 @@ export class MultisigTransfer__Params {
 
   get grossWithdrawAmount(): BigInt {
     return this._event.parameters[4].value.toBigInt();
-  }
-}
-
-export class OwnerWithdrawal extends ethereum.Event {
-  get params(): OwnerWithdrawal__Params {
-    return new OwnerWithdrawal__Params(this);
-  }
-}
-
-export class OwnerWithdrawal__Params {
-  _event: OwnerWithdrawal;
-
-  constructor(event: OwnerWithdrawal) {
-    this._event = event;
-  }
-
-  get fundRunId(): i32 {
-    return this._event.parameters[0].value.toI32();
-  }
-
-  get owner(): Address {
-    return this._event.parameters[1].value.toAddress();
-  }
-
-  get netWithdrawAmount(): BigInt {
-    return this._event.parameters[2].value.toBigInt();
-  }
-
-  get grossWithdrawAmount(): BigInt {
-    return this._event.parameters[3].value.toBigInt();
   }
 }
 
@@ -339,32 +249,25 @@ export class ProposalSignature__Params {
 export class CrowdFund__fundRunValuesResult {
   value0: BigInt;
   value1: BigInt;
-  value2: BigInt;
 
-  constructor(value0: BigInt, value1: BigInt, value2: BigInt) {
+  constructor(value0: BigInt, value1: BigInt) {
     this.value0 = value0;
     this.value1 = value1;
-    this.value2 = value2;
   }
 
   toMap(): TypedMap<string, ethereum.Value> {
     let map = new TypedMap<string, ethereum.Value>();
     map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
     map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
-    map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
     return map;
   }
 
-  getTarget(): BigInt {
+  getAmountCollected(): BigInt {
     return this.value0;
   }
 
-  getAmountCollected(): BigInt {
-    return this.value1;
-  }
-
   getAmountWithdrawn(): BigInt {
-    return this.value2;
+    return this.value1;
   }
 }
 
@@ -390,29 +293,6 @@ export class CrowdFund extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toAddress());
-  }
-
-  fundRunDeadlines(param0: i32): BigInt {
-    let result = super.call(
-      "fundRunDeadlines",
-      "fundRunDeadlines(uint16):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(param0))]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_fundRunDeadlines(param0: i32): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "fundRunDeadlines",
-      "fundRunDeadlines(uint16):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(param0))]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
   fundRunOwners(param0: i32, param1: BigInt): Address {
@@ -444,40 +324,16 @@ export class CrowdFund extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
-  fundRunStatuses(param0: i32): i32 {
-    let result = super.call(
-      "fundRunStatuses",
-      "fundRunStatuses(uint16):(uint8)",
-      [ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(param0))]
-    );
-
-    return result[0].toI32();
-  }
-
-  try_fundRunStatuses(param0: i32): ethereum.CallResult<i32> {
-    let result = super.tryCall(
-      "fundRunStatuses",
-      "fundRunStatuses(uint16):(uint8)",
-      [ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(param0))]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toI32());
-  }
-
   fundRunValues(param0: i32): CrowdFund__fundRunValuesResult {
     let result = super.call(
       "fundRunValues",
-      "fundRunValues(uint16):(uint256,uint256,uint256)",
+      "fundRunValues(uint16):(uint256,uint256)",
       [ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(param0))]
     );
 
     return new CrowdFund__fundRunValuesResult(
       result[0].toBigInt(),
-      result[1].toBigInt(),
-      result[2].toBigInt()
+      result[1].toBigInt()
     );
   }
 
@@ -486,7 +342,7 @@ export class CrowdFund extends ethereum.SmartContract {
   ): ethereum.CallResult<CrowdFund__fundRunValuesResult> {
     let result = super.tryCall(
       "fundRunValues",
-      "fundRunValues(uint16):(uint256,uint256,uint256)",
+      "fundRunValues(uint16):(uint256,uint256)",
       [ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(param0))]
     );
     if (result.reverted) {
@@ -496,8 +352,7 @@ export class CrowdFund extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(
       new CrowdFund__fundRunValuesResult(
         value[0].toBigInt(),
-        value[1].toBigInt(),
-        value[2].toBigInt()
+        value[1].toBigInt()
       )
     );
   }
@@ -675,25 +530,6 @@ export class CrowdFund extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toI32());
   }
 
-  timeLeft(_id: i32): BigInt {
-    let result = super.call("timeLeft", "timeLeft(uint16):(uint256)", [
-      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(_id))
-    ]);
-
-    return result[0].toBigInt();
-  }
-
-  try_timeLeft(_id: i32): ethereum.CallResult<BigInt> {
-    let result = super.tryCall("timeLeft", "timeLeft(uint16):(uint256)", [
-      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(_id))
-    ]);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
   totalProfitsTaken(): BigInt {
     let result = super.call(
       "totalProfitsTaken",
@@ -818,16 +654,8 @@ export class CreateFundRunCall__Inputs {
     return this._call.inputValues[1].value.toString();
   }
 
-  get _target(): BigInt {
-    return this._call.inputValues[2].value.toBigInt();
-  }
-
-  get _deadline(): BigInt {
-    return this._call.inputValues[3].value.toBigInt();
-  }
-
   get _owners(): Array<Address> {
-    return this._call.inputValues[4].value.toAddressArray();
+    return this._call.inputValues[2].value.toAddressArray();
   }
 }
 
@@ -923,96 +751,6 @@ export class DonateToFundRunCall__Outputs {
   _call: DonateToFundRunCall;
 
   constructor(call: DonateToFundRunCall) {
-    this._call = call;
-  }
-}
-
-export class ForceEndCall extends ethereum.Call {
-  get inputs(): ForceEndCall__Inputs {
-    return new ForceEndCall__Inputs(this);
-  }
-
-  get outputs(): ForceEndCall__Outputs {
-    return new ForceEndCall__Outputs(this);
-  }
-}
-
-export class ForceEndCall__Inputs {
-  _call: ForceEndCall;
-
-  constructor(call: ForceEndCall) {
-    this._call = call;
-  }
-
-  get _id(): i32 {
-    return this._call.inputValues[0].value.toI32();
-  }
-}
-
-export class ForceEndCall__Outputs {
-  _call: ForceEndCall;
-
-  constructor(call: ForceEndCall) {
-    this._call = call;
-  }
-}
-
-export class FundRunDonorWithdrawCall extends ethereum.Call {
-  get inputs(): FundRunDonorWithdrawCall__Inputs {
-    return new FundRunDonorWithdrawCall__Inputs(this);
-  }
-
-  get outputs(): FundRunDonorWithdrawCall__Outputs {
-    return new FundRunDonorWithdrawCall__Outputs(this);
-  }
-}
-
-export class FundRunDonorWithdrawCall__Inputs {
-  _call: FundRunDonorWithdrawCall;
-
-  constructor(call: FundRunDonorWithdrawCall) {
-    this._call = call;
-  }
-
-  get _id(): i32 {
-    return this._call.inputValues[0].value.toI32();
-  }
-}
-
-export class FundRunDonorWithdrawCall__Outputs {
-  _call: FundRunDonorWithdrawCall;
-
-  constructor(call: FundRunDonorWithdrawCall) {
-    this._call = call;
-  }
-}
-
-export class FundRunOwnerWithdrawCall extends ethereum.Call {
-  get inputs(): FundRunOwnerWithdrawCall__Inputs {
-    return new FundRunOwnerWithdrawCall__Inputs(this);
-  }
-
-  get outputs(): FundRunOwnerWithdrawCall__Outputs {
-    return new FundRunOwnerWithdrawCall__Outputs(this);
-  }
-}
-
-export class FundRunOwnerWithdrawCall__Inputs {
-  _call: FundRunOwnerWithdrawCall;
-
-  constructor(call: FundRunOwnerWithdrawCall) {
-    this._call = call;
-  }
-
-  get _id(): i32 {
-    return this._call.inputValues[0].value.toI32();
-  }
-}
-
-export class FundRunOwnerWithdrawCall__Outputs {
-  _call: FundRunOwnerWithdrawCall;
-
-  constructor(call: FundRunOwnerWithdrawCall) {
     this._call = call;
   }
 }
@@ -1207,36 +945,6 @@ export class TransferOwnershipCall__Outputs {
   _call: TransferOwnershipCall;
 
   constructor(call: TransferOwnershipCall) {
-    this._call = call;
-  }
-}
-
-export class UpdateFundRunStatusCall extends ethereum.Call {
-  get inputs(): UpdateFundRunStatusCall__Inputs {
-    return new UpdateFundRunStatusCall__Inputs(this);
-  }
-
-  get outputs(): UpdateFundRunStatusCall__Outputs {
-    return new UpdateFundRunStatusCall__Outputs(this);
-  }
-}
-
-export class UpdateFundRunStatusCall__Inputs {
-  _call: UpdateFundRunStatusCall;
-
-  constructor(call: UpdateFundRunStatusCall) {
-    this._call = call;
-  }
-
-  get _id(): i32 {
-    return this._call.inputValues[0].value.toI32();
-  }
-}
-
-export class UpdateFundRunStatusCall__Outputs {
-  _call: UpdateFundRunStatusCall;
-
-  constructor(call: UpdateFundRunStatusCall) {
     this._call = call;
   }
 }

@@ -50,11 +50,8 @@ const FundRunPage: NextPage = () => {
                     id={data?.fundRuns[0].fundRunId}
                     title={data?.fundRuns[0].title}
                     description={data?.fundRuns[0].description}
-                    target={data?.fundRuns[0].target}
-                    deadline={data?.fundRuns[0].deadline.toString()}
                     amountCollected={data?.fundRuns[0].amountCollected}
                     amountWithdrawn={data?.fundRuns[0].amountWithdrawn}
-                    status={data?.fundRuns[0].status}
                   />
 
                   <FundRunDonate id={data?.fundRuns[0].fundRunId} owners={data?.fundRuns[0].owners} />

@@ -9,11 +9,8 @@ export const GQL_FUNDRUN_By_FundRunId = () => {
         owners
         title
         description
-        deadline
-        target
         amountCollected
         amountWithdrawn
-        status
       }
     }
   `;
@@ -30,11 +27,8 @@ export const GQL_FUNDRUNS_For_Display = () => {
         owners
         title
         description
-        deadline
-        target
         amountCollected
         amountWithdrawn
-        status
       }
     }
   `;
@@ -52,11 +46,8 @@ export const GQL_FUNDRUNS_Three_Tier = () => {
         owners
         title
         description
-        deadline
-        target
         amountCollected
         amountWithdrawn
-        status
         proposals {
           id
           proposalId
@@ -246,43 +237,4 @@ export const GQL_DONATIONS = (searchInput: string) => {
         }
       }
     `;
-};
-
-//queries page
-//OWNER-WITHDRAWALS ORDERED-BY FUND RUN
-export const GQL_OWNER_WITHDRAWALS = () => {
-  return gql`
-    query ($limit: Int!, $offset: Int!) {
-      ownerWithdrawals(orderBy: fundRunId, orderDirection: desc, first: $limit, skip: $offset) {
-        id
-        owner
-        grossWithdrawAmount
-        netWithdrawAmount
-        fundRun {
-          id
-          title
-        }
-      }
-    }
-  `;
-};
-
-//queries page
-//DONOR-WITHDRAWALS ORDERED-BY FUND RUN
-export const GQL_DONOR_WITHDRAWALS = () => {
-  return gql`
-    query ($limit: Int!, $offset: Int!) {
-      donorWithdrawals(orderBy: fundRunId, orderDirection: desc, first: $limit, skip: $offset) {
-        id
-        donor
-        amount
-        fundRun {
-          id
-          title
-          amountCollected
-          amountWithdrawn
-        }
-      }
-    }
-  `;
 };

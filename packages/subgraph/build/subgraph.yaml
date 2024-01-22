@@ -9,7 +9,7 @@ dataSources:
     network: localhost
     source:
       abi: CrowdFund
-      address: "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9"
+      address: "0x5FbDB2315678afecb367f032d93F642f64180aa3"
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -17,11 +17,8 @@ dataSources:
       entities:
         - ContractOwnerWithdrawal
         - Donation
-        - DonorWithdrawal
         - FundRun
-        - FundRunStatusChange
         - MultisigTransfer
-        - OwnerWithdrawal
         - OwnershipTransferred
         - Proposal
         - ProposalRevoke
@@ -34,16 +31,10 @@ dataSources:
           handler: handleContractOwnerWithdrawal
         - event: Donation(uint16,address,uint256)
           handler: handleDonation
-        - event: DonorWithdrawal(uint16,address,uint256)
-          handler: handleDonorWithdrawal
-        - event: FundRun(uint16,address[],string,string,uint256,uint256,uint256,uint256,uint8)
+        - event: FundRun(uint16,address[],string,string,uint256,uint256)
           handler: handleFundRun
-        - event: FundRunStatusChange(uint16,uint8)
-          handler: handleFundRunStatusChange
         - event: MultisigTransfer(uint16,uint16,address,uint256,uint256)
           handler: handleMultisigTransfer
-        - event: OwnerWithdrawal(uint16,address,uint256,uint256)
-          handler: handleOwnerWithdrawal
         - event: OwnershipTransferred(indexed address,indexed address)
           handler: handleOwnershipTransferred
         - event: Proposal(uint16,uint16,address,uint256,address,string,uint8,uint256,uint16)
