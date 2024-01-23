@@ -6,6 +6,12 @@ import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 import "../node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import { ECDSA } from "../node_modules/@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
+/**
+ * @title Profit Taker - Only Owner is allowed to take the profit from this contract
+ *  - Profit is 0.25% of all multisig transfers (not on the donation)
+ *
+ */
+
 contract ProfitTaker is Ownable, ReentrancyGuard {
 	uint256 public totalProfitsTaken = 0;
 	uint256 private commissionPayout = 0;

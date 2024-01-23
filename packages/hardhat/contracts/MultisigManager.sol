@@ -3,6 +3,16 @@ pragma solidity >=0.8.0 <0.9.0;
 
 import "./ProfitTaker.sol";
 
+/**
+ * @title Multisig Manager - proposal management and multisig transfers
+ *
+ *  FUNCTIONS for a TRANSFER:
+ * 
+ *    [external] 
+ *  - multisigWithdraw _>  _verifyMultisigRequest _> _processMultisigRequest
+ *                     _>  _multisigTransfer (sends funds)
+ */
+
 contract MultisigManager is ProfitTaker {
 	enum ProposalStatus {
 		Created,

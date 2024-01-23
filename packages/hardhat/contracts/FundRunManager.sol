@@ -3,6 +3,11 @@ pragma solidity >=0.8.0 <0.9.0;
 
 import "./MultisigManager.sol";
 
+/**
+ * @title Fund Run Manager - creates Fund Runs and allows for donations to them
+ *
+ */
+
 contract FundRunManager is MultisigManager {
 	event Donation(uint16 fundRunId, address donor, uint256 amount);
 

@@ -28,13 +28,15 @@ import "./FundRunManager.sol";
  *
  *
  *
+ *
+ *
+ * CrowdFundLibrary       (  structs  )
+ * ProfitTaker            (  contractOwnerWithdraw()  )
+ * MultisigManager        (  proposal management and multisig transfers  )
+ * FundRunManager         (  donations/payable, createFundRun()  )
+ * CrowdFund              (    ... working/devving here    )
+ *
  */
-
-// CrowdFundLibrary       (  structs  )
-// ProfitTaker            (  contractOwnerWithdraw()  )
-// MultisigManager        (  proposal management and multisigtransfers  )
-// FundRunManager         (  donations/payable, createFundRun()  )
-// CrowdFund              (    ... working/devving here    )
 
 contract CrowdFund is FundRunManager {
 	constructor(address _contractOwner) {
