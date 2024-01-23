@@ -357,21 +357,6 @@ export class CrowdFund extends ethereum.SmartContract {
     );
   }
 
-  getBalance(): BigInt {
-    let result = super.call("getBalance", "getBalance():(uint256)", []);
-
-    return result[0].toBigInt();
-  }
-
-  try_getBalance(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall("getBalance", "getBalance():(uint256)", []);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
   getNonce(_id: i32): BigInt {
     let result = super.call("getNonce", "getNonce(uint16):(uint256)", [
       ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(_id))
