@@ -38,6 +38,9 @@ contract ProfitTaker is Ownable, ReentrancyGuard {
 		emit ContractOwnerWithdrawal(msg.sender, amountToWithdraw);
 	}
 
+	/**
+	 * @dev  also called bt MultisigManager.sol
+	 */
 	function _getNetWithdrawAmount(
 		uint256 _grossWithdrawAmount
 	) internal returns (uint256 netWithdrawAmount) {

@@ -217,12 +217,38 @@ contract MultisigManager is ProfitTaker {
 		return vaultNonces[_id];
 	}
 
+	/**
+	 * @dev RETURNS FALSE IF:
+	 *      creator adds self as co-owner
+	 *      two co-owners have the same address
+	 * Otherwise returns TRUE
+     *
+     * Also called by: FundRunManager.sol
+	 */
+	function _validateOwners(
+		address _creator,
+		address[] memory _owners
+	) internal pure returns (bool) {
+		if (_owners.length == 1) return true;
+		bool creatorAlreadyInList = false;
+		address addrOne;
+		address addrTwo;
+		for (uint16 i = 0; i < _owners.length; i++) {
+			if (_owners[i] == _creator && creatorAlreadyInList) return false;
+			else if (_owners[i] == _creator) creatorAlreadyInList = true;
+			if (_owners[i] == addrOne || _owners[i] == addrTwo) return false;
+			if (i == 0) addrOne = _owners[i];
+			else if (i == 1) addrTwo = _owners[i];
+		}
+		return true;
+	}
+
 	function _verifyMultisigRequest(
 		CrowdFundLibrary.MultiSigRequest calldata _tx,
 		uint256 _nonce,
 		bytes[] calldata _signatures,
 		uint16 _id
-	) internal {
+	) private {
 		require(_nonce > vaultNonces[_id], "nonce already used");
 		uint256 signaturesCount = _signatures.length;
 		require(
@@ -252,7 +278,7 @@ contract MultisigManager is ProfitTaker {
 		CrowdFundLibrary.MultiSigRequest calldata _tx,
 		uint16 _id,
 		uint16 _proposalId
-	) internal {
+	) private {
 		_checkMultisigProposal(
 			fundRunValues[_id].amountCollected,
 			fundRunValues[_id].amountWithdrawn,
@@ -283,7 +309,7 @@ contract MultisigManager is ProfitTaker {
 	function _isOwnerOfFundRun(
 		address _addr,
 		uint16 _id
-	) internal view returns (bool) {
+	) private view returns (bool) {
 		for (uint16 i = 0; i < fundRunOwners[_id].length; i++) {
 			if (fundRunOwners[_id][i] == _addr) return true;
 		}
@@ -294,7 +320,7 @@ contract MultisigManager is ProfitTaker {
 		uint256 _amtCollected,
 		uint256 _amtWithdrawn,
 		uint256 _txAmt
-	) internal pure {
+	) private pure {
 		require(_amtCollected > 0, "There is nothing to withdraw");
 		require(
 			_amtCollected > _amtWithdrawn,
@@ -308,30 +334,6 @@ contract MultisigManager is ProfitTaker {
 			_amtWithdrawn + _txAmt <= _amtCollected,
 			"This proposal would overdraw this Fund Run."
 		);
-	}
-
-	/**
-	 * @dev RETURNS FALSE IF:
-	 *      creator adds self as co-owner
-	 *      two co-owners have the same address
-	 * Otherwise returns TRUE
-	 */
-	function _validateOwners(
-		address _creator,
-		address[] memory _owners
-	) internal pure returns (bool) {
-		if (_owners.length == 1) return true;
-		bool creatorAlreadyInList = false;
-		address addrOne;
-		address addrTwo;
-		for (uint16 i = 0; i < _owners.length; i++) {
-			if (_owners[i] == _creator && creatorAlreadyInList) return false;
-			else if (_owners[i] == _creator) creatorAlreadyInList = true;
-			if (_owners[i] == addrOne || _owners[i] == addrTwo) return false;
-			if (i == 0) addrOne = _owners[i];
-			else if (i == 1) addrTwo = _owners[i];
-		}
-		return true;
 	}
 
 	function _processMultisigRequest(
