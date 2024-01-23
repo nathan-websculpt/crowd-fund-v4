@@ -194,7 +194,7 @@
       },
       {
         "indexed": false,
-        "internalType": "enum CrowdFund.ProposalStatus",
+        "internalType": "enum MultisigManager.ProposalStatus",
         "name": "status",
         "type": "uint8"
       },
@@ -317,7 +317,7 @@
             "type": "string"
           }
         ],
-        "internalType": "struct CrowdFund.MultiSigRequest",
+        "internalType": "struct CrowdFundLibrary.MultiSigRequest",
         "name": "_tx",
         "type": "tuple"
       }
@@ -464,7 +464,7 @@
             "type": "string"
           }
         ],
-        "internalType": "struct CrowdFund.MultiSigRequest",
+        "internalType": "struct CrowdFundLibrary.MultiSigRequest",
         "name": "_tx",
         "type": "tuple"
       },
@@ -587,7 +587,7 @@
     "name": "proposalStatuses",
     "outputs": [
       {
-        "internalType": "enum CrowdFund.ProposalStatus",
+        "internalType": "enum MultisigManager.ProposalStatus",
         "name": "",
         "type": "uint8"
       }

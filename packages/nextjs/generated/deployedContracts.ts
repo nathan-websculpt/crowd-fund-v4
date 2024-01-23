@@ -5,7 +5,7 @@ const contracts = {
       name: "localhost",
       contracts: {
         CrowdFund: {
-          address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+          address: "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853",
           abi: [
             {
               inputs: [
@@ -202,7 +202,7 @@ const contracts = {
                 },
                 {
                   indexed: false,
-                  internalType: "enum CrowdFund.ProposalStatus",
+                  internalType: "enum MultisigManager.ProposalStatus",
                   name: "status",
                   type: "uint8",
                 },
@@ -325,7 +325,7 @@ const contracts = {
                       type: "string",
                     },
                   ],
-                  internalType: "struct CrowdFund.MultiSigRequest",
+                  internalType: "struct CrowdFundLibrary.MultiSigRequest",
                   name: "_tx",
                   type: "tuple",
                 },
@@ -472,7 +472,7 @@ const contracts = {
                       type: "string",
                     },
                   ],
-                  internalType: "struct CrowdFund.MultiSigRequest",
+                  internalType: "struct CrowdFundLibrary.MultiSigRequest",
                   name: "_tx",
                   type: "tuple",
                 },
@@ -595,7 +595,7 @@ const contracts = {
               name: "proposalStatuses",
               outputs: [
                 {
-                  internalType: "enum CrowdFund.ProposalStatus",
+                  internalType: "enum MultisigManager.ProposalStatus",
                   name: "",
                   type: "uint8",
                 },
