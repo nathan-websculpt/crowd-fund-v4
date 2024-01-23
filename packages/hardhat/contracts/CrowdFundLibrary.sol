@@ -23,5 +23,4 @@ library CrowdFundLibrary {
 		address donor;
 		mapping(uint256 => uint256) donorMoneyLog; //mapping(fundRunId => donationAmount)
 	}
-    
 }

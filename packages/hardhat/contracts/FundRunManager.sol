@@ -3,8 +3,7 @@ pragma solidity >=0.8.0 <0.9.0;
 
 import "./MultisigManager.sol";
 
-contract CrowdFundManager is MultisigManager {
-
+contract FundRunManager is MultisigManager {
 	event Donation(uint16 fundRunId, address donor, uint256 amount);
 
 	event FundRun(
@@ -34,35 +33,26 @@ contract CrowdFundManager is MultisigManager {
 		 *      prevents two co-owners from having the same address
 		 */
 		require(
-			validateOwners(msg.sender, _owners),
+			_validateOwners(msg.sender, _owners),
 			"The co-owners and the creator of a Fund Run must all have different wallet addresses."
 		);
 
-		CrowdFundLibrary.FundRunValues storage fundRunVals = fundRunValues[numberOfFundRuns];
+		CrowdFundLibrary.FundRunValues storage fundRunVals = fundRunValues[
+			numberOfFundRuns
+		];
 		fundRunVals.amountCollected = 0;
 		fundRunVals.amountWithdrawn = 0;
 
 		fundRunOwners[numberOfFundRuns] = _owners;
 
-		emit FundRun(
-			numberOfFundRuns,
-			_owners,
-			_title,
-			_description,
-			0,
-			0
-		);
+		emit FundRun(numberOfFundRuns, _owners, _title, _description, 0, 0);
 
 		numberOfFundRuns++;
 	}
 
 	function donateToFundRun(
 		uint16 _id
-	)
-		external
-		payable
-		ownsThisFundRun(_id, msg.sender, false)
-	{
+	) external payable ownsThisFundRun(_id, msg.sender, false) {
 		require(msg.value > 0, "Minimum payment amount not met.");
 		uint256 amount = msg.value;
 

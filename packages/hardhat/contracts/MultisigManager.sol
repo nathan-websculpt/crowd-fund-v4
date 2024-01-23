@@ -22,7 +22,7 @@ contract MultisigManager is ProfitTaker {
 	uint16 public numberOfMultisigProposals = 0;
 	uint16 public numberOfFundRuns = 0;
 
-	string private constant MSG_PREFIX = "\x19Ethereum Signed Message:\n32";    
+	string private constant MSG_PREFIX = "\x19Ethereum Signed Message:\n32";
 
 	event ProposalSignature(uint16 proposalId, address signer, bytes signature);
 
@@ -55,12 +55,12 @@ contract MultisigManager is ProfitTaker {
 	) {
 		if (mustOwnThisFundRun) {
 			require(
-				isOwnerOfFundRun(sender, id),
+				_isOwnerOfFundRun(sender, id),
 				"You are not the owner of this Fund Run."
 			);
 		} else {
 			require(
-				!isOwnerOfFundRun(sender, id),
+				!_isOwnerOfFundRun(sender, id),
 				"You own this Fund Run -- therefore, this operation is not allowed"
 			);
 		}
@@ -117,11 +117,12 @@ contract MultisigManager is ProfitTaker {
 		bytes calldata _signature,
 		uint16 _id,
 		CrowdFundLibrary.MultiSigRequest calldata _tx
-	)
-		external
-		ownsThisFundRun(_id, msg.sender, true)
-	{
-		internalCheckMultisigProposal(fundRunValues[_id].amountCollected, fundRunValues[_id].amountWithdrawn, _tx.amount);
+	) external ownsThisFundRun(_id, msg.sender, true) {
+		_checkMultisigProposal(
+			fundRunValues[_id].amountCollected,
+			fundRunValues[_id].amountWithdrawn,
+			_tx.amount
+		);
 		ProposalStatus thisStatus = ProposalStatus(0);
 		proposalCreators[numberOfMultisigProposals] = msg.sender;
 		proposalStatuses[numberOfMultisigProposals] = thisStatus;
@@ -225,7 +226,7 @@ contract MultisigManager is ProfitTaker {
 			bytes memory signature = _signatures[i];
 			address signer = ECDSA.recover(digest, signature);
 			require(
-				isOwnerOfFundRun(signer, _id),
+				_isOwnerOfFundRun(signer, _id),
 				"Possible Issues: Proposal completed, problem with signature, or you are not a co-owner of this Fund Run."
 			);
 			require(
@@ -242,10 +243,14 @@ contract MultisigManager is ProfitTaker {
 		uint16 _id,
 		uint16 _proposalId
 	) internal {
-		internalCheckMultisigProposal(fundRunValues[_id].amountCollected, fundRunValues[_id].amountWithdrawn, _tx.amount);
+		_checkMultisigProposal(
+			fundRunValues[_id].amountCollected,
+			fundRunValues[_id].amountWithdrawn,
+			_tx.amount
+		);
 
 		//contract takes its cut
-		uint256 netWithdrawAmount = getNetWithdrawAmount(_tx.amount);
+		uint256 netWithdrawAmount = _getNetWithdrawAmount(_tx.amount);
 
 		fundRunValues[_id].amountWithdrawn =
 			fundRunValues[_id].amountWithdrawn +
@@ -265,7 +270,7 @@ contract MultisigManager is ProfitTaker {
 		);
 	}
 
-	function isOwnerOfFundRun(
+	function _isOwnerOfFundRun(
 		address _addr,
 		uint16 _id
 	) internal view returns (bool) {
@@ -275,7 +280,7 @@ contract MultisigManager is ProfitTaker {
 		return false;
 	}
 
-	function internalCheckMultisigProposal(
+	function _checkMultisigProposal(
 		uint256 _amtCollected,
 		uint256 _amtWithdrawn,
 		uint256 _txAmt
@@ -301,7 +306,7 @@ contract MultisigManager is ProfitTaker {
 	 *      two co-owners have the same address
 	 * Otherwise returns TRUE
 	 */
-	function validateOwners(
+	function _validateOwners(
 		address _creator,
 		address[] memory _owners
 	) internal pure returns (bool) {
