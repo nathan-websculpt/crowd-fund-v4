@@ -4,22 +4,37 @@ pragma solidity >=0.8.0 <0.9.0;
 import "./FundRunManager.sol";
 
 /**
+ * @title Crowd Fund - Where new dev/work will be added
  * @dev NOT PRODUCTION-READY ... FOR LEARNING PURPOSES ONLY
- * going to start by removing deadlines
- * there will only be multisigs, now (no more single-owners)
+ *
+ * there will only be multisigs, now (no more single-owner Fund Runs)
  * Fund Runs will be open-ended (can be topped-off)
+ * removed deadlines, money-targets, owner-/donor-withdrawals
+ *
+ *                  ____> ALL CONTRACTS <____
+ *                      CrowdFundLibrary
+ *                             |
+ *                             V
+ *                        ProfitTaker
+ *                             |
+ *                             V
+ *                       MultisigManager
+ *                             |
+ *                             V
+ *                       FundRunManager
+ *                             |
+ *                             V
+ *                         CrowdFund
  *
  *
- * "Fund Runs" will be more like "business accounts" on a social network??
- * They will be able to "post" from their page, but ALL owners must agree on a post
- * "All Owners" may also soon change to a "threshold" of signatures required (instead of amount of owners)
+ *
  */
 
-// CrowdFundLibrary
-// ProfitTaker
-// MultisigManager
-// FundRunManager (donations, payables, etc)
-// CrowdFund ( ... working/devving here.)
+// CrowdFundLibrary       (  structs  )
+// ProfitTaker            (  contractOwnerWithdraw()  )
+// MultisigManager        (  proposal management and multisigtransfers  )
+// FundRunManager         (  donations/payable, createFundRun()  )
+// CrowdFund              (    ... working/devving here    )
 
 contract CrowdFund is FundRunManager {
 	constructor(address _contractOwner) {
