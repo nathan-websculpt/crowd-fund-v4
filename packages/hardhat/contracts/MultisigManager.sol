@@ -4,11 +4,11 @@ pragma solidity >=0.8.0 <0.9.0;
 import "./ProfitTaker.sol";
 
 /**
- * @title Multisig Manager - proposal management and multisig transfers
+ * @title Multisig Manager - handles proposal management and multisig transfers
  *
  *  FUNCTIONS for a TRANSFER:
- * 
- *    [external] 
+ *
+ *    [external]
  *  - multisigWithdraw _>  _verifyMultisigRequest _> _processMultisigRequest
  *                     _>  _multisigTransfer (sends funds)
  */

@@ -39,7 +39,7 @@ contract ProfitTaker is Ownable, ReentrancyGuard {
 	}
 
 	/**
-	 * @dev  also called by MultisigManager.sol
+	 * @dev called by MultisigManager.sol
 	 */
 	function _getNetWithdrawAmount(
 		uint256 _grossWithdrawAmount

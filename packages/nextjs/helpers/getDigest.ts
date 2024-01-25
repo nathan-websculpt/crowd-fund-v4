@@ -36,7 +36,7 @@ const getDigest = async (nonce: bigint, amount: bigint, to: string, proposedBy: 
               type: "string",
             },
           ],
-          internalType: "struct CrowdFund.MultiSigRequest", //TODO: update
+          internalType: "struct CrowdFundLibrary.MultiSigRequest",
           name: "_tx",
           type: "tuple",
         },
