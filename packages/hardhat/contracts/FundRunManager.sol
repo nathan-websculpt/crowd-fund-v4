@@ -2,6 +2,7 @@
 pragma solidity >=0.8.0 <0.9.0;
 
 import "./MultisigManager.sol";
+import "hardhat/console.sol";//TODO: remove
 
 /**
  * @title Fund Run Manager - creates Fund Runs and allows for donations to them
@@ -73,7 +74,33 @@ contract FundRunManager is MultisigManager {
 		uint256 newAmountCollected = fundRunValues[_id].amountCollected +
 			amount;
 		fundRunValues[_id].amountCollected = newAmountCollected;
+		
+		console.log("HARDHAT CONSOLE__>   donateToFundRun hit with", amount);
 
 		emit Donation(_id, msg.sender, amount);
+	}
+
+	/**
+	 * @dev RETURNS FALSE IF:
+	 *      creator adds self as co-owner
+	 *      two co-owners have the same address
+	 * Otherwise returns TRUE
+	 */
+	function _validateOwners(
+		address _creator,
+		address[] memory _owners
+	) private pure returns (bool) {
+		if (_owners.length == 1) return true;
+		bool creatorAlreadyInList = false;
+		address addrOne;
+		address addrTwo;
+		for (uint16 i = 0; i < _owners.length; i++) {
+			if (_owners[i] == _creator && creatorAlreadyInList) return false;
+			else if (_owners[i] == _creator) creatorAlreadyInList = true;
+			if (_owners[i] == addrOne || _owners[i] == addrTwo) return false;
+			if (i == 0) addrOne = _owners[i];
+			else if (i == 1) addrTwo = _owners[i];
+		}
+		return true;
 	}
 }

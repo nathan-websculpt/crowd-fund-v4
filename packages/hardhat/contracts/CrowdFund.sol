@@ -7,7 +7,7 @@ import "./FundRunManager.sol";
  * @title Crowd Fund - Where new dev/work will be added
  * @dev NOT PRODUCTION-READY ... FOR LEARNING PURPOSES ONLY
  *
- * there will only be multisigs, now (no more single-owner Fund Runs)
+ * Now there will only be multisig Fund Runs (no more single-owner Fund Runs)
  * Fund Runs will be open-ended (can be topped-off)
  * removed deadlines, money-targets, owner-/donor-withdrawals
  *

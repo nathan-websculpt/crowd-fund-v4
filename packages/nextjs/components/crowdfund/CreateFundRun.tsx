@@ -102,7 +102,7 @@ export const CreateFundRun = () => {
     <>
       <div className="px-6 pt-10 pb-8 shadow-xl sm:my-auto bg-secondary sm:mx-auto sm:max-w-11/12 md:w-9/12 sm:rounded-lg sm:px-10">
         <div className="flex items-center justify-center">
-          <div className="flex flex-col gap-2 sm:gap-5">
+          <div className="flex flex-col w-2/5 gap-2 sm:gap-5">
             <div className="flex justify-end mb-5">
               <Link href="/crowdfund/browse-fund-runs" passHref className="btn btn-sm btn-primary">
                 View Other Fund Runs

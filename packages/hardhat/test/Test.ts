@@ -1,15 +1,12 @@
-//yarn test ./test/MultisigTest.ts
-
 import { ethers } from "hardhat";
 import { CrowdFund } from "../typechain-types";
 import { formatEther, parseEther } from "ethers/lib/utils";
 import { expect } from "chai";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { BigNumber } from "ethers";
-import { setTimeout } from "timers/promises";
 
 describe("Multisig Test", function () {
-  this.timeout(125000); //2-minute timeout, Fund Runs have 1-minute deadlines
+  this.timeout(125000);
   let crowdFund: CrowdFund;
 
   let owner: SignerWithAddress;
@@ -50,22 +47,17 @@ describe("Multisig Test", function () {
     return await crowdFund.connect(walletSigning).multisigWithdraw(tx, nonce, fundRunID, proposalID, sigs);
   };
 
-  //creates a Fund Run as bob, alice, or john ... then checks the Event
   const createFundRun = async (
     walletSigning: SignerWithAddress,
     title: string,
     description: string,
-    targetAmount: BigNumber,
-    deadline: number,
     owners: string[],
   ) => {
-    const tx = await crowdFund.connect(walletSigning).createFundRun(title, description, targetAmount, deadline, owners);
+    const tx = await crowdFund.connect(walletSigning).createFundRun(title, description, owners);
     await expect(tx).to.emit(crowdFund, "FundRun");
   };
 
   describe("Deploying ...", function () {
-    this.timeout(125000); //2-minute timeout, Fund Runs have 1-minute deadlines
-
     it("Should deploy CrowdFund", async function () {
       const [a, b, c, d, e, f, g, h, j] = await ethers.getSigners();
       owner = a;
@@ -88,37 +80,14 @@ describe("Multisig Test", function () {
     });
 
     describe("Making test Fund Runs (this may take a moment) ...", function () {
-      it("Should make a REGULAR Fund Run", async function () {
-        const deadlineToCreateWith = 1;
-        await createFundRun(bob, "Bob's Fund Run", "Bob's Description", parseEther("1"), deadlineToCreateWith, [
-          bob.address,
-        ]);
-      });
-
       it("Should make a (2-Sig) MULTISIG Fund Run", async function () {
-        const deadlineToCreateWith = 1;
         const ownersArray = [alice.address, john.address];
-        await createFundRun(
-          alice,
-          "Alice AND John's Fund Run",
-          "2x MULTISIG FUNDRUN",
-          parseEther("1"),
-          deadlineToCreateWith,
-          ownersArray,
-        );
+        await createFundRun(alice, "Alice AND John's Fund Run", "2x MULTISIG FUNDRUN", ownersArray);
       });
 
       it("Should make a (3-sig) MULTISIG Fund Run", async function () {
-        const deadlineToCreateWith = 1;
         const ownersArray = [chandler.address, joey.address, ross.address];
-        await createFundRun(
-          chandler,
-          "Chandler/Joey/Ross Fund Run",
-          "3x MULTISIG FUNDRUN",
-          parseEther("1"),
-          deadlineToCreateWith,
-          ownersArray,
-        );
+        await createFundRun(chandler, "Chandler/Joey/Ross Fund Run", "3x MULTISIG FUNDRUN", ownersArray);
       });
 
       describe("Handling donations", function () {
@@ -136,21 +105,19 @@ describe("Multisig Test", function () {
           await tx.wait();
         });
 
-        it("Force-Ending Fund Runs...", async function () {
-          const endFundRun_Tx = await crowdFund.connect(alice).forceEnd(1);
-          endFundRun_Tx.wait();
-          const endFundRun_Tx2 = await crowdFund.connect(bob).forceEnd(2);
-          endFundRun_Tx2.wait();
-          await setTimeout(10500); //wait 10 more seconds -- exceed mining interval, or this breaks sporadically
-        });
-
         describe("Making Proposals", function () {
           it("(2-sig wallet)...Alice proposes to pay John 0.25 Ethers", async function () {
             const fundRunID = 1;
             const proposalID = 0;
             const transferAmount = parseEther("0.25");
             const reason = "Alice proposes to pay John 0.25 Ethers";
-            const multisigReq = { amount: transferAmount, to: john.address, proposedBy: alice.address, reason: reason };
+
+            const multisigReq = {
+              amount: transferAmount,
+              to: john.address,
+              proposedBy: alice.address,
+              reason: reason,
+            };
 
             const johnFirstBalance = await john.getBalance();
             const johnExpectedBalance = await johnFirstBalance.add(transferAmount);
@@ -163,6 +130,11 @@ describe("Multisig Test", function () {
 
             //sign digest; CREATING proposal;
             const aliceProposal_signature = await alice.signMessage(ethers.utils.arrayify(digest));
+
+            //TODO: Remove
+            //TODO
+            console.log("aliceProposal_signature", aliceProposal_signature); /////////////
+
             const creationTx = await crowdFund
               .connect(alice)
               .createMultisigProposal(aliceProposal_signature, fundRunID, multisigReq);

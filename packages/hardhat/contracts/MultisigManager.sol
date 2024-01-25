@@ -2,6 +2,7 @@
 pragma solidity >=0.8.0 <0.9.0;
 
 import "./ProfitTaker.sol";
+import "hardhat/console.sol";//TODO: remove
 
 /**
  * @title Multisig Manager - proposal management and multisig transfers
@@ -128,6 +129,7 @@ contract MultisigManager is ProfitTaker {
 		uint16 _id,
 		CrowdFundLibrary.MultiSigRequest calldata _tx
 	) external ownsThisFundRun(_id, msg.sender, true) {
+		console.log("HARDHAT CONSOLE__>   createMultisigProposal hit ... sig");
 		_checkMultisigProposal(
 			fundRunValues[_id].amountCollected,
 			fundRunValues[_id].amountWithdrawn,
@@ -174,6 +176,7 @@ contract MultisigManager is ProfitTaker {
 		proposalSigners[_proposalId].push(msg.sender);
 		proposalStatuses[_proposalId] = ProposalStatus(1);
 		emit ProposalSignature(_proposalId, msg.sender, _signature);
+		console.log("HARDHAT CONSOLE__>   supportMultisigProposal hit ... sig");
 	}
 
 	/**
@@ -192,6 +195,7 @@ contract MultisigManager is ProfitTaker {
 		txNotSent(_proposalId)
 		notRevoked(_proposalId)
 	{
+		console.log("HARDHAT CONSOLE__>   multisigWithdraw hit ... ");
 		_verifyMultisigRequest(_tx, _nonce, _signaturesList, _id);
 		_multisigTransfer(_tx, _id, _proposalId);
 	}
@@ -217,44 +221,20 @@ contract MultisigManager is ProfitTaker {
 		return vaultNonces[_id];
 	}
 
-	/**
-	 * @dev RETURNS FALSE IF:
-	 *      creator adds self as co-owner
-	 *      two co-owners have the same address
-	 * Otherwise returns TRUE
-     *
-     * Also called by: FundRunManager.sol
-	 */
-	function _validateOwners(
-		address _creator,
-		address[] memory _owners
-	) internal pure returns (bool) {
-		if (_owners.length == 1) return true;
-		bool creatorAlreadyInList = false;
-		address addrOne;
-		address addrTwo;
-		for (uint16 i = 0; i < _owners.length; i++) {
-			if (_owners[i] == _creator && creatorAlreadyInList) return false;
-			else if (_owners[i] == _creator) creatorAlreadyInList = true;
-			if (_owners[i] == addrOne || _owners[i] == addrTwo) return false;
-			if (i == 0) addrOne = _owners[i];
-			else if (i == 1) addrTwo = _owners[i];
-		}
-		return true;
-	}
-
 	function _verifyMultisigRequest(
 		CrowdFundLibrary.MultiSigRequest calldata _tx,
 		uint256 _nonce,
 		bytes[] calldata _signatures,
 		uint16 _id
 	) private {
+		console.log("HARDHAT CONSOLE__>   _verifyMultisigRequest hit ");
 		require(_nonce > vaultNonces[_id], "nonce already used");
 		uint256 signaturesCount = _signatures.length;
 		require(
 			signaturesCount == fundRunOwners[_id].length, //TODO: eventually getting a "max signature count" from user
 			"not enough signers"
 		);
+		console.log("HARDHAT CONSOLE__>   _verifyMultisigRequest ... AFTER requireds ");
 		bytes32 digest = _processMultisigRequest(_tx, _nonce);
 
 		address initialSigner;
@@ -284,6 +264,7 @@ contract MultisigManager is ProfitTaker {
 			fundRunValues[_id].amountWithdrawn,
 			_tx.amount
 		);
+		console.log("HARDHAT CONSOLE__>   _multisigTransfer hit ");
 
 		//contract takes its cut
 		uint256 netWithdrawAmount = _getNetWithdrawAmount(_tx.amount);
