@@ -129,7 +129,7 @@ contract MultisigManager is ProfitTaker {
 		uint16 _id,
 		CrowdFundLibrary.MultiSigRequest calldata _tx
 	) external ownsThisFundRun(_id, msg.sender, true) {
-		console.log("HARDHAT CONSOLE__>   createMultisigProposal hit ... sig");
+		console.log("HARDHAT CONSOLE__>   createMultisigProposal hit");
 		_checkMultisigProposal(
 			fundRunValues[_id].amountCollected,
 			fundRunValues[_id].amountWithdrawn,

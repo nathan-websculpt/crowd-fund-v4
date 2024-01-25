@@ -92,14 +92,14 @@ describe("Multisig Test", function () {
 
       describe("Handling donations", function () {
         it("Should complete all donations to the (2-sig)", async function () {
-          const fundRunID = 1;
+          const fundRunID = 0;
           const donationAmount = parseEther("1");
           const tx = await crowdFund.connect(someoneElse).donateToFundRun(fundRunID, { value: donationAmount });
           await tx.wait();
         });
 
         it("Should complete all donations to the (3-sig)", async function () {
-          const fundRunID = 2;
+          const fundRunID = 1;
           const donationAmount = parseEther("1");
           const tx = await crowdFund.connect(someoneElseEntirely).donateToFundRun(fundRunID, { value: donationAmount });
           await tx.wait();
@@ -107,7 +107,7 @@ describe("Multisig Test", function () {
 
         describe("Making Proposals", function () {
           it("(2-sig wallet)...Alice proposes to pay John 0.25 Ethers", async function () {
-            const fundRunID = 1;
+            const fundRunID = 0;
             const proposalID = 0;
             const transferAmount = parseEther("0.25");
             const reason = "Alice proposes to pay John 0.25 Ethers";
@@ -166,7 +166,7 @@ describe("Multisig Test", function () {
 
           //paying someone who is not the owner IS allowed, because a group can pay tertiary parties (like designers, etc)
           it("(2-sig wallet)...John proposes to pay Bob (who is not an owner) 0.75 Ethers", async function () {
-            const fundRunID = 1;
+            const fundRunID = 0;
             const proposalID = 1;
             const transferAmount = parseEther("0.75");
             const reason = "John proposes to pay Bob (who is not an owner) 0.75 Ethers";
@@ -211,7 +211,7 @@ describe("Multisig Test", function () {
           });
 
           it("(3-sig wallet)...The Chan-Chan Man proposes to pay Bob 0.5 Ethers", async function () {
-            const fundRunID = 2;
+            const fundRunID = 1;
             const proposalID = 2;
             const transferAmount = parseEther("0.5");
             const reason =
@@ -269,7 +269,7 @@ describe("Multisig Test", function () {
           });
 
           it("(3-sig wallet)...Ross proposes to pay Alice 0.5 Ethers", async function () {
-            const fundRunID = 2;
+            const fundRunID = 1;
             const proposalID = 3;
             const transferAmount = parseEther("0.5");
             const reason =
