@@ -1,6 +1,7 @@
 //SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0 <0.9.0;
 
+import "./CrowdFundLibrary.sol";
 import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 import "../node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import { ECDSA } from "../node_modules/@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
@@ -11,13 +12,6 @@ import { ECDSA } from "../node_modules/@openzeppelin/contracts/utils/cryptograph
  */
 
 contract CrowdFund is Ownable, ReentrancyGuard {
-	struct MultiSigRequest {
-		uint256 amount;
-		address to;
-		address proposedBy;
-		string reason;
-	}
-
 	struct FundRunValues {
 		uint256 target;
 		uint256 amountCollected;
@@ -235,7 +229,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 	function createMultisigProposal(
 		bytes calldata _signature,
 		uint16 _id,
-		MultiSigRequest calldata _tx
+		CrowdFundLibrary.MultiSigRequest calldata _tx
 	)
 		external
 		isMultisig(_id, true)
@@ -309,7 +303,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 	 * @dev  final transfer/call (when all signers are thought to have signed)
 	 */
 	function multisigWithdraw(
-		MultiSigRequest calldata _tx,
+		CrowdFundLibrary.MultiSigRequest calldata _tx,
 		uint256 _nonce,
 		uint16 _id,
 		uint16 _proposalId,
@@ -581,7 +575,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 	}
 
 	function _verifyMultisigRequest(
-		MultiSigRequest calldata _tx,
+		CrowdFundLibrary.MultiSigRequest calldata _tx,
 		uint256 _nonce,
 		bytes[] calldata _signatures,
 		uint16 _id
@@ -612,7 +606,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 	}
 
 	function _multisigTransfer(
-		MultiSigRequest calldata _tx,
+		CrowdFundLibrary.MultiSigRequest calldata _tx,
 		uint16 _id,
 		uint16 _proposalId
 	) private {
@@ -679,7 +673,7 @@ contract CrowdFund is Ownable, ReentrancyGuard {
 	}
 
 	function _processMultisigRequest(
-		MultiSigRequest calldata _tx,
+		CrowdFundLibrary.MultiSigRequest calldata _tx,
 		uint256 _nonce
 	) private pure returns (bytes32 _digest) {
 		bytes memory encoded = abi.encode(_tx);
