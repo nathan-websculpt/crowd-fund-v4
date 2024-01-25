@@ -2,7 +2,6 @@
 pragma solidity >=0.8.0 <0.9.0;
 
 import "./MultisigManager.sol";
-import "hardhat/console.sol";//TODO: remove
 
 /**
  * @title Fund Run Manager - creates Fund Runs and allows for donations to them
@@ -74,8 +73,6 @@ contract FundRunManager is MultisigManager {
 		uint256 newAmountCollected = fundRunValues[_id].amountCollected +
 			amount;
 		fundRunValues[_id].amountCollected = newAmountCollected;
-		
-		console.log("HARDHAT CONSOLE__>   donateToFundRun hit with", amount);
 
 		emit Donation(_id, msg.sender, amount);
 	}

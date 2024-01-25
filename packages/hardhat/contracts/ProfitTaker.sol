@@ -5,7 +5,6 @@ import "./CrowdFundLibrary.sol";
 import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 import "../node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import { ECDSA } from "../node_modules/@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
-import "hardhat/console.sol";//TODO: remove
 
 /**
  * @title Profit Taker - Only Owner is allowed to take the profit from this contract
