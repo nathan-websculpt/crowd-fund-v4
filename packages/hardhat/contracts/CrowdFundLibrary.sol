@@ -13,7 +13,6 @@ library CrowdFundLibrary {
 		address proposedBy;
 		string reason;
 	}
-<<<<<<< HEAD
 
 	struct FundRunValues {
 		uint256 amountCollected;
@@ -30,6 +29,3 @@ library CrowdFundLibrary {
 		mapping(uint256 => uint256) donorMoneyLog; //mapping(fundRunId => donationAmount)
 	}
 }
-=======
-}
->>>>>>> d7246d719ad6a02249890e54a7ed3845077b047a
