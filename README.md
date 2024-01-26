@@ -1,4 +1,4 @@
-# 🚀 🌑 Multisig Crowd Funds on The Graph
+# 🚀 🌑 Social Crowd Funds
 
 ### 📌 Overview
 <!-- - [Current Contract](https://sepolia.etherscan.io/address/0xbF7766D1488Fe89337174847D533052fc17B475b)
