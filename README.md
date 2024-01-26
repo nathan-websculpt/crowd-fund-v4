@@ -13,7 +13,7 @@ yarn install
 #### Smart Contract is now broken-down into this inheritance tree
 
 ```
-CrowdFundLibrary
+CrowdFundLibrary        ( has structs )
 _________________
 ProfitTaker.sol         import "./CrowdFundLibrary.sol"
 MultisigManager.sol     is ProfitTaker
