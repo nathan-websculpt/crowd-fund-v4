@@ -2,7 +2,7 @@
 
 ##### 📌 -b the-refactor
 
-To use this branch:
+To install this branch:
 
 ```
 git clone -b the-refactor https://github.com/nathan-websculpt/crowd-fund-v4.git YourProjectName
@@ -20,6 +20,11 @@ MultisigManager.sol     is ProfitTaker
 FundRunManager.sol      is MultisigManager
 CrowdFund.sol           is FundRunManager
 ```
+
+👇👇👇Note that this project uses a [subgraph](https://thegraph.com/docs/en/developing/creating-a-subgraph/). If you want to go over how to work with subgraphs, I have these blogs 👇👇👇
+ - [Local Graph Dev with Scaffold-ETH 2](https://medium.com/@websculpt/local-graph-dev-with-scaffold-eth-2-a774a67b148c)
+ - [Query Local Graph with Scaffold-ETH 2](https://medium.com/@websculpt/query-local-graph-with-scaffold-eth-2-0686a27405b8)
+ - [Deploying a Subgraph](https://medium.com/@websculpt/deploying-a-subgraph-8771f25d0d0f)
 
 ### 📌 Overview
 <!-- - [Current Contract](https://sepolia.etherscan.io/address/0xbF7766D1488Fe89337174847D533052fc17B475b)
