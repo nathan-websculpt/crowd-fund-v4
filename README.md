@@ -17,6 +17,11 @@
 ## ✅  Demo 📱
 https://github.com/nathan-websculpt/crowd-fund-v3/assets/58645278/a2969b7f-65bd-4757-bd5d-3be426946afc -->
 
+👇👇👇Note that this project uses a [subgraph](https://thegraph.com/docs/en/developing/creating-a-subgraph/). If you want to go over how to work with subgraphs, I have these blogs 👇👇👇
+ - [Local Graph Dev with Scaffold-ETH 2](https://medium.com/@websculpt/local-graph-dev-with-scaffold-eth-2-a774a67b148c)
+ - [Query Local Graph with Scaffold-ETH 2](https://medium.com/@websculpt/query-local-graph-with-scaffold-eth-2-0686a27405b8)
+ - [Deploying a Subgraph](https://medium.com/@websculpt/deploying-a-subgraph-8771f25d0d0f)
+
 ## 📝 Testing CrowdFund.sol
 Test script: *`packages/hardhat/test/Test.ts`*
  ```
