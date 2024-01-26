@@ -1,4 +1,22 @@
-# 🚀 🌑 Multisig Crowd Funds on The Graph
+# 🚀 🌑 Branch: The Refactor
+
+##### 📌 -b the-refactor
+
+To use this branch:
+
+```
+git clone -b the-refactor https://github.com/nathan-websculpt/crowd-fund-v4.git YourProjectName
+cd YourProjectName
+yarn install
+```
+
+#### Smart Contract is now broken-down into this inheritance tree
+ *                      CrowdFundLibrary
+ *                      _________________
+ *                        ProfitTaker
+ *                       MultisigManager
+ *                       FundRunManager
+ *                         CrowdFund
 
 ### 📌 Overview
 <!-- - [Current Contract](https://sepolia.etherscan.io/address/0xbF7766D1488Fe89337174847D533052fc17B475b)
