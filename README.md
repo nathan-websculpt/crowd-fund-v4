@@ -1,74 +1,41 @@
 # 🚀 🌑 Multisig Crowd Funds on The Graph
 
-
 ### 📌 Overview
-- [Current Contract](https://sepolia.etherscan.io/address/0xbF7766D1488Fe89337174847D533052fc17B475b)
+<!-- - [Current Contract](https://sepolia.etherscan.io/address/0xbF7766D1488Fe89337174847D533052fc17B475b)
   - 0xbF7766D1488Fe89337174847D533052fc17B475b
 - [Current Site](https://crowd-fund-v3-nextjs.vercel.app/)
 - [View a Vault](https://crowd-fund-v3-nextjs.vercel.app/crowdfund/vaults/10)
-- [View Query Data](https://crowd-fund-v3-nextjs.vercel.app/queries)
+- [View Query Data](https://crowd-fund-v3-nextjs.vercel.app/queries) -->
 - 😁 What's New? 😁
-  - [V2](https://github.com/nathan-websculpt/crowd-fund-v2) and V3 (this one) will represent two extremes
-  - [V2](https://github.com/nathan-websculpt/crowd-fund-v2) stores everything on the contract
-  - V3 will store as little as possible on the contract (will now be using a subgraph)
+  - [V3](https://github.com/nathan-websculpt/crowd-fund-v3) Fund Runs had 'Deadlines' and 'Target Ether Amounts' 
+  - In V4, these Fund Runs will be open-ended
+  - A group of owners could operate from their vault indefinitely ( if users continue to top-off these funds )
 
 ⚙️ Built with [Scaffold-ETH 2](#Contents), using NextJS, RainbowKit, Hardhat, Wagmi, and Typescript.
 
-
+<!-- 
 ## ✅  Demo 📱
-https://github.com/nathan-websculpt/crowd-fund-v3/assets/58645278/a2969b7f-65bd-4757-bd5d-3be426946afc
+https://github.com/nathan-websculpt/crowd-fund-v3/assets/58645278/a2969b7f-65bd-4757-bd5d-3be426946afc -->
 
-## Testing
+## 📝 Testing CrowdFund.sol
+Test script: *`packages/hardhat/test/Test.ts`*
+ ```
+ yarn test
+ ```
+The test script will act on behalf of 8 different test users
 
-The repo will pull-down configured for localhost, where you can run these tests.
+##### 🗝️🗝️ 🔒  A 2-Wallet Fund Run is created 
 
-### 🧶 Yarn Tests
- - 🗝️ 🔒 Single-Owner Tests
- ```
- yarn test ./test/CrowdFundTest.ts
- ```
- - 🗝️🗝️🗝️ 🔒 Multisig Tests
- ```
- yarn test ./test/MultisigTest.ts
- ```
- Note that you can also test against the Contract that is deployed to Sepolia by changing the default/target network **FROM** *localhost* **TO** *sepolia* in the following (2) files: 
- - \packages\hardhat\hardhat.config.ts
- - \packages\nextjs\scaffold.config.ts
+##### 🗝️🗝️🗝️ 🔒  A 3-Wallet Fund Run is created
 
-Or you can use the [subgraph directory](https://github.com/nathan-websculpt/crowd-fund-v3/tree/main/packages/subgraph/src) as an example that you can use when making your own subgraph in the [Subgraph Studio](https://thegraph.com/studio/)
+**💸 Donations are then made to these new Fund Runs**
+
+**😎 Proposals are then created and supported by Fund-Run-Owners -- facilitating the final Multisig Transfers**
 
 ## 🙂 Overview
 
-### 🔗 *CrowdFund.sol* and the *subgraph*
-
-#### 🚧🚧🚧There are major changes to the contract from [V2](https://github.com/nathan-websculpt/crowd-fund-v2/blob/main/packages/hardhat/contracts/CrowdFund.sol)🚧🚧🚧
-
-- V2 **structs** replaced by events
-  - which are mapped to Entities that we query from a subgraph later
-  - one-to-many relationships
-    - Fund Runs _> Proposals
-    - Proposals _> Signers/Signatures
-  - [schema.graphql](https://github.com/nathan-websculpt/crowd-fund-v3/blob/main/packages/subgraph/src/schema.graphql)
-  - [mapping.ts](https://github.com/nathan-websculpt/crowd-fund-v3/blob/main/packages/subgraph/src/mapping.ts)
-  - [view queries (code)](https://github.com/nathan-websculpt/crowd-fund-v3/blob/main/packages/nextjs/helpers/getQueries.ts)
-  - [view queries (live)](https://crowd-fund-v3-nextjs.vercel.app/queries)
-
-### 📜 *The 'rules-of-use' for Single-Wallet "Fund Runs":*
-
-- Crowd Fund is a way for users to create **“Fund Runs”** that other users can donate to.
-- These Fund Runs have deadlines ⌛
-  - defined in *minutes* by the user during Fund Run creation
-- Fund Runs also have a *target money goal* 
-- A donor can get their funds back from a Fund Run **IF**:
-  - The deadline ⌛ has passed
-  - The fund failed to raise its target capital
-- An owner can get their new donations **IF**:
-  - The deadline ⌛ has passed
-  - The fund’s donations are greater-than/equal-to the *target money goal*
-
 ###  📜 *How Multisig "Fund Runs" are different:*
 - The mindset of a multisig vault is that payments made (from it) are more granular 
-- If a user wants to get all of their funds at once, a Single-Wallet "Fund Run" is a better choice
 - A Multisig Fund Run is good for users who want to show their donors a set of record-logs for payments coming out of their vault
   - Examples: 💸💸💸
     - "We want to **pay *0x0123*** 0.4 Ether for *'Web Design Services'*" 
@@ -92,8 +59,8 @@ To get started with Crowd Fund, follow the steps below ([To get started with SE-
 1. Clone this repo & install dependencies
 
 ```
-git clone https://github.com/nathan-websculpt/crowd-fund-v3.git
-cd crowd-fund-v3
+git clone https://github.com/nathan-websculpt/crowd-fund-v4.git
+cd crowd-fund-v4
 yarn install
 ```
 
@@ -121,38 +88,14 @@ yarn start
 
 Visit your app on: `http://localhost:3000`. You can tweak the app config in `packages/nextjs/scaffold.config.ts`.
 
-Run smart contract test with `yarn hardhat:test`
+Run smart contract test with `yarn test`
 
 - Edit your smart contract `CrowdFund.sol` in `packages/hardhat/contracts`
 - Edit your frontend in `packages/nextjs/pages`
 - Edit your deployment scripts in `packages/hardhat/deploy`
 
-## 📝 Testing CrowdFund.sol
-Test script: *`packages/hardhat/test/CrowdFundTest.ts`*
- ```
- yarn test ./test/CrowdFundTest.ts
- ```
-The test script will act on behalf of 3 test users: Alice, Bob, and John.
-
-**Alice, Bob, and John will all three make Fund Runs...**
-
-Then the users will donate to one another, such that:
-- Alice's Fund is successful
-- John's Fund doesn't collect quite enough
-- Bob's Fund is a total failure
-
-The test then ensures that:
-- Alice can do an 'Owner Withdrawal'
-- Alice and Bob both can do a 'Donor Withdrawal' from John's Fund
-- Bob's Fund is empty
-
-##### 🗝️🗝️🗝️ 🔒  For Multisig Tests: 
- ```
- yarn test ./test/MultisigTest.ts
- ```
 <br />
 <br />
-
 
 ###### [ *Crowd Fund is built using Scaffold-ETH 2* ]
 # 🏗 Scaffold-ETH 2
