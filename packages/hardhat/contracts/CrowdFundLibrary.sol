@@ -28,4 +28,14 @@ library CrowdFundLibrary {
 		address donor;
 		mapping(uint256 => uint256) donorMoneyLog; //mapping(fundRunId => donationAmount)
 	}
+
+	/**
+	 * @dev new structs in V4
+	 * Multisig Request to make 
+	 * a social media post
+	 */
+	struct SocialMediaRequest {
+		string postText;
+		address proposedBy;
+	}
 }

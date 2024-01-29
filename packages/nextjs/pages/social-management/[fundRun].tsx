@@ -4,16 +4,16 @@ import { useQuery } from "@apollo/client";
 import { NextPage } from "next";
 import { MetaHeader } from "~~/components/MetaHeader";
 import { Spinner } from "~~/components/Spinner";
-import { CreateProposal } from "~~/components/crowdfund/proposals/CreateProposal";
-import { ProposalTable } from "~~/components/crowdfund/proposals/ProposalTable";
+import { CreateSocialProposal } from "~~/components/social-management/CreateSocialProposal";
+import { SocialProposalTable } from "~~/components/social-management/SocialProposalTable";
 import { GQL_FUNDRUN_By_FundRunId } from "~~/helpers/getQueries";
 
-const VaultPage: NextPage = () => {
+const ManageSocial: NextPage = () => {
   const router = useRouter();
-  const { vault } = router.query as { vault?: `${string}` }; //fundRunId
+  const { fundRun } = router.query as { fundRun?: `${string}` }; //fundRunId
 
   const { loading, error, data } = useQuery(GQL_FUNDRUN_By_FundRunId(), {
-    variables: { slug: parseInt(vault) },
+    variables: { slug: parseInt(fundRun) },
   });
 
   useEffect(() => {
@@ -22,12 +22,12 @@ const VaultPage: NextPage = () => {
 
   return (
     <>
-      <MetaHeader title="Multisig Vault" />
+      <MetaHeader title="Manage Social Media" />
       {data?.fundRuns[0] ? (
         <>
           <div className="px-6 pt-10 pb-8 shadow-xl sm:my-auto bg-secondary sm:mx-auto sm:max-w-11/12 md:w-9/12 sm:rounded-lg sm:px-10">
             <div className="flex items-center justify-center">
-              <CreateProposal fundRunId={data?.fundRuns[0].fundRunId} title={data?.fundRuns[0].title} />
+              <CreateSocialProposal fundRunId={data?.fundRuns[0].fundRunId} title={data?.fundRuns[0].title} />
             </div>
           </div>
           {loading ? (
@@ -38,7 +38,7 @@ const VaultPage: NextPage = () => {
               </div>
             </>
           ) : (
-            <ProposalTable fundRunId={data?.fundRuns[0].fundRunId} />
+            <SocialProposalTable fundRunId={data?.fundRuns[0].fundRunId} />
           )}
         </>
       ) : (
@@ -53,4 +53,4 @@ const VaultPage: NextPage = () => {
   );
 };
 
-export default VaultPage;
+export default ManageSocial;

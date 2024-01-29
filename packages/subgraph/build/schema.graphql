@@ -82,9 +82,55 @@ type ProposalSignature @entity {
   proposal: Proposal
 }
 
+type SocialProposal @entity {
+  id: Bytes!
+  socialProposalId: Int! # uint16
+  fundRunId: Int! # uint16
+  proposedBy: Bytes! # address
+  postText: String! # string
+  status: Int! # uint8
+  signaturesRequired: BigInt! # uint256
+  signaturesCount: Int! # uint16
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  signatures: [SocialProposalSignature!] @derivedFrom(field: "socialProposal")
+  fundRun: FundRun
+}
+
+type SocialProposalSignature @entity {
+  id: Bytes!
+  socialProposalId: Int! # uint16
+  signer: Bytes! # address
+  signature: Bytes! # bytes
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  socialProposal: SocialProposal
+}
+
 type ProposalRevoke @entity(immutable: true) {
   id: Bytes!
   proposalId: Int! # uint16
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type SocialProposalRevoke @entity(immutable: true) {
+  id: Bytes!
+  socialProposalId: Int! # uint16
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type SocialPost @entity(immutable: true) {
+  id: Bytes!
+  socialProposalId: Int! # uint16
+  fundRunId: Int! # uint16
+  proposedBy: Bytes! # address
+  postText: String!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!

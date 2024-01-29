@@ -246,6 +246,122 @@ export class ProposalSignature__Params {
   }
 }
 
+export class SocialPost extends ethereum.Event {
+  get params(): SocialPost__Params {
+    return new SocialPost__Params(this);
+  }
+}
+
+export class SocialPost__Params {
+  _event: SocialPost;
+
+  constructor(event: SocialPost) {
+    this._event = event;
+  }
+
+  get socialProposalId(): i32 {
+    return this._event.parameters[0].value.toI32();
+  }
+
+  get fundRunId(): i32 {
+    return this._event.parameters[1].value.toI32();
+  }
+
+  get proposedBy(): Address {
+    return this._event.parameters[2].value.toAddress();
+  }
+
+  get postText(): string {
+    return this._event.parameters[3].value.toString();
+  }
+}
+
+export class SocialProposal extends ethereum.Event {
+  get params(): SocialProposal__Params {
+    return new SocialProposal__Params(this);
+  }
+}
+
+export class SocialProposal__Params {
+  _event: SocialProposal;
+
+  constructor(event: SocialProposal) {
+    this._event = event;
+  }
+
+  get socialProposalId(): i32 {
+    return this._event.parameters[0].value.toI32();
+  }
+
+  get fundRunId(): i32 {
+    return this._event.parameters[1].value.toI32();
+  }
+
+  get proposedBy(): Address {
+    return this._event.parameters[2].value.toAddress();
+  }
+
+  get postText(): string {
+    return this._event.parameters[3].value.toString();
+  }
+
+  get status(): i32 {
+    return this._event.parameters[4].value.toI32();
+  }
+
+  get signaturesRequired(): BigInt {
+    return this._event.parameters[5].value.toBigInt();
+  }
+
+  get signaturesCount(): i32 {
+    return this._event.parameters[6].value.toI32();
+  }
+}
+
+export class SocialProposalRevoke extends ethereum.Event {
+  get params(): SocialProposalRevoke__Params {
+    return new SocialProposalRevoke__Params(this);
+  }
+}
+
+export class SocialProposalRevoke__Params {
+  _event: SocialProposalRevoke;
+
+  constructor(event: SocialProposalRevoke) {
+    this._event = event;
+  }
+
+  get socialProposalId(): i32 {
+    return this._event.parameters[0].value.toI32();
+  }
+}
+
+export class SocialProposalSignature extends ethereum.Event {
+  get params(): SocialProposalSignature__Params {
+    return new SocialProposalSignature__Params(this);
+  }
+}
+
+export class SocialProposalSignature__Params {
+  _event: SocialProposalSignature;
+
+  constructor(event: SocialProposalSignature) {
+    this._event = event;
+  }
+
+  get socialProposalId(): i32 {
+    return this._event.parameters[0].value.toI32();
+  }
+
+  get signer(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+
+  get signature(): Bytes {
+    return this._event.parameters[2].value.toBytes();
+  }
+}
+
 export class CrowdFund__fundRunValuesResult {
   value0: BigInt;
   value1: BigInt;
@@ -274,6 +390,21 @@ export class CrowdFund__fundRunValuesResult {
 export class CrowdFund extends ethereum.SmartContract {
   static bind(address: Address): CrowdFund {
     return new CrowdFund("CrowdFund", address);
+  }
+
+  MSG_PREFIX(): string {
+    let result = super.call("MSG_PREFIX", "MSG_PREFIX():(string)", []);
+
+    return result[0].toString();
+  }
+
+  try_MSG_PREFIX(): ethereum.CallResult<string> {
+    let result = super.tryCall("MSG_PREFIX", "MSG_PREFIX():(string)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toString());
   }
 
   donorLogs(param0: Address): Address {
@@ -376,6 +507,29 @@ export class CrowdFund extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
+  getSocialManagementNonce(_id: i32): BigInt {
+    let result = super.call(
+      "getSocialManagementNonce",
+      "getSocialManagementNonce(uint16):(uint256)",
+      [ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(_id))]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getSocialManagementNonce(_id: i32): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getSocialManagementNonce",
+      "getSocialManagementNonce(uint16):(uint256)",
+      [ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(_id))]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
   numberOfFundRuns(): i32 {
     let result = super.call(
       "numberOfFundRuns",
@@ -413,6 +567,29 @@ export class CrowdFund extends ethereum.SmartContract {
     let result = super.tryCall(
       "numberOfMultisigProposals",
       "numberOfMultisigProposals():(uint16)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toI32());
+  }
+
+  numberOfSocialProposals(): i32 {
+    let result = super.call(
+      "numberOfSocialProposals",
+      "numberOfSocialProposals():(uint16)",
+      []
+    );
+
+    return result[0].toI32();
+  }
+
+  try_numberOfSocialProposals(): ethereum.CallResult<i32> {
+    let result = super.tryCall(
+      "numberOfSocialProposals",
+      "numberOfSocialProposals():(uint16)",
       []
     );
     if (result.reverted) {
@@ -506,6 +683,107 @@ export class CrowdFund extends ethereum.SmartContract {
     let result = super.tryCall(
       "proposalStatuses",
       "proposalStatuses(uint16):(uint8)",
+      [ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(param0))]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toI32());
+  }
+
+  socialManagementNonces(param0: i32): BigInt {
+    let result = super.call(
+      "socialManagementNonces",
+      "socialManagementNonces(uint16):(uint256)",
+      [ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(param0))]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_socialManagementNonces(param0: i32): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "socialManagementNonces",
+      "socialManagementNonces(uint16):(uint256)",
+      [ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(param0))]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  socialProposalCreators(param0: i32): Address {
+    let result = super.call(
+      "socialProposalCreators",
+      "socialProposalCreators(uint16):(address)",
+      [ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(param0))]
+    );
+
+    return result[0].toAddress();
+  }
+
+  try_socialProposalCreators(param0: i32): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "socialProposalCreators",
+      "socialProposalCreators(uint16):(address)",
+      [ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(param0))]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  socialProposalSigners(param0: i32, param1: BigInt): Address {
+    let result = super.call(
+      "socialProposalSigners",
+      "socialProposalSigners(uint16,uint256):(address)",
+      [
+        ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(param0)),
+        ethereum.Value.fromUnsignedBigInt(param1)
+      ]
+    );
+
+    return result[0].toAddress();
+  }
+
+  try_socialProposalSigners(
+    param0: i32,
+    param1: BigInt
+  ): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "socialProposalSigners",
+      "socialProposalSigners(uint16,uint256):(address)",
+      [
+        ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(param0)),
+        ethereum.Value.fromUnsignedBigInt(param1)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  socialProposalStatuses(param0: i32): i32 {
+    let result = super.call(
+      "socialProposalStatuses",
+      "socialProposalStatuses(uint16):(uint8)",
+      [ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(param0))]
+    );
+
+    return result[0].toI32();
+  }
+
+  try_socialProposalStatuses(param0: i32): ethereum.CallResult<i32> {
+    let result = super.tryCall(
+      "socialProposalStatuses",
+      "socialProposalStatuses(uint16):(uint8)",
       [ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(param0))]
     );
     if (result.reverted) {
@@ -710,6 +988,56 @@ export class CreateMultisigProposalCall_txStruct extends ethereum.Tuple {
   }
 }
 
+export class CreateSocialProposalCall extends ethereum.Call {
+  get inputs(): CreateSocialProposalCall__Inputs {
+    return new CreateSocialProposalCall__Inputs(this);
+  }
+
+  get outputs(): CreateSocialProposalCall__Outputs {
+    return new CreateSocialProposalCall__Outputs(this);
+  }
+}
+
+export class CreateSocialProposalCall__Inputs {
+  _call: CreateSocialProposalCall;
+
+  constructor(call: CreateSocialProposalCall) {
+    this._call = call;
+  }
+
+  get _signature(): Bytes {
+    return this._call.inputValues[0].value.toBytes();
+  }
+
+  get _id(): i32 {
+    return this._call.inputValues[1].value.toI32();
+  }
+
+  get _tx(): CreateSocialProposalCall_txStruct {
+    return changetype<CreateSocialProposalCall_txStruct>(
+      this._call.inputValues[2].value.toTuple()
+    );
+  }
+}
+
+export class CreateSocialProposalCall__Outputs {
+  _call: CreateSocialProposalCall;
+
+  constructor(call: CreateSocialProposalCall) {
+    this._call = call;
+  }
+}
+
+export class CreateSocialProposalCall_txStruct extends ethereum.Tuple {
+  get postText(): string {
+    return this[0].toString();
+  }
+
+  get proposedBy(): Address {
+    return this[1].toAddress();
+  }
+}
+
 export class DonateToFundRunCall extends ethereum.Call {
   get inputs(): DonateToFundRunCall__Inputs {
     return new DonateToFundRunCall__Inputs(this);
@@ -737,6 +1065,64 @@ export class DonateToFundRunCall__Outputs {
 
   constructor(call: DonateToFundRunCall) {
     this._call = call;
+  }
+}
+
+export class FinalizeAndPostCall extends ethereum.Call {
+  get inputs(): FinalizeAndPostCall__Inputs {
+    return new FinalizeAndPostCall__Inputs(this);
+  }
+
+  get outputs(): FinalizeAndPostCall__Outputs {
+    return new FinalizeAndPostCall__Outputs(this);
+  }
+}
+
+export class FinalizeAndPostCall__Inputs {
+  _call: FinalizeAndPostCall;
+
+  constructor(call: FinalizeAndPostCall) {
+    this._call = call;
+  }
+
+  get _tx(): FinalizeAndPostCall_txStruct {
+    return changetype<FinalizeAndPostCall_txStruct>(
+      this._call.inputValues[0].value.toTuple()
+    );
+  }
+
+  get _nonce(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+
+  get _id(): i32 {
+    return this._call.inputValues[2].value.toI32();
+  }
+
+  get _socialProposalId(): i32 {
+    return this._call.inputValues[3].value.toI32();
+  }
+
+  get _signaturesList(): Array<Bytes> {
+    return this._call.inputValues[4].value.toBytesArray();
+  }
+}
+
+export class FinalizeAndPostCall__Outputs {
+  _call: FinalizeAndPostCall;
+
+  constructor(call: FinalizeAndPostCall) {
+    this._call = call;
+  }
+}
+
+export class FinalizeAndPostCall_txStruct extends ethereum.Tuple {
+  get postText(): string {
+    return this[0].toString();
+  }
+
+  get proposedBy(): Address {
+    return this[1].toAddress();
   }
 }
 
@@ -866,6 +1252,40 @@ export class RevokeMultisigProposalCall__Outputs {
   }
 }
 
+export class RevokeSocialProposalCall extends ethereum.Call {
+  get inputs(): RevokeSocialProposalCall__Inputs {
+    return new RevokeSocialProposalCall__Inputs(this);
+  }
+
+  get outputs(): RevokeSocialProposalCall__Outputs {
+    return new RevokeSocialProposalCall__Outputs(this);
+  }
+}
+
+export class RevokeSocialProposalCall__Inputs {
+  _call: RevokeSocialProposalCall;
+
+  constructor(call: RevokeSocialProposalCall) {
+    this._call = call;
+  }
+
+  get _id(): i32 {
+    return this._call.inputValues[0].value.toI32();
+  }
+
+  get _socialProposalId(): i32 {
+    return this._call.inputValues[1].value.toI32();
+  }
+}
+
+export class RevokeSocialProposalCall__Outputs {
+  _call: RevokeSocialProposalCall;
+
+  constructor(call: RevokeSocialProposalCall) {
+    this._call = call;
+  }
+}
+
 export class SupportMultisigProposalCall extends ethereum.Call {
   get inputs(): SupportMultisigProposalCall__Inputs {
     return new SupportMultisigProposalCall__Inputs(this);
@@ -900,6 +1320,44 @@ export class SupportMultisigProposalCall__Outputs {
   _call: SupportMultisigProposalCall;
 
   constructor(call: SupportMultisigProposalCall) {
+    this._call = call;
+  }
+}
+
+export class SupportSocialProposalCall extends ethereum.Call {
+  get inputs(): SupportSocialProposalCall__Inputs {
+    return new SupportSocialProposalCall__Inputs(this);
+  }
+
+  get outputs(): SupportSocialProposalCall__Outputs {
+    return new SupportSocialProposalCall__Outputs(this);
+  }
+}
+
+export class SupportSocialProposalCall__Inputs {
+  _call: SupportSocialProposalCall;
+
+  constructor(call: SupportSocialProposalCall) {
+    this._call = call;
+  }
+
+  get _signature(): Bytes {
+    return this._call.inputValues[0].value.toBytes();
+  }
+
+  get _id(): i32 {
+    return this._call.inputValues[1].value.toI32();
+  }
+
+  get _socialProposalId(): i32 {
+    return this._call.inputValues[2].value.toI32();
+  }
+}
+
+export class SupportSocialProposalCall__Outputs {
+  _call: SupportSocialProposalCall;
+
+  constructor(call: SupportSocialProposalCall) {
     this._call = call;
   }
 }

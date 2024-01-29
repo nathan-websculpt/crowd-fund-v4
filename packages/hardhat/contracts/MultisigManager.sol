@@ -32,7 +32,7 @@ contract MultisigManager is ProfitTaker {
 	uint16 public numberOfMultisigProposals = 0;
 	uint16 public numberOfFundRuns = 0;
 
-	string private constant MSG_PREFIX = "\x19Ethereum Signed Message:\n32";
+	string public constant MSG_PREFIX = "\x19Ethereum Signed Message:\n32";
 
 	event ProposalSignature(uint16 proposalId, address signer, bytes signature);
 
@@ -216,6 +216,16 @@ contract MultisigManager is ProfitTaker {
 	function getNonce(uint16 _id) external view returns (uint256) {
 		return vaultNonces[_id];
 	}
+	
+	function _isOwnerOfFundRun(
+		address _addr,
+		uint16 _id
+	) internal view returns (bool) {
+		for (uint16 i = 0; i < fundRunOwners[_id].length; i++) {
+			if (fundRunOwners[_id][i] == _addr) return true;
+		}
+		return false;
+	}
 
 	function _verifyMultisigRequest(
 		CrowdFundLibrary.MultiSigRequest calldata _tx,
@@ -278,16 +288,6 @@ contract MultisigManager is ProfitTaker {
 			netWithdrawAmount,
 			_tx.amount
 		);
-	}
-
-	function _isOwnerOfFundRun(
-		address _addr,
-		uint16 _id
-	) private view returns (bool) {
-		for (uint16 i = 0; i < fundRunOwners[_id].length; i++) {
-			if (fundRunOwners[_id][i] == _addr) return true;
-		}
-		return false;
 	}
 
 	function _checkMultisigProposal(

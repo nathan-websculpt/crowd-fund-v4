@@ -9,7 +9,7 @@ dataSources:
     network: localhost
     source:
       abi: CrowdFund
-      address: "0x9A676e781A523b5d0C0e43731313A708CB607508"
+      address: "0x610178dA211FEF7D417bC0e6FeD39F05609AD788"
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -21,8 +21,11 @@ dataSources:
         - MultisigTransfer
         - OwnershipTransferred
         - Proposal
+        - SocialProposal
         - ProposalRevoke
         - ProposalSignature
+        - SocialProposalSignature
+        - SocialPost
       abis:
         - name: CrowdFund
           file: ./abis/localhost_CrowdFund.json
@@ -39,8 +42,16 @@ dataSources:
           handler: handleOwnershipTransferred
         - event: Proposal(uint16,uint16,address,uint256,address,string,uint8,uint256,uint16)
           handler: handleProposal
+        - event: SocialProposal(uint16,uint16,address,string,uint8,uint256,uint16)
+          handler: handleSocialProposal
         - event: ProposalRevoke(uint16)
           handler: handleProposalRevoke
         - event: ProposalSignature(uint16,address,bytes)
           handler: handleProposalSignature
+        - event: SocialProposalSignature(uint16,address,bytes)
+          handler: handleSocialProposalSignature
+        - event: SocialPost(uint16,uint16,address,string)
+          handler: handleSocialPost
+        - event: SocialProposalRevoke(uint16)
+          handler: handleSocialProposalRevoke
       file: ./src/mapping.ts

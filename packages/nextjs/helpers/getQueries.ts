@@ -82,6 +82,20 @@ export const GQL_SIGNATURES = () => {
   `;
 };
 
+//for Finalization of a Proposal
+//returns all signatures for a Proposal (which are then sent to the contract)
+export const GQL_SOCIAL_SIGNATURES = () => {
+  return gql`
+    query ($slug1: Int!, $slug2: Int!) {
+      socialProposals(where: { fundRunId: $slug1, socialProposalId: $slug2 }) {
+        signatures {
+          signature
+        }
+      }
+    }
+  `;
+};
+
 //for the table on Vaults page
 //will not return revoked proposals
 export const GQL_PROPOSALS_By_FundRunId = () => {
@@ -237,4 +251,26 @@ export const GQL_DONATIONS = (searchInput: string) => {
         }
       }
     `;
+};
+
+//for the SOCIAL Proposals Table
+//will not return revoked proposals
+export const GQL_SOCIAL_PROPOSALS_By_FundRunId = () => {
+  return gql`
+    query ($slug: Int!) {
+      socialProposals(where: { fundRunId: $slug, status_lt: 3 }) {
+        id
+        socialProposalId
+        fundRunId
+        proposedBy
+        postText
+        status
+        signatures {
+          id
+          signer
+          signature
+        }
+      }
+    }
+  `;
 };

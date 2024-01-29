@@ -1050,6 +1050,349 @@ export class ProposalSignature extends Entity {
   }
 }
 
+export class SocialProposal extends Entity {
+  constructor(id: Bytes) {
+    super();
+    this.set("id", Value.fromBytes(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save SocialProposal entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.BYTES,
+        `Entities of type SocialProposal must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("SocialProposal", id.toBytes().toHexString(), this);
+    }
+  }
+
+  static loadInBlock(id: Bytes): SocialProposal | null {
+    return changetype<SocialProposal | null>(
+      store.get_in_block("SocialProposal", id.toHexString())
+    );
+  }
+
+  static load(id: Bytes): SocialProposal | null {
+    return changetype<SocialProposal | null>(
+      store.get("SocialProposal", id.toHexString())
+    );
+  }
+
+  get id(): Bytes {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set id(value: Bytes) {
+    this.set("id", Value.fromBytes(value));
+  }
+
+  get socialProposalId(): i32 {
+    let value = this.get("socialProposalId");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI32();
+    }
+  }
+
+  set socialProposalId(value: i32) {
+    this.set("socialProposalId", Value.fromI32(value));
+  }
+
+  get fundRunId(): i32 {
+    let value = this.get("fundRunId");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI32();
+    }
+  }
+
+  set fundRunId(value: i32) {
+    this.set("fundRunId", Value.fromI32(value));
+  }
+
+  get proposedBy(): Bytes {
+    let value = this.get("proposedBy");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set proposedBy(value: Bytes) {
+    this.set("proposedBy", Value.fromBytes(value));
+  }
+
+  get postText(): string {
+    let value = this.get("postText");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set postText(value: string) {
+    this.set("postText", Value.fromString(value));
+  }
+
+  get status(): i32 {
+    let value = this.get("status");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI32();
+    }
+  }
+
+  set status(value: i32) {
+    this.set("status", Value.fromI32(value));
+  }
+
+  get signaturesRequired(): BigInt {
+    let value = this.get("signaturesRequired");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set signaturesRequired(value: BigInt) {
+    this.set("signaturesRequired", Value.fromBigInt(value));
+  }
+
+  get signaturesCount(): i32 {
+    let value = this.get("signaturesCount");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI32();
+    }
+  }
+
+  set signaturesCount(value: i32) {
+    this.set("signaturesCount", Value.fromI32(value));
+  }
+
+  get blockNumber(): BigInt {
+    let value = this.get("blockNumber");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set blockNumber(value: BigInt) {
+    this.set("blockNumber", Value.fromBigInt(value));
+  }
+
+  get blockTimestamp(): BigInt {
+    let value = this.get("blockTimestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set blockTimestamp(value: BigInt) {
+    this.set("blockTimestamp", Value.fromBigInt(value));
+  }
+
+  get transactionHash(): Bytes {
+    let value = this.get("transactionHash");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set transactionHash(value: Bytes) {
+    this.set("transactionHash", Value.fromBytes(value));
+  }
+
+  get signatures(): SocialProposalSignatureLoader {
+    return new SocialProposalSignatureLoader(
+      "SocialProposal",
+      this.get("id")!
+        .toBytes()
+        .toHexString(),
+      "signatures"
+    );
+  }
+
+  get fundRun(): Bytes | null {
+    let value = this.get("fundRun");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set fundRun(value: Bytes | null) {
+    if (!value) {
+      this.unset("fundRun");
+    } else {
+      this.set("fundRun", Value.fromBytes(<Bytes>value));
+    }
+  }
+}
+
+export class SocialProposalSignature extends Entity {
+  constructor(id: Bytes) {
+    super();
+    this.set("id", Value.fromBytes(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(
+      id != null,
+      "Cannot save SocialProposalSignature entity without an ID"
+    );
+    if (id) {
+      assert(
+        id.kind == ValueKind.BYTES,
+        `Entities of type SocialProposalSignature must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("SocialProposalSignature", id.toBytes().toHexString(), this);
+    }
+  }
+
+  static loadInBlock(id: Bytes): SocialProposalSignature | null {
+    return changetype<SocialProposalSignature | null>(
+      store.get_in_block("SocialProposalSignature", id.toHexString())
+    );
+  }
+
+  static load(id: Bytes): SocialProposalSignature | null {
+    return changetype<SocialProposalSignature | null>(
+      store.get("SocialProposalSignature", id.toHexString())
+    );
+  }
+
+  get id(): Bytes {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set id(value: Bytes) {
+    this.set("id", Value.fromBytes(value));
+  }
+
+  get socialProposalId(): i32 {
+    let value = this.get("socialProposalId");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI32();
+    }
+  }
+
+  set socialProposalId(value: i32) {
+    this.set("socialProposalId", Value.fromI32(value));
+  }
+
+  get signer(): Bytes {
+    let value = this.get("signer");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set signer(value: Bytes) {
+    this.set("signer", Value.fromBytes(value));
+  }
+
+  get signature(): Bytes {
+    let value = this.get("signature");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set signature(value: Bytes) {
+    this.set("signature", Value.fromBytes(value));
+  }
+
+  get blockNumber(): BigInt {
+    let value = this.get("blockNumber");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set blockNumber(value: BigInt) {
+    this.set("blockNumber", Value.fromBigInt(value));
+  }
+
+  get blockTimestamp(): BigInt {
+    let value = this.get("blockTimestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set blockTimestamp(value: BigInt) {
+    this.set("blockTimestamp", Value.fromBigInt(value));
+  }
+
+  get transactionHash(): Bytes {
+    let value = this.get("transactionHash");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set transactionHash(value: Bytes) {
+    this.set("transactionHash", Value.fromBytes(value));
+  }
+
+  get socialProposal(): Bytes | null {
+    let value = this.get("socialProposal");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set socialProposal(value: Bytes | null) {
+    if (!value) {
+      this.unset("socialProposal");
+    } else {
+      this.set("socialProposal", Value.fromBytes(<Bytes>value));
+    }
+  }
+}
+
 export class ProposalRevoke extends Entity {
   constructor(id: Bytes) {
     super();
@@ -1146,6 +1489,237 @@ export class ProposalRevoke extends Entity {
   }
 }
 
+export class SocialProposalRevoke extends Entity {
+  constructor(id: Bytes) {
+    super();
+    this.set("id", Value.fromBytes(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save SocialProposalRevoke entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.BYTES,
+        `Entities of type SocialProposalRevoke must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("SocialProposalRevoke", id.toBytes().toHexString(), this);
+    }
+  }
+
+  static loadInBlock(id: Bytes): SocialProposalRevoke | null {
+    return changetype<SocialProposalRevoke | null>(
+      store.get_in_block("SocialProposalRevoke", id.toHexString())
+    );
+  }
+
+  static load(id: Bytes): SocialProposalRevoke | null {
+    return changetype<SocialProposalRevoke | null>(
+      store.get("SocialProposalRevoke", id.toHexString())
+    );
+  }
+
+  get id(): Bytes {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set id(value: Bytes) {
+    this.set("id", Value.fromBytes(value));
+  }
+
+  get socialProposalId(): i32 {
+    let value = this.get("socialProposalId");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI32();
+    }
+  }
+
+  set socialProposalId(value: i32) {
+    this.set("socialProposalId", Value.fromI32(value));
+  }
+
+  get blockNumber(): BigInt {
+    let value = this.get("blockNumber");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set blockNumber(value: BigInt) {
+    this.set("blockNumber", Value.fromBigInt(value));
+  }
+
+  get blockTimestamp(): BigInt {
+    let value = this.get("blockTimestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set blockTimestamp(value: BigInt) {
+    this.set("blockTimestamp", Value.fromBigInt(value));
+  }
+
+  get transactionHash(): Bytes {
+    let value = this.get("transactionHash");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set transactionHash(value: Bytes) {
+    this.set("transactionHash", Value.fromBytes(value));
+  }
+}
+
+export class SocialPost extends Entity {
+  constructor(id: Bytes) {
+    super();
+    this.set("id", Value.fromBytes(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save SocialPost entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.BYTES,
+        `Entities of type SocialPost must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("SocialPost", id.toBytes().toHexString(), this);
+    }
+  }
+
+  static loadInBlock(id: Bytes): SocialPost | null {
+    return changetype<SocialPost | null>(
+      store.get_in_block("SocialPost", id.toHexString())
+    );
+  }
+
+  static load(id: Bytes): SocialPost | null {
+    return changetype<SocialPost | null>(
+      store.get("SocialPost", id.toHexString())
+    );
+  }
+
+  get id(): Bytes {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set id(value: Bytes) {
+    this.set("id", Value.fromBytes(value));
+  }
+
+  get socialProposalId(): i32 {
+    let value = this.get("socialProposalId");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI32();
+    }
+  }
+
+  set socialProposalId(value: i32) {
+    this.set("socialProposalId", Value.fromI32(value));
+  }
+
+  get fundRunId(): i32 {
+    let value = this.get("fundRunId");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI32();
+    }
+  }
+
+  set fundRunId(value: i32) {
+    this.set("fundRunId", Value.fromI32(value));
+  }
+
+  get proposedBy(): Bytes {
+    let value = this.get("proposedBy");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set proposedBy(value: Bytes) {
+    this.set("proposedBy", Value.fromBytes(value));
+  }
+
+  get postText(): string {
+    let value = this.get("postText");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set postText(value: string) {
+    this.set("postText", Value.fromString(value));
+  }
+
+  get blockNumber(): BigInt {
+    let value = this.get("blockNumber");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set blockNumber(value: BigInt) {
+    this.set("blockNumber", Value.fromBigInt(value));
+  }
+
+  get blockTimestamp(): BigInt {
+    let value = this.get("blockTimestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set blockTimestamp(value: BigInt) {
+    this.set("blockTimestamp", Value.fromBigInt(value));
+  }
+
+  get transactionHash(): Bytes {
+    let value = this.get("transactionHash");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set transactionHash(value: Bytes) {
+    this.set("transactionHash", Value.fromBytes(value));
+  }
+}
+
 export class ProposalLoader extends Entity {
   _entity: string;
   _field: string;
@@ -1179,5 +1753,23 @@ export class ProposalSignatureLoader extends Entity {
   load(): ProposalSignature[] {
     let value = store.loadRelated(this._entity, this._id, this._field);
     return changetype<ProposalSignature[]>(value);
+  }
+}
+
+export class SocialProposalSignatureLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): SocialProposalSignature[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<SocialProposalSignature[]>(value);
   }
 }
