@@ -20,7 +20,7 @@ const Entry: NextPage = () => {
           <Link href="/social-management/0" passHref className="btn btn-sm btn-primary">
             NEW: social media manager
           </Link>
-          <Link href="/social-management/0" passHref className="btn btn-sm btn-primary">
+          <Link href="/social/0" passHref className="btn btn-sm btn-primary">
             NEW: fund run social media
           </Link>
         </div>

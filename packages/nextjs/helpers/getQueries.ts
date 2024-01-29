@@ -34,6 +34,26 @@ export const GQL_FUNDRUNS_For_Display = () => {
   `;
 };
 
+//for viewing the Fund Run's "Social Media Page" list on /browse-fund-runs
+//returns latest-first
+export const GQL_SOCIAL_POSTS_For_Display = () => {
+  return gql`
+    query ($limit: Int!, $offset: Int!, $fundRunId: Int!) {
+      socialPosts(
+        where: { fundRunId: $fundRunId }
+        orderBy: socialProposalId
+        orderDirection: desc
+        first: $limit
+        skip: $offset
+      ) {
+        id
+        postText
+        proposedBy
+      }
+    }
+  `;
+};
+
 //queries page
 //for viewing 3-tier table
 //ALL Fund Runs
