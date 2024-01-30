@@ -129,6 +129,7 @@ type SocialPost @entity(immutable: true) {
   id: Bytes!
   socialProposalId: Int! # uint16
   fundRunId: Int! # uint16
+  fundRunTitle: String! 
   proposedBy: Bytes! # address
   postText: String!
   blockNumber: BigInt!

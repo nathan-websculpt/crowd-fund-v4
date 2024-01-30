@@ -49,6 +49,8 @@ export const GQL_SOCIAL_POSTS_For_Display = () => {
         id
         postText
         proposedBy
+        fundRunId
+        fundRunTitle
       }
     }
   `;

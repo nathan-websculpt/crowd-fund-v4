@@ -14,7 +14,6 @@ const ViewSocial: NextPage = () => {
           </button>
         </div>
 
-        <h1 className="font-bold text-primary-content">Posts from this Fund Run</h1>
         <SocialPostList />
       </div>
     </>

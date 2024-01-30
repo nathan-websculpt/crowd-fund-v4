@@ -34,6 +34,7 @@ export const SocialPostList = () => {
   } else {
     return (
       <>
+        <h1 className="font-bold text-primary-content">Posts from Fund Run: {data?.socialPosts[0].fundRunTitle}</h1>
         <div className="flex justify-center gap-3 mb-3">
           <span className="my-auto text-lg">Page {pageNum + 1}</span>
           <select
@@ -59,7 +60,12 @@ export const SocialPostList = () => {
             key={p.id.toString()}
             className="flex flex-col gap-2 p-2 m-4 border shadow-xl border-base-300 bg-base-200 sm:rounded-lg"
           >
-            <SocialPostDisplay postText={p.postText} proposedBy={p.proposedBy} />
+            <SocialPostDisplay
+              fundRunId={p.fundRunId}
+              fundRunTitle={p.fundRunTitle}
+              postText={p.postText}
+              proposedBy={p.proposedBy}
+            />
           </div>
         ))}
 

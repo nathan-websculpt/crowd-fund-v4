@@ -1654,6 +1654,19 @@ export class SocialPost extends Entity {
     this.set("fundRunId", Value.fromI32(value));
   }
 
+  get fundRunTitle(): string {
+    let value = this.get("fundRunTitle");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set fundRunTitle(value: string) {
+    this.set("fundRunTitle", Value.fromString(value));
+  }
+
   get proposedBy(): Bytes {
     let value = this.get("proposedBy");
     if (!value || value.kind == ValueKind.NULL) {

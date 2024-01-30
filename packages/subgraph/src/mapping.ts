@@ -11,7 +11,7 @@ import {
   ProposalSignature as ProposalSignatureEvent,
   SocialProposalSignature as SocialProposalSignatureEvent,
   SocialPost as SocialPostEvent,
-  SocialProposalRevoke as SocialProposalRevokeEvent
+  SocialProposalRevoke as SocialProposalRevokeEvent,
 } from "../generated/CrowdFund/CrowdFund";
 import {
   ContractOwnerWithdrawal,
@@ -25,7 +25,7 @@ import {
   ProposalSignature,
   SocialProposalSignature,
   SocialPost,
-  SocialProposalRevoke
+  SocialProposalRevoke,
 } from "../generated/schema";
 
 export function handleContractOwnerWithdrawal(
@@ -267,7 +267,9 @@ export function handleSocialProposal(event: SocialProposalEvent): void {
   entity.save();
 }
 
-export function handleSocialProposalSignature(event: SocialProposalSignatureEvent): void {
+export function handleSocialProposalSignature(
+  event: SocialProposalSignatureEvent
+): void {
   let entity = new SocialProposalSignature(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   );
@@ -285,14 +287,20 @@ export function handleSocialProposalSignature(event: SocialProposalSignatureEven
     )
   );
   if (socialProposalEntity !== null) {
-    let newProposalCount = BigInt.fromI32(socialProposalEntity.signaturesCount + 1);
+    let newProposalCount = BigInt.fromI32(
+      socialProposalEntity.signaturesCount + 1
+    );
 
     if (socialProposalEntity.signaturesCount === 0) {
       socialProposalEntity.signaturesCount += 1;
-    } else if (newProposalCount.equals(socialProposalEntity.signaturesRequired)) {
+    } else if (
+      newProposalCount.equals(socialProposalEntity.signaturesRequired)
+    ) {
       socialProposalEntity.status = 1;
       socialProposalEntity.signaturesCount += 1;
-      log.debug("debug one {}", [socialProposalEntity.signaturesCount.toString()]);
+      log.debug("debug one {}", [
+        socialProposalEntity.signaturesCount.toString(),
+      ]);
     } else {
       socialProposalEntity.signaturesCount += 1;
     }
@@ -302,6 +310,31 @@ export function handleSocialProposalSignature(event: SocialProposalSignatureEven
     log.debug("debug three {}", [
       "NO SOCIAL PROPOSAL FOUND: handleSocialProposalSignature() ~mapping",
     ]);
+  }
+
+  entity.save();
+}
+
+export function handleSocialProposalRevoke(
+  event: SocialProposalRevokeEvent
+): void {
+  let entity = new SocialProposalRevoke(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
+  );
+  entity.socialProposalId = event.params.socialProposalId;
+
+  entity.blockNumber = event.block.number;
+  entity.blockTimestamp = event.block.timestamp;
+  entity.transactionHash = event.transaction.hash;
+
+  let socialProposalEntity = SocialProposal.load(
+    Bytes.fromHexString("socialproposals_").concat(
+      Bytes.fromI32(event.params.socialProposalId)
+    )
+  );
+  if (socialProposalEntity !== null) {
+    socialProposalEntity.status = 3;
+    socialProposalEntity.save();
   }
 
   entity.save();
@@ -329,29 +362,10 @@ export function handleSocialPost(event: SocialPostEvent): void {
     proposalEntity.status = 2;
     proposalEntity.save();
   }
-
-  entity.save();
-}
-
-export function handleSocialProposalRevoke(event: SocialProposalRevokeEvent): void {
-  let entity = new SocialProposalRevoke(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
+  let fundRunEntity = FundRun.load(
+    Bytes.fromHexString("fundruns__").concat(Bytes.fromI32(entity.fundRunId))
   );
-  entity.socialProposalId = event.params.socialProposalId;
-
-  entity.blockNumber = event.block.number;
-  entity.blockTimestamp = event.block.timestamp;
-  entity.transactionHash = event.transaction.hash;
-
-  let socialProposalEntity = SocialProposal.load(
-    Bytes.fromHexString("socialproposals_").concat(
-      Bytes.fromI32(event.params.socialProposalId)
-    )
-  );
-  if (socialProposalEntity !== null) {
-    socialProposalEntity.status = 3;
-    socialProposalEntity.save();
-  }
+  if (fundRunEntity !== null) entity.fundRunTitle = fundRunEntity.title;
 
   entity.save();
 }

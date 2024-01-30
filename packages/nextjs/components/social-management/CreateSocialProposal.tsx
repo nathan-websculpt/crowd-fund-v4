@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import router from "next/router";
 import { SignMessageReturnType, toBytes } from "viem";
 import { useAccount, useWalletClient } from "wagmi";
@@ -46,8 +47,8 @@ export const CreateSocialProposal = (fundRun: CreateSocialProposalProps) => {
       newErr("A reason is required.");
       return;
     }
-    if (postTextInput.trim().length > 350) {
-      newErr("The max-length for the reason field is 350 characters");
+    if (postTextInput.trim().length > 550) {
+      newErr("The max-length for the reason field is 550 characters");
       return;
     }
 
@@ -84,11 +85,14 @@ export const CreateSocialProposal = (fundRun: CreateSocialProposalProps) => {
 
   return (
     <>
-      <div className="flex flex-col gap-2 sm:gap-5">
-        <div className="flex justify-start mb-5">
+      <div className="flex flex-col w-full gap-2 sm:gap-5 sm:w-4/5 md:w-3/5">
+        <div className="flex justify-start gap-3 mb-5">
           <button className="btn btn-sm btn-primary" onClick={() => router.back()}>
             Back
           </button>
+          <Link href={`/social/${fundRun?.fundRunId}`} passHref className="btn btn-sm btn-primary">
+            View Your Page
+          </Link>
         </div>
         {error ? (
           <div className="flex justify-center">
@@ -107,11 +111,13 @@ export const CreateSocialProposal = (fundRun: CreateSocialProposalProps) => {
           nonce will be off (for the unfinished proposal).
         </h4>
 
-        <div className="sm:gap-5 sm:flex sm:flex-row">
+        <div className="justify-center sm:gap-5 sm:flex sm:flex-row">
           <div className="flex flex-col">
-            <label className="text-lg font-bold">Post Text</label>
-            <input
-              type="text"
+            <label className="mb-3 text-2xl font-bold">Propose a Post</label>
+            <textarea
+              name="post-text-input"
+              rows={5}
+              cols={55}
               placeholder="What would you like to say to your donors?"
               className="px-3 py-3 border rounded-lg bg-base-200 border-base-300"
               value={postTextInput}
