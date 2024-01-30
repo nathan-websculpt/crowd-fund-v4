@@ -55,10 +55,6 @@ export const SupportSocialProposal = (sp: SupportSocialProposalProps) => {
 
   return (
     <>
-      {/* 
-if (loading) return <p>Loading ...</p>;
-
-if (error) return `Error! ${error}`; */}
       <td className="w-1/12 text-center md:py-4">
         <div className="tooltip tooltip-primary tooltip-right" data-tip="Support this proposal before finalizing.">
           <button className="w-full btn" onClick={() => supportProposal()} disabled={isLoading}>

@@ -34,7 +34,7 @@ export const GQL_FUNDRUNS_For_Display = () => {
   `;
 };
 
-//for viewing the Fund Run's "Social Media Page" list on /browse-fund-runs
+//for viewing the Fund Run's "Social Media Page" list-of-posts on "/social/{fundRunId}"
 //returns latest-first
 export const GQL_SOCIAL_POSTS_For_Display = () => {
   return gql`
@@ -104,8 +104,8 @@ export const GQL_SIGNATURES = () => {
   `;
 };
 
-//for Finalization of a Proposal
-//returns all signatures for a Proposal (which are then sent to the contract)
+//for Finalization of a Social Media Post
+//returns all signatures for a proposed Post (which are then sent to the contract)
 export const GQL_SOCIAL_SIGNATURES = () => {
   return gql`
     query ($slug1: Int!, $slug2: Int!) {

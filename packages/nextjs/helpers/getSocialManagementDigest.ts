@@ -1,4 +1,4 @@
-// gets digest for a multisig proposal (CreateProposal.tsx and SupportProposal.tsx)
+// gets digest for a social post proposal
 import { encodeAbiParameters, encodePacked, keccak256 } from "viem";
 
 const getSocialManagementDigest = async (nonce: bigint, postText: string, proposedBy: string) => {

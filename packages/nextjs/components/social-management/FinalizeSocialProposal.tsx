@@ -20,12 +20,11 @@ export const FinalizeSocialProposal = (proposal: FinalizeSocialProposalProps) =>
   const [getProposal, { loading, error, data }] = useLazyQuery(GQL_SOCIAL_SIGNATURES());
 
   useEffect(() => {
-    if (error !== undefined && error !== null) console.log("GQL_SIGNATURES Query Error: ", error);
+    if (error !== undefined && error !== null) console.log("GQL_SOCIAL_SIGNATURES Query Error: ", error);
   }, [error]);
 
   useEffect(() => {
     if (nonce !== undefined) {
-      console.log("getting sigs");
       getProposal({ variables: { slug1: proposal.fundRunId, slug2: proposal.socialProposalId } });
     }
   }, [nonce]);
@@ -35,7 +34,6 @@ export const FinalizeSocialProposal = (proposal: FinalizeSocialProposalProps) =>
       console.log(data);
       const thisArr = [];
       for (let i = 0; i < data.socialProposals[0].signatures.length; i++) {
-        console.log("looping sigs: ", data.socialProposals[0].signatures[i].signature);
         thisArr.push(data.socialProposals[0].signatures[i].signature);
       }
       setSignaturesList(thisArr);

@@ -44,11 +44,11 @@ export const CreateSocialProposal = (fundRun: CreateSocialProposalProps) => {
     setErrorMsg("");
     setError(false);
     if (postTextInput.trim().length === 0) {
-      newErr("A reason is required.");
+      newErr("Post Text is required.");
       return;
     }
     if (postTextInput.trim().length > 550) {
-      newErr("The max-length for the reason field is 550 characters");
+      newErr("The max-length for the field is 550 characters");
       return;
     }
 

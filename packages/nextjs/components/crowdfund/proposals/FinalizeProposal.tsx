@@ -27,7 +27,6 @@ export const FinalizeProposal = (proposal: FinalizeProposalProps) => {
 
   useEffect(() => {
     if (nonce !== undefined) {
-      console.log("getting sigs");
       getProposal({ variables: { slug1: proposal.fundRunId, slug2: proposal.proposalId } });
     }
   }, [nonce]);
@@ -37,7 +36,6 @@ export const FinalizeProposal = (proposal: FinalizeProposalProps) => {
       console.log(data);
       const thisArr = [];
       for (let i = 0; i < data.proposals[0].signatures.length; i++) {
-        console.log("looping sigs: ", data.proposals[0].signatures[i].signature);
         thisArr.push(data.proposals[0].signatures[i].signature);
       }
       setSignaturesList(thisArr);

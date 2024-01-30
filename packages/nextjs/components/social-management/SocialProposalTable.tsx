@@ -11,7 +11,7 @@ interface SocialProposalTableProps {
 export const SocialProposalTable = (fundRun: SocialProposalTableProps) => {
   const { loading, error, data } = useQuery(GQL_SOCIAL_PROPOSALS_By_FundRunId(), {
     variables: { slug: fundRun.fundRunId },
-    pollInterval: 1000,
+    pollInterval: 5000,
   });
 
   useEffect(() => {
