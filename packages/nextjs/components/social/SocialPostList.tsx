@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
@@ -34,7 +35,21 @@ export const SocialPostList = () => {
   } else {
     return (
       <>
-        <h1 className="font-bold text-primary-content">Posts from Fund Run: {data?.socialPosts[0].fundRunTitle}</h1>
+        {data?.socialPosts[0] !== undefined ? (
+          <div className="flex flex-col mb-12">
+            <h1 className="font-bold text-primary-content">Posts from Fund Run: {data?.socialPosts[0].fundRunTitle}</h1>
+            <Link
+              href={`/social-management/${data?.socialPosts[0].fundRunId}`}
+              passHref
+              className="w-full max-w-full min-w-full mt-4"
+            >
+              <p className="text-center bg-primary">Click Here to Manage Social Page</p>
+            </Link>
+            <p className="-mt-2 text-center">☝️ would be removed in production ☝️</p>
+          </div>
+        ) : (
+          <h1 className="mt-4 mb-4 text-4xl text-center text-primary-content">No Fund Run found</h1>
+        )}
         <div className="flex justify-center gap-3 mb-3">
           <span className="my-auto text-lg">Page {pageNum + 1}</span>
           <select

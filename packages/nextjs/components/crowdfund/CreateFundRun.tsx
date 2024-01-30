@@ -83,6 +83,9 @@ export const CreateFundRun = () => {
         newErr("You input your own wallet address as one of the co-owners ... please select a different address.");
         return;
       }
+    } else {
+      newErr("You failed to input a co-owner; Please add at least one more address to proceed.");
+      return;
     }
 
     // validation complete

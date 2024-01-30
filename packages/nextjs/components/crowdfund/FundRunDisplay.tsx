@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { formatEther } from "viem";
 
 interface FundRunDisplayProps {
@@ -11,6 +12,15 @@ interface FundRunDisplayProps {
 export const FundRunDisplay = (fundRun: FundRunDisplayProps) => {
   return (
     <>
+      <div className="flex justify-between">
+        <Link href={`/social-management/${fundRun?.id}`} passHref className="btn btn-primary btn-xs">
+          Manage Social Page
+        </Link>
+        <Link href={`/social/${fundRun?.id}`} passHref className="btn btn-primary btn-xs">
+          View Social Page
+        </Link>
+      </div>
+
       <label className="text-lg font-bold underline">Title</label>
       <p className="mt-0 mb-1 text-xl">{fundRun.title}</p>
 
