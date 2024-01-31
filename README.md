@@ -3,13 +3,17 @@
 ### 📌 Overview
 <!-- - [Current Contract](https://sepolia.etherscan.io/address/0xbF7766D1488Fe89337174847D533052fc17B475b)
   - 0xbF7766D1488Fe89337174847D533052fc17B475b
-- [Current Site](https://crowd-fund-v3-nextjs.vercel.app/)
-- [View a Vault](https://crowd-fund-v3-nextjs.vercel.app/crowdfund/vaults/10)
-- [View Query Data](https://crowd-fund-v3-nextjs.vercel.app/queries) -->
+- [Current Site](https://crowd-fund-v4-nextjs.vercel.app/)
+- [View a Vault](https://crowd-fund-v4-nextjs.vercel.app/crowdfund/vaults/10)
+- [View Query Data](https://crowd-fund-v4-nextjs.vercel.app/queries) -->
 - 😁 What's New? 😁
   - [V3](https://github.com/nathan-websculpt/crowd-fund-v3) Fund Runs had 'Deadlines' and 'Target Ether Amounts' 
   - In V4, these Fund Runs will be open-ended
   - A group of owners could operate from their vault indefinitely ( if users continue to top-off these funds )
+  - New "Social Media" elements to Crowd Fund:
+    - Posts can be made by a group of owners, but they ALL must agree on what they are posting first.
+    - [View a Social Media Page](https://crowd-fund-v4-nextjs.vercel.app/social/0)
+    - [View a Social Media Management Page](https://crowd-fund-v4-nextjs.vercel.app/social-management/0)
 
 ⚙️ Built with [Scaffold-ETH 2](#Contents), using NextJS, RainbowKit, Hardhat, Wagmi, and Typescript.
 
