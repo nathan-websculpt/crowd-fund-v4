@@ -40,10 +40,6 @@ export const Header = () => {
         <NavLink href="/">Home</NavLink>
       </li>
       <li>
-        <NavLink href="/crowdfund/start-fund-run">CREATE NEW</NavLink>
-        {/* TODO: PRODTODO:: remove this ^^^ */}
-      </li>
-      <li>
         <NavLink href="/crowdfund/browse-fund-runs">View Fund Runs</NavLink>
       </li>
       <li>
@@ -51,9 +47,6 @@ export const Header = () => {
       </li>
       <li>
         <NavLink href="/queries">Queries</NavLink>
-      </li>
-      <li>
-        <NavLink href="/blockexplorer">Block Explorer</NavLink>
       </li>
     </>
   );
