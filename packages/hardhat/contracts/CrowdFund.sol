@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0 <0.9.0;
 
-import "./FundRunManager.sol";
+import "./SocialPostManager.sol";
 
 /**
  * @title Crowd Fund - Where new dev/work will be added
@@ -42,7 +42,7 @@ import "./FundRunManager.sol";
  *
  */
 
-contract CrowdFund is FundRunManager {
+contract CrowdFund is SocialPostManager {
 	constructor(address _contractOwner) {
 		_transferOwnership(_contractOwner);
 	}
