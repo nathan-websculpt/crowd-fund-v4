@@ -48,7 +48,7 @@ export const SocialPostList = () => {
             <p className="-mt-2 text-center">☝️ would be removed in production ☝️</p>
           </div>
         ) : (
-          <h1 className="mt-4 mb-4 text-4xl text-center text-primary-content">No Fund Run found</h1>
+          <h1 className="mt-4 mb-4 text-4xl text-center text-primary-content">No Posts found for this Fund Run</h1>
         )}
         <div className="flex justify-center gap-3 mb-3">
           <span className="my-auto text-lg">Page {pageNum + 1}</span>

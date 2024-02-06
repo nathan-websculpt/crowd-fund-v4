@@ -2,6 +2,7 @@
 pragma solidity >=0.8.0 <0.9.0;
 
 import "./SocialPostManager.sol";
+import "./FollowersManager.sol";
 
 /**
  * @title Crowd Fund - Where new dev/work will be added
@@ -42,20 +43,8 @@ import "./SocialPostManager.sol";
  *
  */
 
-contract CrowdFund is SocialPostManager {	
-	event Follow(uint16 fundRunId, address user);
-	
-	event Unfollow(uint16 fundRunId, address user);
-
+contract CrowdFund is SocialPostManager, FollowersManager {	
 	constructor(address _contractOwner) {
 		_transferOwnership(_contractOwner);
-	}
-
-	function follow(uint16 _fundRunId) external {
-		emit Follow(_fundRunId, msg.sender);
-	}
-
-	function unfollow(uint16 _fundRunId) external {
-		emit Unfollow(_fundRunId, msg.sender);
 	}
 }
