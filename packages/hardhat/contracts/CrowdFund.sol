@@ -2,7 +2,7 @@
 pragma solidity >=0.8.0 <0.9.0;
 
 import "./SocialPostManager.sol";
-import "./Singleton.sol";
+import "./Singleton.sol"; 
 
 /**
  * @title Crowd Fund - Where new dev/work will be added
