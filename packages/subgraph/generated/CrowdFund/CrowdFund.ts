@@ -58,6 +58,28 @@ export class Donation__Params {
   }
 }
 
+export class Follow extends ethereum.Event {
+  get params(): Follow__Params {
+    return new Follow__Params(this);
+  }
+}
+
+export class Follow__Params {
+  _event: Follow;
+
+  constructor(event: Follow) {
+    this._event = event;
+  }
+
+  get fundRunId(): i32 {
+    return this._event.parameters[0].value.toI32();
+  }
+
+  get user(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+}
+
 export class FundRun extends ethereum.Event {
   get params(): FundRun__Params {
     return new FundRun__Params(this);
@@ -359,6 +381,28 @@ export class SocialProposalSignature__Params {
 
   get signature(): Bytes {
     return this._event.parameters[2].value.toBytes();
+  }
+}
+
+export class Unfollow extends ethereum.Event {
+  get params(): Unfollow__Params {
+    return new Unfollow__Params(this);
+  }
+}
+
+export class Unfollow__Params {
+  _event: Unfollow;
+
+  constructor(event: Unfollow) {
+    this._event = event;
+  }
+
+  get fundRunId(): i32 {
+    return this._event.parameters[0].value.toI32();
+  }
+
+  get user(): Address {
+    return this._event.parameters[1].value.toAddress();
   }
 }
 
@@ -1126,6 +1170,36 @@ export class FinalizeAndPostCall_txStruct extends ethereum.Tuple {
   }
 }
 
+export class FollowCall extends ethereum.Call {
+  get inputs(): FollowCall__Inputs {
+    return new FollowCall__Inputs(this);
+  }
+
+  get outputs(): FollowCall__Outputs {
+    return new FollowCall__Outputs(this);
+  }
+}
+
+export class FollowCall__Inputs {
+  _call: FollowCall;
+
+  constructor(call: FollowCall) {
+    this._call = call;
+  }
+
+  get _fundRunId(): i32 {
+    return this._call.inputValues[0].value.toI32();
+  }
+}
+
+export class FollowCall__Outputs {
+  _call: FollowCall;
+
+  constructor(call: FollowCall) {
+    this._call = call;
+  }
+}
+
 export class MultisigWithdrawCall extends ethereum.Call {
   get inputs(): MultisigWithdrawCall__Inputs {
     return new MultisigWithdrawCall__Inputs(this);
@@ -1388,6 +1462,36 @@ export class TransferOwnershipCall__Outputs {
   _call: TransferOwnershipCall;
 
   constructor(call: TransferOwnershipCall) {
+    this._call = call;
+  }
+}
+
+export class UnfollowCall extends ethereum.Call {
+  get inputs(): UnfollowCall__Inputs {
+    return new UnfollowCall__Inputs(this);
+  }
+
+  get outputs(): UnfollowCall__Outputs {
+    return new UnfollowCall__Outputs(this);
+  }
+}
+
+export class UnfollowCall__Inputs {
+  _call: UnfollowCall;
+
+  constructor(call: UnfollowCall) {
+    this._call = call;
+  }
+
+  get _fundRunId(): i32 {
+    return this._call.inputValues[0].value.toI32();
+  }
+}
+
+export class UnfollowCall__Outputs {
+  _call: UnfollowCall;
+
+  constructor(call: UnfollowCall) {
     this._call = call;
   }
 }

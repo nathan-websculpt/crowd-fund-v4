@@ -65,6 +65,25 @@
       },
       {
         "indexed": false,
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      }
+    ],
+    "name": "Follow",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint16",
+        "name": "fundRunId",
+        "type": "uint16"
+      },
+      {
+        "indexed": false,
         "internalType": "address[]",
         "name": "owners",
         "type": "address[]"
@@ -312,7 +331,7 @@
       },
       {
         "indexed": false,
-        "internalType": "enum CrowdFund.SocialProposalStatus",
+        "internalType": "enum SocialPostManager.SocialProposalStatus",
         "name": "status",
         "type": "uint8"
       },
@@ -368,6 +387,25 @@
       }
     ],
     "name": "SocialProposalSignature",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint16",
+        "name": "fundRunId",
+        "type": "uint16"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      }
+    ],
+    "name": "Unfollow",
     "type": "event"
   },
   {
@@ -566,6 +604,19 @@
       }
     ],
     "name": "finalizeAndPost",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint16",
+        "name": "_fundRunId",
+        "type": "uint16"
+      }
+    ],
+    "name": "follow",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -941,7 +992,7 @@
     "name": "socialProposalStatuses",
     "outputs": [
       {
-        "internalType": "enum CrowdFund.SocialProposalStatus",
+        "internalType": "enum SocialPostManager.SocialProposalStatus",
         "name": "",
         "type": "uint8"
       }
@@ -1017,6 +1068,19 @@
       }
     ],
     "name": "transferOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint16",
+        "name": "_fundRunId",
+        "type": "uint16"
+      }
+    ],
+    "name": "unfollow",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
