@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { FollowToggle } from "./FollowToggle";
 import { useQuery } from "@apollo/client";
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 import { Spinner } from "~~/components/Spinner";
@@ -46,6 +47,8 @@ export const SocialPostList = () => {
               <p className="text-center bg-primary">Click Here to Manage Social Page</p>
             </Link>
             <p className="-mt-2 text-center">☝️ would be removed in production ☝️</p>
+
+            <FollowToggle fundRunId={parseInt(fundRun)} />
           </div>
         ) : (
           <h1 className="mt-4 mb-4 text-4xl text-center text-primary-content">No Posts found for this Fund Run</h1>

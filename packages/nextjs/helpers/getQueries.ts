@@ -296,3 +296,19 @@ export const GQL_SOCIAL_PROPOSALS_By_FundRunId = () => {
     }
   `;
 };
+
+//for seeing if a user is following a Fund Run
+//used in FollowToggle.tsx to see IF a user is following a Fund Run
+export const GQL_SOCIAL_FOLLOWERS_By_FundRunId_and_Address = () => {
+  return gql`
+    query ($fundRunId: Int!, $user: String!) {
+      fundRuns(where: { fundRunId: $fundRunId }) {
+        followers(where: { user: $user }) {
+          id
+          fundRunId
+          user
+        }
+      }
+    }
+  `;
+}; //TODO: ^^clean unneeded fields
