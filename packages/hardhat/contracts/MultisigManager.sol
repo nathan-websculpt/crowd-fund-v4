@@ -216,7 +216,7 @@ contract MultisigManager is ProfitTaker {
 	function getNonce(uint16 _id) external view returns (uint256) {
 		return vaultNonces[_id];
 	}
-	
+
 	function _isOwnerOfFundRun(
 		address _addr,
 		uint16 _id

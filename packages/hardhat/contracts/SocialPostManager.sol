@@ -8,7 +8,7 @@ import "./FundRunManager.sol";
  *
  */
 
- contract SocialPostManager is FundRunManager {
+contract SocialPostManager is FundRunManager {
 	enum SocialProposalStatus {
 		Created,
 		ReadyToSend,
@@ -21,7 +21,7 @@ import "./FundRunManager.sol";
 	mapping(uint16 => address[]) public socialProposalSigners;
 	mapping(uint16 => SocialProposalStatus) public socialProposalStatuses;
 	uint16 public numberOfSocialProposals = 0;
-	
+
 	event SocialProposalRevoke(uint16 socialProposalId);
 
 	event SocialProposalSignature(
@@ -83,8 +83,15 @@ import "./FundRunManager.sol";
 		_;
 	}
 
-	modifier userHasNotSignedSocialProposal(uint16 socialProposalId, address signer) {
-		for (uint16 i = 0; i < socialProposalSigners[socialProposalId].length; i++) {
+	modifier userHasNotSignedSocialProposal(
+		uint16 socialProposalId,
+		address signer
+	) {
+		for (
+			uint16 i = 0;
+			i < socialProposalSigners[socialProposalId].length;
+			i++
+		) {
 			require(
 				socialProposalSigners[socialProposalId][i] != signer,
 				"This user has already signed this proposal - action not allowed."
@@ -113,7 +120,11 @@ import "./FundRunManager.sol";
 			0
 		);
 
-		emit SocialProposalSignature(numberOfSocialProposals, msg.sender, _signature);
+		emit SocialProposalSignature(
+			numberOfSocialProposals,
+			msg.sender,
+			_signature
+		);
 
 		numberOfSocialProposals++;
 	}
@@ -151,7 +162,7 @@ import "./FundRunManager.sol";
 		postNotSent(_socialProposalId)
 		socialProposalNotRevoked(_socialProposalId)
 	{
-		_verifySocialRequest(_tx, _nonce, _signaturesList, _id);		
+		_verifySocialRequest(_tx, _nonce, _signaturesList, _id);
 		socialProposalStatuses[_socialProposalId] = SocialProposalStatus(2);
 		emit SocialPost(_socialProposalId, _id, _tx.proposedBy, _tx.postText);
 	}
@@ -173,7 +184,9 @@ import "./FundRunManager.sol";
 		emit SocialProposalRevoke(_socialProposalId);
 	}
 
-	function getSocialManagementNonce(uint16 _id) external view returns (uint256) {
+	function getSocialManagementNonce(
+		uint16 _id
+	) external view returns (uint256) {
 		return socialManagementNonces[_id];
 	}
 
