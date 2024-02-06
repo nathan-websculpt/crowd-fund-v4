@@ -407,6 +407,21 @@ export class CrowdFund extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toString());
   }
 
+  bar(): Address {
+    let result = super.call("bar", "bar():(address)", []);
+
+    return result[0].toAddress();
+  }
+
+  try_bar(): ethereum.CallResult<Address> {
+    let result = super.tryCall("bar", "bar():(address)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
   donorLogs(param0: Address): Address {
     let result = super.call("donorLogs", "donorLogs(address):(address)", [
       ethereum.Value.fromAddress(param0)

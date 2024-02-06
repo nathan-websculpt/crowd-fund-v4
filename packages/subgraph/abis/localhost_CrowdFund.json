@@ -312,7 +312,7 @@
       },
       {
         "indexed": false,
-        "internalType": "enum CrowdFund.SocialProposalStatus",
+        "internalType": "enum SocialPostManager.SocialProposalStatus",
         "name": "status",
         "type": "uint8"
       },
@@ -378,6 +378,19 @@
         "internalType": "string",
         "name": "",
         "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "bar",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -941,7 +954,7 @@
     "name": "socialProposalStatuses",
     "outputs": [
       {
-        "internalType": "enum CrowdFund.SocialProposalStatus",
+        "internalType": "enum SocialPostManager.SocialProposalStatus",
         "name": "",
         "type": "uint8"
       }

@@ -2,6 +2,7 @@
 pragma solidity >=0.8.0 <0.9.0;
 
 import "./SocialPostManager.sol";
+import "./Singleton.sol";
 
 /**
  * @title Crowd Fund - Where new dev/work will be added
@@ -37,15 +38,43 @@ import "./SocialPostManager.sol";
  * ProfitTaker            (  contractOwnerWithdraw()  )
  * MultisigManager        (  proposal management and multisig transfers  )
  * FundRunManager         (  donations/payable, createFundRun()  )
- * SocialPostManager         (  manage proposals to make social media type Posts  )
+ * SocialPostManager      (  manage proposals to make social media type Posts  )
  * CrowdFund              (    ... working/devving here    )
  *
  */
 
 contract CrowdFund is SocialPostManager {
-	constructor(address _contractOwner) {
-		_transferOwnership(_contractOwner);
+	address private singletonInstance;
+	Singleton private singleton;
+
+	//EVENTS
+
+	//TODO: this may be redundancy-overkill
+	modifier enforceSingletonInstance() {
+		require(
+			singleton.getInstance() == singletonInstance,
+			"The wrong instance of Singleton is being used."
+		);
+		_;
 	}
 
-	
+	constructor(address _contractOwner) {
+		_transferOwnership(_contractOwner);
+		require(
+			address(singleton) == address(0),
+			"Singleton instance already exists."
+		);
+		singleton = new Singleton();
+		singletonInstance = singleton.getInstance();
+	}
+
+	function bar()
+		public
+		view
+		enforceSingletonInstance
+		returns (address)
+	{
+		address yo = singleton.foo(msg.sender);
+		return (yo);
+	}
 }
