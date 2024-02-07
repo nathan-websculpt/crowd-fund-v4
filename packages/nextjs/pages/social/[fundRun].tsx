@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
 import { NextPage } from "next";
@@ -7,16 +7,26 @@ import { Spinner } from "~~/components/Spinner";
 import { FundRunDisplay } from "~~/components/crowdfund/FundRunDisplay";
 import { FundRunDonate } from "~~/components/crowdfund/FundRunDonate";
 import { SocialPostList } from "~~/components/social/SocialPostList";
+import { WhoFollowsThisFundRun } from "~~/components/social/following/WhoFollowsThisFundRun";
 import { GQL_FUNDRUN_By_FundRunId } from "~~/helpers/getQueries";
 
 const ViewSocial: NextPage = () => {
   const router = useRouter();
   const { fundRun } = router.query as { fundRun?: `${string}` };
+  const [showingPosts, setShowingPosts] = useState(true);
 
   const { loading, error, data } = useQuery(GQL_FUNDRUN_By_FundRunId(), {
     variables: { slug: parseInt(fundRun) },
     pollInterval: 1000,
   });
+
+  function viewPostsClick() {
+    setShowingPosts(false);
+  }
+
+  function viewFollowersClick() {
+    setShowingPosts(true);
+  }
 
   useEffect(() => {
     if (error !== undefined && error !== null) console.log("GQL_FUNDRUN_By_FundRunId Query Error: ", error);
@@ -57,7 +67,22 @@ const ViewSocial: NextPage = () => {
             </div>
           </div>
 
-          <SocialPostList />
+          <div>
+            <button
+              className={showingPosts ? "btn btn-primary" : "btn btn-secondary"}
+              onClick={() => setShowingPosts(true)}
+            >
+              View Posts
+            </button>
+            <button
+              className={showingPosts ? "btn btn-secondary" : "btn btn-primary"}
+              onClick={() => setShowingPosts(false)}
+            >
+              View Followers
+            </button>
+          </div>
+          {showingPosts ? <SocialPostList /> : <WhoFollowsThisFundRun fundRunId={data?.fundRuns[0].fundRunId} />}
+          {/* todo: WhoFollowsThisFundRun will break if there is no fund run here... */}
         </div>
       </>
     );

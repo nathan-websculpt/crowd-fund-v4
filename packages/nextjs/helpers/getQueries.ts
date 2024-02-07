@@ -338,3 +338,16 @@ export const GQL_SOCIAL_FOLLOWING_By_Address = () => {
     }
   `;
 };
+
+//for getting all of the followers for a particular Fund Run
+//used in WhoFollowsThisFundRun.tsx
+export const GQL_SOCIAL_FOLLOWERS_By_FundRunId = () => {
+  return gql`
+    query ($limit: Int!, $offset: Int!, $fundRunId: Int!) {
+      follows(first: $limit, skip: $offset, where: { fundRunId: $fundRunId }) {
+        id
+        user
+      }
+    }
+  `;
+};
