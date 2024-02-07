@@ -24,10 +24,6 @@ export const FollowToggle = (fundRun: FollowToggleProps) => {
       console.log("GQL_SOCIAL_FOLLOWERS_By_FundRunId_and_Address Query Error: ", error);
   }, [error]);
 
-  useEffect(() => {
-    if (data !== undefined && data !== null) console.log("Query DATA: ", data);
-  }, [data]);
-
   if (data?.fundRuns?.length > 0)
     if (data?.fundRuns[0].followers?.length > 0) return <UnfollowButton fundRunId={fundRun.fundRunId} />;
     else return <FollowButton fundRunId={fundRun.fundRunId} />;

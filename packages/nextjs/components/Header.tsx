@@ -55,6 +55,9 @@ export const Header = () => {
       <li>
         <NavLink href="/blockexplorer">Block Explorer</NavLink>
       </li>
+      <li>
+        <NavLink href="/following">Following</NavLink>
+      </li>
     </>
   );
 
