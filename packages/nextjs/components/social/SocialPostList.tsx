@@ -36,7 +36,7 @@ export const SocialPostList = () => {
   } else {
     return (
       <>
-        <div className="flex flex-col mt-16 mb-3">
+        <div className="flex flex-col mb-3">
           {data?.socialPosts[0] !== undefined ? (
             <h1 className="mt-4 mb-4 text-4xl text-center text-primary-content">Viewing latest posts:</h1>
           ) : (
