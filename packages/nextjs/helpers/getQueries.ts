@@ -344,7 +344,7 @@ export const GQL_SOCIAL_FOLLOWING_By_Address = () => {
 export const GQL_SOCIAL_FOLLOWERS_By_FundRunId = () => {
   return gql`
     query ($limit: Int!, $offset: Int!, $fundRunId: Int!) {
-      follows(first: $limit, skip: $offset, where: { fundRunId: $fundRunId }) {
+      follows(first: $limit, skip: $offset, where: { fundRunId: $fundRunId, fundRun_not: null }) {
         id
         user
       }
