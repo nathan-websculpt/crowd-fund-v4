@@ -75,7 +75,7 @@ export const FundRunsList = () => {
               </div>
 
               <div>
-                <Link href={`/crowdfund/${fund.fundRunId}`} passHref className="btn btn-primary">
+                <Link href={`/social/${fund.fundRunId}`} passHref className="btn btn-primary">
                   <div className="tooltip tooltip-primary" data-tip="donate...">
                     View Fund Run
                   </div>

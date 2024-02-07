@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { FollowToggle } from "../social/FollowToggle";
 import { formatEther } from "viem";
 
 interface FundRunDisplayProps {
@@ -16,9 +17,7 @@ export const FundRunDisplay = (fundRun: FundRunDisplayProps) => {
         <Link href={`/social-management/${fundRun?.id}`} passHref className="btn btn-primary btn-xs">
           Manage Social Page
         </Link>
-        <Link href={`/social/${fundRun?.id}`} passHref className="btn btn-primary btn-xs">
-          View Social Page
-        </Link>
+        <FollowToggle fundRunId={fundRun?.id} />
       </div>
 
       <label className="text-lg font-bold underline">Title</label>

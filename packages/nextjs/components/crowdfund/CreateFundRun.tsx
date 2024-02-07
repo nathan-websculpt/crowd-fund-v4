@@ -31,7 +31,7 @@ export const CreateFundRun = () => {
       logs.map(log => {
         const { fundRunId, owners, title } = log.args;
         console.log("📡 New Fund Run Event \ncreator:", owners, "\nID: ", fundRunId, "\nTitle: ", title);
-        if (owners !== undefined) if (userAccount.address === owners[0]) router.push(`/crowdfund/${fundRunId}`);
+        if (owners !== undefined) if (userAccount.address === owners[0]) router.push(`/social/${fundRunId}`);
       });
     },
   });
