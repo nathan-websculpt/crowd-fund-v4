@@ -24,10 +24,6 @@ export const WhoFollowsThisFundRun = (fund: WhoFollowsProps) => {
     if (error !== undefined && error !== null) console.log("GQL_SOCIAL_FOLLOWERS_By_FundRunId Query Error: ", error);
   }, [error]);
 
-  useEffect(() => {
-    if (data !== undefined && data !== null) console.log("data: ", data.follows);
-  }, [data]);
-
   return (
     <>
       <div className="flex justify-center gap-3 mb-3">
