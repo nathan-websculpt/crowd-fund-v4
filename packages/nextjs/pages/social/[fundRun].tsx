@@ -78,7 +78,7 @@ const ViewSocial: NextPage = () => {
               className={showingPosts ? "btn btn-secondary" : "btn btn-primary"}
               onClick={() => setShowingPosts(false)}
             >
-            {showingPosts ? "View Followers" : "Viewing Followers"}
+              {showingPosts ? "View Followers" : "Viewing Followers"}
             </button>
           </div>
           {showingPosts ? <SocialPostList /> : <WhoFollowsThisFundRun fundRunId={data?.fundRuns[0].fundRunId} />}
