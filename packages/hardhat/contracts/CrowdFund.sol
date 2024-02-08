@@ -44,7 +44,13 @@ import "./FollowersManager.sol";
  */
 
 contract CrowdFund is SocialPostManager, FollowersManager {	
+	event Comment (bytes postId, string commentText);
+
 	constructor(address _contractOwner) {
 		_transferOwnership(_contractOwner);
+	}
+
+	function createComment(bytes memory _postId, string memory _commentText) external {
+		emit Comment(_postId, _commentText);
 	}
 }

@@ -10,6 +10,28 @@ import {
   BigInt
 } from "@graphprotocol/graph-ts";
 
+export class Comment extends ethereum.Event {
+  get params(): Comment__Params {
+    return new Comment__Params(this);
+  }
+}
+
+export class Comment__Params {
+  _event: Comment;
+
+  constructor(event: Comment) {
+    this._event = event;
+  }
+
+  get postId(): Bytes {
+    return this._event.parameters[0].value.toBytes();
+  }
+
+  get commentText(): string {
+    return this._event.parameters[1].value.toString();
+  }
+}
+
 export class ContractOwnerWithdrawal extends ethereum.Event {
   get params(): ContractOwnerWithdrawal__Params {
     return new ContractOwnerWithdrawal__Params(this);
@@ -932,6 +954,40 @@ export class ContractOwnerWithdrawCall__Outputs {
   _call: ContractOwnerWithdrawCall;
 
   constructor(call: ContractOwnerWithdrawCall) {
+    this._call = call;
+  }
+}
+
+export class CreateCommentCall extends ethereum.Call {
+  get inputs(): CreateCommentCall__Inputs {
+    return new CreateCommentCall__Inputs(this);
+  }
+
+  get outputs(): CreateCommentCall__Outputs {
+    return new CreateCommentCall__Outputs(this);
+  }
+}
+
+export class CreateCommentCall__Inputs {
+  _call: CreateCommentCall;
+
+  constructor(call: CreateCommentCall) {
+    this._call = call;
+  }
+
+  get _postId(): Bytes {
+    return this._call.inputValues[0].value.toBytes();
+  }
+
+  get _commentText(): string {
+    return this._call.inputValues[1].value.toString();
+  }
+}
+
+export class CreateCommentCall__Outputs {
+  _call: CreateCommentCall;
+
+  constructor(call: CreateCommentCall) {
     this._call = call;
   }
 }

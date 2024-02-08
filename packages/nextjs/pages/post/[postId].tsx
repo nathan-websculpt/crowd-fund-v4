@@ -5,6 +5,7 @@ import { NextPage } from "next";
 import { MetaHeader } from "~~/components/MetaHeader";
 import { Spinner } from "~~/components/Spinner";
 import { Comments } from "~~/components/posts/Comments";
+import { CreateComment } from "~~/components/posts/CreateComment";
 import { SocialPostDisplay } from "~~/components/social/SocialPostDisplay";
 import { GQL_SOCIAL_POST_For_Display } from "~~/helpers/getQueries";
 
@@ -46,7 +47,9 @@ const ViewPost: NextPage = () => {
               proposedBy={data.socialPost.proposedBy}
               isCommenting={true}
             />
-
+            <div className="mt-6"></div>
+            <CreateComment postId={postId} />
+            <h1 className="mt-12 text-right">Viewing all Comments</h1>
             <Comments postId={data.socialPost.id} />
           </div>
         </div>

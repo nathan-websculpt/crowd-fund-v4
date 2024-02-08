@@ -15,6 +15,25 @@
     "inputs": [
       {
         "indexed": false,
+        "internalType": "bytes",
+        "name": "postId",
+        "type": "bytes"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "commentText",
+        "type": "string"
+      }
+    ],
+    "name": "Comment",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
         "internalType": "address",
         "name": "contractOwner",
         "type": "address"
@@ -424,6 +443,24 @@
   {
     "inputs": [],
     "name": "contractOwnerWithdraw",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes",
+        "name": "_postId",
+        "type": "bytes"
+      },
+      {
+        "internalType": "string",
+        "name": "_commentText",
+        "type": "string"
+      }
+    ],
+    "name": "createComment",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

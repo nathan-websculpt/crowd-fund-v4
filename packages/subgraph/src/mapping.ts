@@ -14,6 +14,7 @@ import {
   SocialProposalRevoke as SocialProposalRevokeEvent,
   Follow as FollowEvent,
   Unfollow as UnfollowEvent,
+  Comment as CommentEvent,
 } from "../generated/CrowdFund/CrowdFund";
 import {
   ContractOwnerWithdrawal,
@@ -30,6 +31,7 @@ import {
   SocialProposalRevoke,
   Follow,
   Unfollow,
+  Comment,
 } from "../generated/schema";
 
 export function handleContractOwnerWithdrawal(
@@ -417,6 +419,24 @@ export function handleUnfollow(event: UnfollowEvent): void {
   if (followEntity !== null) {
     followEntity.fundRun = null;
     followEntity.save();
+  }
+
+  entity.save();
+}
+
+export function handleComment(event: CommentEvent): void {
+  let entity = new Comment(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
+  );
+  entity.commentText = event.params.commentText
+
+  entity.blockNumber = event.block.number;
+  entity.blockTimestamp = event.block.timestamp;
+  entity.transactionHash = event.transaction.hash;
+
+  let postEntity = SocialPost.load(event.params.postId);
+  if(postEntity !== null) {
+    entity.socialPost = postEntity.id;
   }
 
   entity.save();

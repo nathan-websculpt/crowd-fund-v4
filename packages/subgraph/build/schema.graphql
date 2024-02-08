@@ -136,6 +136,7 @@ type SocialPost @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+  comments: [Comment!] @derivedFrom(field: "socialPost")
 }
 
 type Follow @entity {
@@ -155,4 +156,13 @@ type Unfollow @entity {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+}
+
+type Comment @entity {
+  id: Bytes!
+  commentText: String!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  socialPost: SocialPost
 }

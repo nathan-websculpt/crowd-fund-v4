@@ -77,8 +77,9 @@ export const GQL_SOCIAL_POST_For_Display = () => {
 export const GQL_SOCIAL_POST_COMMENTS_For_Display = () => {
   return gql`
     query ($socialPostId: String!) {
-      socialPost(id: $socialPostId) {
+      comments(where: { socialPost_: { id: $socialPostId } }) {
         id
+        commentText
         # todo: could just pull the comments from the query up above...
       }
     }
