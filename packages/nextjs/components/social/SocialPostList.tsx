@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/router";
-import { FollowToggle } from "./FollowToggle";
 import { useQuery } from "@apollo/client";
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 import { Spinner } from "~~/components/Spinner";
@@ -69,10 +67,12 @@ export const SocialPostList = () => {
             className="flex flex-col gap-2 p-2 m-4 border shadow-xl border-base-300 bg-base-200 sm:rounded-lg"
           >
             <SocialPostDisplay
+              id={p.id}
               fundRunId={p.fundRunId}
               fundRunTitle={p.fundRunTitle}
               postText={p.postText}
               proposedBy={p.proposedBy}
+              isCommenting={false}
             />
           </div>
         ))}

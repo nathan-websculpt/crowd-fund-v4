@@ -2,10 +2,12 @@ import Link from "next/link";
 import { Address } from "../scaffold-eth";
 
 interface SocialPostDisplayProps {
+  id: string;
   fundRunId: number;
   fundRunTitle: string;
   postText: string;
   proposedBy: string;
+  isCommenting: boolean;
 }
 
 export const SocialPostDisplay = (thisPost: SocialPostDisplayProps) => {
@@ -21,9 +23,18 @@ export const SocialPostDisplay = (thisPost: SocialPostDisplayProps) => {
 
       <p className="mt-3 mb-5 text-3xl">{thisPost?.postText}</p>
 
-      <div className="flex items-center justify-end gap-4">
-        <label className="font-mono text-sm font-bold">Originally Proposed By:</label>
-        <Address address={thisPost?.proposedBy} size="sm" />
+      <div className="flex items-center justify-between gap-4">
+        <div>
+          {!thisPost.isCommenting && (
+            <Link href={`/post/${thisPost?.id}`} passHref className="btn btn-primary btn-sm">
+              Comment
+            </Link>
+          )}
+        </div>
+        <div>
+          <label className="font-mono text-sm font-bold">Originally Proposed By:</label>
+          <Address address={thisPost?.proposedBy} size="sm" />
+        </div>
       </div>
     </>
   );

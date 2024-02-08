@@ -56,6 +56,35 @@ export const GQL_SOCIAL_POSTS_For_Display = () => {
   `;
 };
 
+//for viewing a single Social Media Post
+//used in /post/[postId].tsx
+export const GQL_SOCIAL_POST_For_Display = () => {
+  return gql`
+    query ($socialPostId: String!) {
+      socialPost(id: $socialPostId) {
+        id
+        postText
+        proposedBy
+        fundRunId
+        fundRunTitle
+      }
+    }
+  `;
+};
+
+//for viewing a Post's Comments
+//used in /post/[postId].tsx -- Comments.tsx
+export const GQL_SOCIAL_POST_COMMENTS_For_Display = () => {
+  return gql`
+    query ($socialPostId: String!) {
+      socialPost(id: $socialPostId) {
+        id
+        # todo: could just pull the comments from the query up above...
+      }
+    }
+  `;
+};
+
 //queries page
 //for viewing 3-tier table
 //ALL Fund Runs

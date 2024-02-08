@@ -20,14 +20,6 @@ const ViewSocial: NextPage = () => {
     pollInterval: 1000,
   });
 
-  function viewPostsClick() {
-    setShowingPosts(false);
-  }
-
-  function viewFollowersClick() {
-    setShowingPosts(true);
-  }
-
   useEffect(() => {
     if (error !== undefined && error !== null) console.log("GQL_FUNDRUN_By_FundRunId Query Error: ", error);
   }, [error]);
