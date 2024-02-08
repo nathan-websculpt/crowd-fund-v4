@@ -9,7 +9,7 @@ dataSources:
     network: localhost
     source:
       abi: CrowdFund
-      address: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"
+      address: "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707"
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -60,6 +60,6 @@ dataSources:
           handler: handleFollow
         - event: Unfollow(uint16,address)
           handler: handleUnfollow
-        - event: Comment(bytes,string)
+        - event: Comment(uint16,bytes,string,address)
           handler: handleComment
       file: CrowdFund\CrowdFund.wasm

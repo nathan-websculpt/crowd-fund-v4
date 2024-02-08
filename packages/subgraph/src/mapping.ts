@@ -428,7 +428,9 @@ export function handleComment(event: CommentEvent): void {
   let entity = new Comment(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   );
-  entity.commentText = event.params.commentText
+  entity.commentId = event.params.commentId;
+  entity.commentText = event.params.commentText;
+  entity.commenter = event.params.commenter;
 
   entity.blockNumber = event.block.number;
   entity.blockTimestamp = event.block.timestamp;

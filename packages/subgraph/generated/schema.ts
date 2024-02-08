@@ -2025,6 +2025,19 @@ export class Comment extends Entity {
     this.set("id", Value.fromBytes(value));
   }
 
+  get commentId(): i32 {
+    let value = this.get("commentId");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI32();
+    }
+  }
+
+  set commentId(value: i32) {
+    this.set("commentId", Value.fromI32(value));
+  }
+
   get commentText(): string {
     let value = this.get("commentText");
     if (!value || value.kind == ValueKind.NULL) {
@@ -2036,6 +2049,19 @@ export class Comment extends Entity {
 
   set commentText(value: string) {
     this.set("commentText", Value.fromString(value));
+  }
+
+  get commenter(): Bytes {
+    let value = this.get("commenter");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set commenter(value: Bytes) {
+    this.set("commenter", Value.fromBytes(value));
   }
 
   get blockNumber(): BigInt {

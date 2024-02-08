@@ -15,6 +15,12 @@
     "inputs": [
       {
         "indexed": false,
+        "internalType": "uint16",
+        "name": "commentId",
+        "type": "uint16"
+      },
+      {
+        "indexed": false,
         "internalType": "bytes",
         "name": "postId",
         "type": "bytes"
@@ -24,6 +30,12 @@
         "internalType": "string",
         "name": "commentText",
         "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "commenter",
+        "type": "address"
       }
     ],
     "name": "Comment",
@@ -797,6 +809,19 @@
     "name": "multisigWithdraw",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "numberOfComments",
+    "outputs": [
+      {
+        "internalType": "uint16",
+        "name": "",
+        "type": "uint16"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {

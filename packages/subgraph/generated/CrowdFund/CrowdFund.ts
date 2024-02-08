@@ -23,12 +23,20 @@ export class Comment__Params {
     this._event = event;
   }
 
+  get commentId(): i32 {
+    return this._event.parameters[0].value.toI32();
+  }
+
   get postId(): Bytes {
-    return this._event.parameters[0].value.toBytes();
+    return this._event.parameters[1].value.toBytes();
   }
 
   get commentText(): string {
-    return this._event.parameters[1].value.toString();
+    return this._event.parameters[2].value.toString();
+  }
+
+  get commenter(): Address {
+    return this._event.parameters[3].value.toAddress();
   }
 }
 
@@ -594,6 +602,29 @@ export class CrowdFund extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  numberOfComments(): i32 {
+    let result = super.call(
+      "numberOfComments",
+      "numberOfComments():(uint16)",
+      []
+    );
+
+    return result[0].toI32();
+  }
+
+  try_numberOfComments(): ethereum.CallResult<i32> {
+    let result = super.tryCall(
+      "numberOfComments",
+      "numberOfComments():(uint16)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toI32());
   }
 
   numberOfFundRuns(): i32 {

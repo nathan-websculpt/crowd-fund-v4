@@ -160,7 +160,9 @@ type Unfollow @entity {
 
 type Comment @entity {
   id: Bytes!
+  commentId: Int!
   commentText: String!
+  commenter: Bytes!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!

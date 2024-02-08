@@ -76,10 +76,17 @@ export const GQL_SOCIAL_POST_For_Display = () => {
 //used in /post/[postId].tsx -- Comments.tsx
 export const GQL_SOCIAL_POST_COMMENTS_For_Display = () => {
   return gql`
-    query ($socialPostId: String!) {
-      comments(where: { socialPost_: { id: $socialPostId } }) {
+    query ($limit: Int!, $offset: Int!, $socialPostId: String!) {
+      comments(
+        orderBy: commentId
+        orderDirection: desc
+        where: { socialPost_: { id: $socialPostId } }
+        first: $limit
+        skip: $offset
+      ) {
         id
         commentText
+        commenter
         # todo: could just pull the comments from the query up above...
       }
     }

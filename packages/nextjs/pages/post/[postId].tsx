@@ -39,18 +39,25 @@ const ViewPost: NextPage = () => {
             </button>
           </div>
           <div className="flex flex-col gap-2 p-2 m-4 border shadow-xl border-base-300 bg-base-200 sm:rounded-lg">
-            <SocialPostDisplay
-              id={data.socialPost.id}
-              fundRunId={data.socialPost.fundRunId}
-              fundRunTitle={data.socialPost.fundRunTitle}
-              postText={data.socialPost.postText}
-              proposedBy={data.socialPost.proposedBy}
-              isCommenting={true}
-            />
+            {data !== undefined && (
+              <SocialPostDisplay
+                id={data.socialPost.id}
+                fundRunId={data.socialPost.fundRunId}
+                fundRunTitle={data.socialPost.fundRunTitle}
+                postText={data.socialPost.postText}
+                proposedBy={data.socialPost.proposedBy}
+                isCommenting={true}
+              />
+            )}
             <div className="mt-6"></div>
             <CreateComment postId={postId} />
-            <h1 className="mt-12 text-right">Viewing all Comments</h1>
-            <Comments postId={data.socialPost.id} />
+
+            {data !== undefined && (
+              <>
+                <h1 className="mt-12 text-right">Comments</h1>
+                <Comments postId={data.socialPost.id} />
+              </>
+            )}
           </div>
         </div>
       </>

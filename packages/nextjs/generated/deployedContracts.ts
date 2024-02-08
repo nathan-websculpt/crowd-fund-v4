@@ -5,7 +5,7 @@ const contracts = {
       name: "localhost",
       contracts: {
         CrowdFund: {
-          address: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+          address: "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
           abi: [
             {
               inputs: [
@@ -23,6 +23,12 @@ const contracts = {
               inputs: [
                 {
                   indexed: false,
+                  internalType: "uint16",
+                  name: "commentId",
+                  type: "uint16",
+                },
+                {
+                  indexed: false,
                   internalType: "bytes",
                   name: "postId",
                   type: "bytes",
@@ -32,6 +38,12 @@ const contracts = {
                   internalType: "string",
                   name: "commentText",
                   type: "string",
+                },
+                {
+                  indexed: false,
+                  internalType: "address",
+                  name: "commenter",
+                  type: "address",
                 },
               ],
               name: "Comment",
@@ -805,6 +817,19 @@ const contracts = {
               name: "multisigWithdraw",
               outputs: [],
               stateMutability: "nonpayable",
+              type: "function",
+            },
+            {
+              inputs: [],
+              name: "numberOfComments",
+              outputs: [
+                {
+                  internalType: "uint16",
+                  name: "",
+                  type: "uint16",
+                },
+              ],
+              stateMutability: "view",
               type: "function",
             },
             {
