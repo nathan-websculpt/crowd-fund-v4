@@ -371,7 +371,10 @@ export function handleSocialPost(event: SocialPostEvent): void {
   let fundRunEntity = FundRun.load(
     Bytes.fromHexString("fundruns__").concat(Bytes.fromI32(entity.fundRunId))
   );
-  if (fundRunEntity !== null) entity.fundRunTitle = fundRunEntity.title;
+  if (fundRunEntity !== null){ 
+    entity.fundRunTitle = fundRunEntity.title;
+    entity.fundRun = fundRunEntity.id;
+  }
 
   entity.save();
 }

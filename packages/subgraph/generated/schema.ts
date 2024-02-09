@@ -437,6 +437,16 @@ export class FundRun extends Entity {
       "followers"
     );
   }
+
+  get posts(): SocialPostLoader {
+    return new SocialPostLoader(
+      "FundRun",
+      this.get("id")!
+        .toBytes()
+        .toHexString(),
+      "posts"
+    );
+  }
 }
 
 export class MultisigTransfer extends Entity {
@@ -1742,6 +1752,23 @@ export class SocialPost extends Entity {
     this.set("transactionHash", Value.fromBytes(value));
   }
 
+  get fundRun(): Bytes | null {
+    let value = this.get("fundRun");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set fundRun(value: Bytes | null) {
+    if (!value) {
+      this.unset("fundRun");
+    } else {
+      this.set("fundRun", Value.fromBytes(<Bytes>value));
+    }
+  }
+
   get comments(): CommentLoader {
     return new CommentLoader(
       "SocialPost",
@@ -2154,6 +2181,24 @@ export class FollowLoader extends Entity {
   load(): Follow[] {
     let value = store.loadRelated(this._entity, this._id, this._field);
     return changetype<Follow[]>(value);
+  }
+}
+
+export class SocialPostLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): SocialPost[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<SocialPost[]>(value);
   }
 }
 

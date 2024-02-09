@@ -3,25 +3,32 @@ import { useRouter } from "next/router";
 import { Spinner } from "../Spinner";
 import { SocialPostDisplay } from "../social/SocialPostDisplay";
 import { useQuery } from "@apollo/client";
+import { useAccount } from "wagmi";
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
-import { GQL_EXPLORE_POSTS_For_Display } from "~~/helpers/getQueries";
+import { GQL_EXPLORE_POSTS_By_Who_You_Follow } from "~~/helpers/getQueries";
 
-export const ExplorePosts = () => {
+export const ExplorePostsFromWhoIFollow = () => {
+  const userAccount = useAccount();
   const router = useRouter();
   const [pageSize, setPageSize] = useState(25);
   const [pageNum, setPageNum] = useState(0);
 
-  const { loading, error, data } = useQuery(GQL_EXPLORE_POSTS_For_Display(), {
+  const { loading, error, data } = useQuery(GQL_EXPLORE_POSTS_By_Who_You_Follow(), {
     variables: {
       limit: pageSize,
       offset: pageNum * pageSize,
+      user: userAccount.address,
     },
     pollInterval: 5000,
   });
 
   useEffect(() => {
-    if (error !== undefined && error !== null) console.log("GQL_EXPLORE_POSTS_For_Display Query Error: ", error);
+    if (error !== undefined && error !== null) console.log("GQL_EXPLORE_POSTS_By_Who_You_Follow Query Error: ", error);
   }, [error]);
+
+  useEffect(() => {
+    if (data !== undefined && data !== null) console.log("Query data: ", data);
+  }, [data]);
 
   if (loading) {
     return (
@@ -39,13 +46,7 @@ export const ExplorePosts = () => {
             </button>
           </div>
           <div className="flex flex-col mb-3">
-            {data?.socialPosts[0] !== undefined ? (
-              <h1 className="mt-4 mb-4 text-4xl text-center text-primary-content">
-                Exploring posts from all Fund Runs
-              </h1>
-            ) : (
-              <h1 className="mt-4 mb-4 text-4xl text-center text-primary-content">No Posts found for this Fund Run</h1>
-            )}
+            <h1 className="mt-4 mb-4 text-4xl text-center text-primary-content">Posts from the Fund Runs you follow</h1>
           </div>
           <div className="flex justify-center gap-3 mb-3">
             <span className="my-auto text-lg">Page {pageNum + 1}</span>
@@ -67,19 +68,23 @@ export const ExplorePosts = () => {
               Next
             </button>
           </div>
-          {data?.socialPosts?.map(p => (
-            <div
-              key={p.id.toString()}
-              className="flex flex-col gap-2 p-2 m-4 border shadow-xl border-base-300 bg-base-200 sm:rounded-lg"
-            >
-              <SocialPostDisplay
-                id={p.id}
-                fundRunId={p.fundRunId}
-                fundRunTitle={p.fundRunTitle}
-                postText={p.postText}
-                proposedBy={p.proposedBy}
-                isCommenting={false}
-              />
+          {data?.follows?.map(follow => (
+            <div key={follow.id.toString()}>
+              {follow?.fundRun?.posts?.map(p => (
+                <div
+                  key={p.id.toString()}
+                  className="flex flex-col gap-2 p-2 m-4 border shadow-xl border-base-300 bg-base-200 sm:rounded-lg"
+                >
+                  <SocialPostDisplay
+                    id={p.id}
+                    fundRunId={p.fundRunId}
+                    fundRunTitle={p.fundRunTitle}
+                    postText={p.postText}
+                    proposedBy={p.proposedBy}
+                    isCommenting={false}
+                  />
+                </div>
+              ))}
             </div>
           ))}
 

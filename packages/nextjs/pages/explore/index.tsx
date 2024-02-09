@@ -1,13 +1,32 @@
+import { useState } from "react";
 import { NextPage } from "next";
 import { MetaHeader } from "~~/components/MetaHeader";
 import { ExplorePosts } from "~~/components/posts/ExplorePosts";
+import { ExplorePostsFromWhoIFollow } from "~~/components/posts/ExplorePostsFromWhoIFollow";
 
 //currently just to see latest posts
 const Explore: NextPage = () => {
+  const [showingWhoYouFollow, setShowingWhoYouFollow] = useState(true);
+
   return (
     <>
       <MetaHeader title="Explore Latest Posts" />
-      <ExplorePosts />
+
+      <div className="flex justify-center mb-6 mt-14">
+        <button
+          className={showingWhoYouFollow ? "btn btn-primary" : "btn btn-secondary"}
+          onClick={() => setShowingWhoYouFollow(true)}
+        >
+          {showingWhoYouFollow ? "Viewing Who you Follow" : "View Who you Follow"}
+        </button>
+        <button
+          className={showingWhoYouFollow ? "btn btn-secondary" : "btn btn-primary"}
+          onClick={() => setShowingWhoYouFollow(false)}
+        >
+          {showingWhoYouFollow ? "Explore More" : "Exploring More"}
+        </button>
+      </div>
+      {showingWhoYouFollow ? <ExplorePostsFromWhoIFollow /> : <ExplorePosts />}
     </>
   );
 };

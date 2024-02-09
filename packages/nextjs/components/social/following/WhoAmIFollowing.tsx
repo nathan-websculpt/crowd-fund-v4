@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
 import { useAccount } from "wagmi";
@@ -75,6 +76,27 @@ export const WhoAmIFollowing = () => {
                 amountCollected={followingThis.fundRun.amountCollected}
                 amountWithdrawn={followingThis.fundRun.amountWithdrawn}
               />
+              <div className="flex justify-between">
+                <div>
+                  <Link
+                    href={`/crowdfund/vaults/${followingThis.fundRun.fundRunId}`}
+                    passHref
+                    className="btn btn-primary"
+                  >
+                    <div className="tooltip tooltip-primary" data-tip="View Proposals in the Vault">
+                      View Vault
+                    </div>
+                  </Link>
+                </div>
+
+                <div>
+                  <Link href={`/social/${followingThis.fundRun.fundRunId}`} passHref className="btn btn-primary">
+                    <div className="tooltip tooltip-primary" data-tip="donate...">
+                      View Fund Run
+                    </div>
+                  </Link>
+                </div>
+              </div>
             </div>
           ) : (
             <div key={followingThis.id.toString()}></div>

@@ -72,6 +72,28 @@ export const GQL_EXPLORE_POSTS_For_Display = () => {
   `;
 };
 
+//for viewing latest posts, from who the user is following
+//used on Explore page
+export const GQL_EXPLORE_POSTS_By_Who_You_Follow = () => {
+  return gql`
+    query ($limit: Int!, $offset: Int!, $user: String!) {
+      follows(orderBy: blockTimestamp, orderDirection: desc, first: $limit, skip: $offset, where: { user: $user }) {
+        id
+        fundRun {
+          id
+          posts {
+            id
+            postText
+            proposedBy
+            fundRunId
+            fundRunTitle
+          }
+        }
+      }
+    }
+  `;
+};
+
 //for viewing a single Social Media Post
 //used in /post/[postId].tsx
 export const GQL_SOCIAL_POST_For_Display = () => {

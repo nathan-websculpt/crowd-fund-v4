@@ -44,7 +44,7 @@ import "./FollowersManager.sol";
  */
 
 contract CrowdFund is SocialPostManager, FollowersManager {
-	uint16 public numberOfComments = 0;
+	uint16 public numberOfComments = 0; //TODO: may remove this
 	event Comment (uint16 commentId, bytes postId, string commentText, address commenter);
 
 	constructor(address _contractOwner) {
