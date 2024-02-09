@@ -56,6 +56,22 @@ export const GQL_SOCIAL_POSTS_For_Display = () => {
   `;
 };
 
+//for viewing latest posts
+//used on Explore page
+export const GQL_EXPLORE_POSTS_For_Display = () => {
+  return gql`
+    query ($limit: Int!, $offset: Int!) {
+      socialPosts(orderBy: blockTimestamp, orderDirection: desc, first: $limit, skip: $offset) {
+        id
+        postText
+        proposedBy
+        fundRunId
+        fundRunTitle
+      }
+    }
+  `;
+};
+
 //for viewing a single Social Media Post
 //used in /post/[postId].tsx
 export const GQL_SOCIAL_POST_For_Display = () => {

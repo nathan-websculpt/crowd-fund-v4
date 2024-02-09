@@ -7,7 +7,7 @@ interface CreateCommentProps {
 }
 
 export const CreateComment = (c: CreateCommentProps) => {
-  const [commentText, setCommentText] = useState("Leave your comment...");
+  const [commentText, setCommentText] = useState("");
   const [error, setError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 

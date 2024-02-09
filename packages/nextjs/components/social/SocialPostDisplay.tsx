@@ -27,7 +27,7 @@ export const SocialPostDisplay = (thisPost: SocialPostDisplayProps) => {
         <div>
           {!thisPost.isCommenting && (
             <Link href={`/post/${thisPost?.id}`} passHref className="btn btn-primary btn-sm">
-              Comment
+              Comment / s
             </Link>
           )}
         </div>
