@@ -24,33 +24,30 @@ export const SingleSocialProposal = (sp: DisplaySocialProposalProps) => {
         <Address address={sp?.proposedBy} size="sm" />
       </td>
       <td className="w-1/12 md:py-4">{sp.postText}</td>
-      {sp.status !== 2 ? (
-        <>
-          <SupportSocialProposal
-            fundRunId={sp.fundRunId}
-            socialProposalId={sp.socialProposalId}
-            proposedBy={sp.proposedBy}
-            postText={sp.postText}
-          />
-          {sp.status !== 0 ? (
-            <FinalizeSocialProposal
-              fundRunId={sp.fundRunId}
-              socialProposalId={sp.socialProposalId}
-              proposedBy={sp.proposedBy}
-              postText={sp.postText}
-            />
-          ) : (
-            <td className="w-1/12 md:py-4"></td>
-          )}
-
-          <RevokeSocialProposal fundRunId={sp.fundRunId} socialProposalId={sp.socialProposalId} />
-        </>
+      {sp.status === 0 ? (
+        <SupportSocialProposal
+          fundRunId={sp.fundRunId}
+          socialProposalId={sp.socialProposalId}
+          proposedBy={sp.proposedBy}
+          postText={sp.postText}
+        />
       ) : (
-        <>
-          <td className="w-1/12 md:py-4"></td>
-          <td className="w-1/12 md:py-4"></td>
-          <td className="w-1/12 md:py-4"></td>
-        </>
+        <td className="w-1/12 md:py-4"></td>
+      )}
+      {sp.status === 1 ? (
+        <FinalizeSocialProposal
+          fundRunId={sp.fundRunId}
+          socialProposalId={sp.socialProposalId}
+          proposedBy={sp.proposedBy}
+          postText={sp.postText}
+        />
+      ) : (
+        <td className="w-1/12 md:py-4"></td>
+      )}
+      {sp.status !== 2 ? (
+        <RevokeSocialProposal fundRunId={sp.fundRunId} socialProposalId={sp.socialProposalId} />
+      ) : (
+        <td className="w-1/12 md:py-4"></td>
       )}
     </>
   );
