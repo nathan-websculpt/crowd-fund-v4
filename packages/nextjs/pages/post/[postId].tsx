@@ -47,6 +47,7 @@ const ViewPost: NextPage = () => {
                 postText={data.socialPost.postText}
                 proposedBy={data.socialPost.proposedBy}
                 isCommenting={true}
+                canTip={true}
               />
             )}
             <div className="mt-6"></div>

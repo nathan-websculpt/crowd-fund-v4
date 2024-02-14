@@ -82,6 +82,7 @@ export const ExplorePostsFromWhoIFollow = () => {
                     postText={p.postText}
                     proposedBy={p.proposedBy}
                     isCommenting={false}
+                    canTip={true}
                   />
                 </div>
               ))}

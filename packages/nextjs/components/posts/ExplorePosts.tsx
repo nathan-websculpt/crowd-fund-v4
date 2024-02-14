@@ -79,6 +79,7 @@ export const ExplorePosts = () => {
                 postText={p.postText}
                 proposedBy={p.proposedBy}
                 isCommenting={false}
+                canTip={true}
               />
             </div>
           ))}

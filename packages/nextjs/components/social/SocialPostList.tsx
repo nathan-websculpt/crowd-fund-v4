@@ -73,6 +73,7 @@ export const SocialPostList = () => {
               postText={p.postText}
               proposedBy={p.proposedBy}
               isCommenting={false}
+              canTip={false}
             />
           </div>
         ))}
