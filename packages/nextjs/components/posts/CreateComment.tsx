@@ -47,7 +47,7 @@ export const CreateComment = (c: CreateCommentProps) => {
         onChange={e => setCommentText(e.target.value)}
       />
       <button className="btn btn-primary" onClick={() => validateThenWrite()}>
-        Leave your Reply
+        Leave your Comment
       </button>
     </>
   );

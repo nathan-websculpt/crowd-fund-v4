@@ -54,7 +54,7 @@ export const WhoFollowsThisFundRun = (fund: WhoFollowsProps) => {
         </button>
       </div>
 
-      <div className="flex justify-center">
+      <div className="flex flex-col items-center">
         {data?.follows?.map(follower => (
           <div
             key={follower?.id}

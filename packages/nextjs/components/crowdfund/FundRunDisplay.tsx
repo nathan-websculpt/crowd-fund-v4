@@ -14,7 +14,7 @@ export const FundRunDisplay = (fundRun: FundRunDisplayProps) => {
   return (
     <>
       <div className="flex justify-between">
-        <Link href={`/social-management/${fundRun?.id}`} passHref className="btn btn-primary btn-xs">
+        <Link href={`/social-management/${fundRun?.id}`} passHref className="btn btn-primary btn-sm">
           Manage Social Page
         </Link>
         <FollowToggle fundRunId={fundRun?.id} />
