@@ -38,7 +38,7 @@ export const SocialPostList = (fund: SocialPostProps) => {
       <>
         <div className="flex flex-col mb-3">
           {data?.socialPosts[0] !== undefined ? (
-            <h1 className="mt-4 mb-4 text-4xl text-center text-primary-content">Viewing latest posts:</h1>
+            <h1 className="mt-4 mb-4 text-4xl text-center text-primary-content">Viewing latest posts</h1>
           ) : (
             <h1 className="mt-4 mb-4 text-4xl text-center text-primary-content">No Posts found for this Fund Run</h1>
           )}

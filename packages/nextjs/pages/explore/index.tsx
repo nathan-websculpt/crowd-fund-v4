@@ -14,13 +14,13 @@ const Explore: NextPage = () => {
 
       <div className="flex justify-center mb-6 mt-14">
         <button
-          className={showingWhoYouFollow ? "btn btn-primary" : "btn btn-secondary"}
+          className={showingWhoYouFollow ? "btn btn-accent rounded-none" : "btn btn-primary rounded-none"}
           onClick={() => setShowingWhoYouFollow(true)}
         >
           {showingWhoYouFollow ? "Viewing Who you Follow" : "View Who you Follow"}
         </button>
         <button
-          className={showingWhoYouFollow ? "btn btn-secondary" : "btn btn-primary"}
+          className={showingWhoYouFollow ? "btn btn-primary rounded-none" : "btn btn-accent rounded-none"}
           onClick={() => setShowingWhoYouFollow(false)}
         >
           {showingWhoYouFollow ? "Explore More" : "Exploring More"}

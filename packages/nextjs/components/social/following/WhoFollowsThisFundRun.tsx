@@ -54,14 +54,16 @@ export const WhoFollowsThisFundRun = (fund: WhoFollowsProps) => {
         </button>
       </div>
 
-      {data?.follows?.map(follower => (
-        <div
-          key={follower?.id}
-          className="flex flex-col gap-2 p-2 m-4 border shadow-xl border-base-300 bg-base-200 sm:rounded-lg"
-        >
-          <Address address={follower?.user} size="xl" />
-        </div>
-      ))}
+      <div className="flex justify-center">
+        {data?.follows?.map(follower => (
+          <div
+            key={follower?.id}
+            className="flex flex-col items-center w-2/5 gap-2 p-2 m-4 border shadow-xl border-base-300 bg-base-200 sm:rounded-lg"
+          >
+            <Address address={follower?.user} size="xl" />
+          </div>
+        ))}
+      </div>
 
       <div className="flex justify-end gap-3 mx-5 mt-5">
         <button className="btn btn-sm" disabled={!pageNum} onClick={() => setPageNum(0)}>

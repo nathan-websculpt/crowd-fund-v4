@@ -62,13 +62,13 @@ const ViewSocial: NextPage = () => {
 
           <div className="flex justify-center mb-6 mt-14">
             <button
-              className={showingPosts ? "btn btn-primary" : "btn btn-secondary"}
+              className={showingPosts ? "btn btn-accent rounded-none" : "btn btn-primary rounded-none"}
               onClick={() => setShowingPosts(true)}
             >
               {showingPosts ? "Viewing Posts" : "View Posts"}
             </button>
             <button
-              className={showingPosts ? "btn btn-secondary" : "btn btn-primary"}
+              className={showingPosts ? "btn btn-primary rounded-none" : "btn btn-accent rounded-none"}
               onClick={() => setShowingPosts(false)}
             >
               {showingPosts ? "View Followers" : "Viewing Followers"}
