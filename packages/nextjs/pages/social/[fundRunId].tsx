@@ -12,17 +12,18 @@ import { GQL_FUNDRUN_By_FundRunId } from "~~/helpers/getQueries";
 
 const ViewSocial: NextPage = () => {
   const router = useRouter();
-  const { fundRun } = router.query as { fundRun?: `${string}` };
+  const { fundRunId } = router.query;
   const [showingPosts, setShowingPosts] = useState(true);
 
   const { loading, error, data } = useQuery(GQL_FUNDRUN_By_FundRunId(), {
-    variables: { slug: parseInt(fundRun) },
+    variables: { slug: parseInt(fundRunId) },
     pollInterval: 1000,
   });
 
   useEffect(() => {
     if (error !== undefined && error !== null) console.log("GQL_FUNDRUN_By_FundRunId Query Error: ", error);
   }, [error]);
+
   if (loading) {
     return (
       <div className="flex flex-col gap-2 p-2 m-4 mx-auto border shadow-xl border-base-300 bg-base-200 sm:rounded-lg">
@@ -73,8 +74,11 @@ const ViewSocial: NextPage = () => {
               {showingPosts ? "View Followers" : "Viewing Followers"}
             </button>
           </div>
-          {showingPosts ? <SocialPostList /> : <WhoFollowsThisFundRun fundRunId={data?.fundRuns[0].fundRunId} />}
-          {/* todo: WhoFollowsThisFundRun will break if there is no fund run here... */}
+          {showingPosts ? (
+            <SocialPostList fundRunId={parseInt(fundRunId)} />
+          ) : (
+            <WhoFollowsThisFundRun fundRunId={parseInt(fundRunId)} />
+          )}
         </div>
       </>
     );

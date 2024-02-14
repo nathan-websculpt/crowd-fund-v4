@@ -6,9 +6,11 @@ import { Spinner } from "~~/components/Spinner";
 import { SocialPostDisplay } from "~~/components/social/SocialPostDisplay";
 import { GQL_SOCIAL_POSTS_For_Display } from "~~/helpers/getQueries";
 
-export const SocialPostList = () => {
-  const router = useRouter();
-  const { fundRun } = router.query as { fundRun?: `${string}` }; //fundRunId
+interface SocialPostProps {
+  fundRunId: number;
+}
+
+export const SocialPostList = (fund: SocialPostProps) => {
   const [pageSize, setPageSize] = useState(25);
   const [pageNum, setPageNum] = useState(0);
 
@@ -16,7 +18,7 @@ export const SocialPostList = () => {
     variables: {
       limit: pageSize,
       offset: pageNum * pageSize,
-      fundRunId: parseInt(fundRun),
+      fundRunId: parseInt(fund?.fundRunId),
     },
     pollInterval: 10000,
   });
