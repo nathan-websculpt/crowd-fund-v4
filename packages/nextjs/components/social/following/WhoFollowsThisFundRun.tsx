@@ -28,7 +28,7 @@ export const WhoFollowsThisFundRun = (fund: WhoFollowsProps) => {
     <>
       <div className="flex flex-col mb-3">
         {data?.follows?.length > 0 ? (
-          <h1 className="mt-4 mb-4 text-4xl text-center text-primary-content">Viewing your Followers:</h1>
+          <h1 className="mt-4 mb-4 text-4xl text-center text-primary-content">Viewing Fund Run's Followers</h1>
         ) : (
           <h1 className="mt-4 mb-4 text-4xl text-center text-primary-content">Sorry, no followers</h1>
         )}
