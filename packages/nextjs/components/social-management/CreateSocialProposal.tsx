@@ -86,13 +86,20 @@ export const CreateSocialProposal = (fundRun: CreateSocialProposalProps) => {
   return (
     <>
       <div className="flex flex-col w-full gap-2 sm:gap-5 sm:w-4/5 md:w-3/5">
-        <div className="flex justify-start gap-3 mb-5">
-          <button className="btn btn-sm btn-primary" onClick={() => router.back()}>
-            Back
-          </button>
-          <Link href={`/social/${fundRun?.fundRunId}`} passHref className="btn btn-sm btn-primary">
-            View Your Page
-          </Link>
+        <div className="flex justify-between gap-3 mb-5">
+          <div className="flex justify-start">
+            <button className="btn btn-sm btn-primary" onClick={() => router.back()}>
+              Back
+            </button>
+          </div>
+          <div className="flex justify-end gap-4">
+            <Link href={`/social/${fundRun?.fundRunId}`} passHref className="btn btn-sm btn-primary">
+              View Your Page
+            </Link>
+            <Link href={`/crowdfund/vaults/${fundRun?.fundRunId}`} passHref className="btn btn-sm btn-primary">
+              View Your Vault
+            </Link>
+          </div>
         </div>
         {error ? (
           <div className="flex justify-center">
