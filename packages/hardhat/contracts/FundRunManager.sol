@@ -25,6 +25,7 @@ contract FundRunManager is MultisigManager {
 		string memory _description,
 		address[] memory _owners
 	) external {
+		require(_owners.length > 1, "Fund Runs must have more than one owner.");
 		bytes32 baseCompare = keccak256("");
 		bytes32 titleCompare = keccak256(bytes(_title));
 		bytes32 descriptionCompare = keccak256(bytes(_description));
