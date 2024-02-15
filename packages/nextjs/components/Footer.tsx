@@ -44,7 +44,7 @@ export const Footer = () => {
             <span>·</span>
             <div>
               <a
-                href="https://github.com/nathan-websculpt/crowd-fund"
+                href="https://github.com/nathan-websculpt/crowd-fund-v4"
                 target="_blank"
                 rel="noreferrer"
                 className="underline underline-offset-2"
