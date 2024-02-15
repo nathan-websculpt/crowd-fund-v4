@@ -31,7 +31,7 @@ library CrowdFundLibrary {
 
 	/**
 	 * @dev new structs in V4
-	 * Multisig Request to make 
+	 * Multisig Request to make
 	 * a social media post
 	 */
 	struct SocialMediaRequest {

@@ -1,11 +1,15 @@
 # 🚀 🌑 Social Crowd Funds
 
+## Demo
+
+https://github.com/nathan-websculpt/crowd-fund-v4/assets/58645278/4ccb41ab-12d9-4749-80c7-c75c8a08ff91
+
 ### 📌 Overview
-<!-- - [Current Contract](https://sepolia.etherscan.io/address/0xbF7766D1488Fe89337174847D533052fc17B475b)
-  - 0xbF7766D1488Fe89337174847D533052fc17B475b
+- [Current Contract](https://sepolia.etherscan.io/address/0x821001b6Bcf64d65C4258219B5559725Ca095bf6)
+  - 0x821001b6Bcf64d65C4258219B5559725Ca095bf6
 - [Current Site](https://crowd-fund-v4-nextjs.vercel.app/)
-- [View a Vault](https://crowd-fund-v4-nextjs.vercel.app/crowdfund/vaults/10)
-- [View Query Data](https://crowd-fund-v4-nextjs.vercel.app/queries) -->
+- [View a Vault](https://crowd-fund-v4-nextjs.vercel.app/crowdfund/vaults/0)
+- [View Query Data](https://crowd-fund-v4-nextjs.vercel.app/queries)
 - 😁 What's New? 😁
   - [V3](https://github.com/nathan-websculpt/crowd-fund-v3) Fund Runs had 'Deadlines' and 'Target Ether Amounts' 
   - In V4, these Fund Runs will be open-ended
@@ -16,10 +20,6 @@
     - [View a Social Media Management Page](https://crowd-fund-v4-nextjs.vercel.app/social-management/0)
 
 ⚙️ Built with [Scaffold-ETH 2](#Contents), using NextJS, RainbowKit, Hardhat, Wagmi, and Typescript.
-
-<!-- 
-## ✅  Demo 📱
-https://github.com/nathan-websculpt/crowd-fund-v3/assets/58645278/a2969b7f-65bd-4757-bd5d-3be426946afc -->
 
 👇👇👇Note that this project uses a [subgraph](https://thegraph.com/docs/en/developing/creating-a-subgraph/). If you want to go over how to work with subgraphs, I have these blogs 👇👇👇
  - [Local Graph Dev with Scaffold-ETH 2](https://medium.com/@websculpt/local-graph-dev-with-scaffold-eth-2-a774a67b148c)

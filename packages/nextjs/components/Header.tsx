@@ -48,6 +48,12 @@ export const Header = () => {
       <li>
         <NavLink href="/queries">Queries</NavLink>
       </li>
+      <li>
+        <NavLink href="/following">Following</NavLink>
+      </li>
+      <li>
+        <NavLink href="/explore">Explore</NavLink>
+      </li>
     </>
   );
 

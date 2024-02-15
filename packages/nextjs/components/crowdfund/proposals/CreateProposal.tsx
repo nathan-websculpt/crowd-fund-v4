@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import router from "next/router";
 import { SignMessageReturnType, isAddress, parseEther, toBytes } from "viem";
 import { useAccount, useWalletClient } from "wagmi";
@@ -108,11 +109,21 @@ export const CreateProposal = (fundRun: CreateProposalProps) => {
 
   return (
     <>
-      <div className="flex flex-col gap-2 sm:gap-5">
-        <div className="flex justify-start mb-5">
-          <button className="btn btn-sm btn-primary" onClick={() => router.back()}>
-            Back
-          </button>
+      <div className="flex flex-col w-full gap-2 sm:gap-5 sm:w-4/5 md:w-3/5">
+        <div className="flex justify-between gap-3 mb-5">
+          <div className="flex justify-start">
+            <button className="btn btn-sm btn-primary" onClick={() => router.back()}>
+              Back
+            </button>
+          </div>
+          <div className="flex justify-end gap-4">
+            <Link href={`/social-management/${fundRun?.fundRunId}`} passHref className="btn btn-sm btn-primary">
+              Manage Your Page
+            </Link>
+            <Link href={`/social/${fundRun?.fundRunId}`} passHref className="btn btn-sm btn-primary">
+              View Your Page
+            </Link>
+          </div>
         </div>
         {error ? (
           <div className="flex justify-center">

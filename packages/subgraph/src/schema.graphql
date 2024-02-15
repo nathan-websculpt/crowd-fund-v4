@@ -30,6 +30,8 @@ type FundRun @entity {
   blockTimestamp: BigInt!
   transactionHash: Bytes!
   proposals: [Proposal!] @derivedFrom(field: "fundRun")
+  followers: [Follow!] @derivedFrom(field: "fundRun")
+  posts: [SocialPost!] @derivedFrom(field: "fundRun")
 }
 
 type MultisigTransfer @entity(immutable: true) {
@@ -125,7 +127,7 @@ type SocialProposalRevoke @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type SocialPost @entity(immutable: true) {
+type SocialPost @entity {
   id: Bytes!
   socialProposalId: Int! # uint16
   fundRunId: Int! # uint16
@@ -135,4 +137,36 @@ type SocialPost @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+  fundRun: FundRun
+  comments: [Comment!] @derivedFrom(field: "socialPost")
+}
+
+type Follow @entity {
+  id: Bytes!
+  fundRunId: Int! # uint16
+  user: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  fundRun: FundRun
+}
+
+type Unfollow @entity {
+  id: Bytes!
+  fundRunId: Int! # uint16
+  user: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Comment @entity {
+  id: Bytes!
+  commentId: Int!
+  commentText: String!
+  commenter: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  socialPost: SocialPost
 }

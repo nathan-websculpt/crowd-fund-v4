@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
@@ -7,9 +6,11 @@ import { Spinner } from "~~/components/Spinner";
 import { SocialPostDisplay } from "~~/components/social/SocialPostDisplay";
 import { GQL_SOCIAL_POSTS_For_Display } from "~~/helpers/getQueries";
 
-export const SocialPostList = () => {
-  const router = useRouter();
-  const { fundRun } = router.query as { fundRun?: `${string}` }; //fundRunId
+interface SocialPostProps {
+  fundRunId: number;
+}
+
+export const SocialPostList = (fund: SocialPostProps) => {
   const [pageSize, setPageSize] = useState(25);
   const [pageNum, setPageNum] = useState(0);
 
@@ -17,7 +18,7 @@ export const SocialPostList = () => {
     variables: {
       limit: pageSize,
       offset: pageNum * pageSize,
-      fundRunId: parseInt(fundRun),
+      fundRunId: parseInt(fund?.fundRunId),
     },
     pollInterval: 10000,
   });
@@ -35,21 +36,13 @@ export const SocialPostList = () => {
   } else {
     return (
       <>
-        {data?.socialPosts[0] !== undefined ? (
-          <div className="flex flex-col mb-12">
-            <h1 className="font-bold text-primary-content">Posts from Fund Run: {data?.socialPosts[0].fundRunTitle}</h1>
-            <Link
-              href={`/social-management/${data?.socialPosts[0].fundRunId}`}
-              passHref
-              className="w-full max-w-full min-w-full mt-4"
-            >
-              <p className="text-center bg-primary">Click Here to Manage Social Page</p>
-            </Link>
-            <p className="-mt-2 text-center">☝️ would be removed in production ☝️</p>
-          </div>
-        ) : (
-          <h1 className="mt-4 mb-4 text-4xl text-center text-primary-content">No Fund Run found</h1>
-        )}
+        <div className="flex flex-col mb-3">
+          {data?.socialPosts[0] !== undefined ? (
+            <h1 className="mt-4 mb-4 text-4xl text-center text-primary-content">Viewing latest posts</h1>
+          ) : (
+            <h1 className="mt-4 mb-4 text-4xl text-center text-primary-content">No Posts found for this Fund Run</h1>
+          )}
+        </div>
         <div className="flex justify-center gap-3 mb-3">
           <span className="my-auto text-lg">Page {pageNum + 1}</span>
           <select
@@ -76,10 +69,13 @@ export const SocialPostList = () => {
             className="flex flex-col gap-2 p-2 m-4 border shadow-xl border-base-300 bg-base-200 sm:rounded-lg"
           >
             <SocialPostDisplay
+              id={p.id}
               fundRunId={p.fundRunId}
               fundRunTitle={p.fundRunTitle}
               postText={p.postText}
               proposedBy={p.proposedBy}
+              isCommenting={false}
+              canTip={false}
             />
           </div>
         ))}

@@ -26,6 +26,8 @@ dataSources:
         - ProposalSignature
         - SocialProposalSignature
         - SocialPost
+        - Follow
+        - Unfollow
       abis:
         - name: CrowdFund
           file: CrowdFund\abis\localhost_CrowdFund.json
@@ -54,4 +56,10 @@ dataSources:
           handler: handleSocialPost
         - event: SocialProposalRevoke(uint16)
           handler: handleSocialProposalRevoke
+        - event: Follow(uint16,address)
+          handler: handleFollow
+        - event: Unfollow(uint16,address)
+          handler: handleUnfollow
+        - event: Comment(uint16,bytes,string,address)
+          handler: handleComment
       file: CrowdFund\CrowdFund.wasm

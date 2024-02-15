@@ -10,11 +10,11 @@ import { GQL_FUNDRUN_By_FundRunId } from "~~/helpers/getQueries";
 
 const ManageSocial: NextPage = () => {
   const router = useRouter();
-  const { fundRun } = router.query as { fundRun?: `${string}` }; //fundRunId
+  const { fundRunId } = router.query;
 
   //query returns a bit more than needed (for now), but going to use other fields later
   const { loading, error, data } = useQuery(GQL_FUNDRUN_By_FundRunId(), {
-    variables: { slug: parseInt(fundRun) },
+    variables: { slug: parseInt(fundRunId) },
   });
 
   useEffect(() => {

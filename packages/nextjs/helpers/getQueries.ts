@@ -56,6 +56,81 @@ export const GQL_SOCIAL_POSTS_For_Display = () => {
   `;
 };
 
+//for viewing latest posts
+//used on Explore page
+export const GQL_EXPLORE_POSTS_For_Display = () => {
+  return gql`
+    query ($limit: Int!, $offset: Int!) {
+      socialPosts(orderBy: blockTimestamp, orderDirection: desc, first: $limit, skip: $offset) {
+        id
+        postText
+        proposedBy
+        fundRunId
+        fundRunTitle
+      }
+    }
+  `;
+};
+
+//for viewing latest posts, from who the user is following
+//used on Explore page
+export const GQL_EXPLORE_POSTS_By_Who_You_Follow = () => {
+  return gql`
+    query ($limit: Int!, $offset: Int!, $user: String!) {
+      follows(orderBy: blockTimestamp, orderDirection: desc, first: $limit, skip: $offset, where: { user: $user }) {
+        id
+        fundRun {
+          id
+          posts {
+            id
+            postText
+            proposedBy
+            fundRunId
+            fundRunTitle
+          }
+        }
+      }
+    }
+  `;
+};
+
+//for viewing a single Social Media Post
+//used in /post/[postId].tsx
+export const GQL_SOCIAL_POST_For_Display = () => {
+  return gql`
+    query ($socialPostId: String!) {
+      socialPost(id: $socialPostId) {
+        id
+        postText
+        proposedBy
+        fundRunId
+        fundRunTitle
+      }
+    }
+  `;
+};
+
+//for viewing a Post's Comments
+//used in /post/[postId].tsx -- Comments.tsx
+export const GQL_SOCIAL_POST_COMMENTS_For_Display = () => {
+  return gql`
+    query ($limit: Int!, $offset: Int!, $socialPostId: String!) {
+      comments(
+        orderBy: commentId
+        orderDirection: desc
+        where: { socialPost_: { id: $socialPostId } }
+        first: $limit
+        skip: $offset
+      ) {
+        id
+        commentText
+        commenter
+        # todo: could just pull the comments from the query up above...
+      }
+    }
+  `;
+};
+
 //queries page
 //for viewing 3-tier table
 //ALL Fund Runs
@@ -292,6 +367,61 @@ export const GQL_SOCIAL_PROPOSALS_By_FundRunId = () => {
           signer
           signature
         }
+      }
+    }
+  `;
+};
+
+//for seeing if a user is following a Fund Run
+//used in FollowToggle.tsx to see IF a user is following a Fund Run
+export const GQL_SOCIAL_FOLLOWERS_By_FundRunId_and_Address = () => {
+  return gql`
+    query ($fundRunId: Int!, $user: String!) {
+      fundRuns(where: { fundRunId: $fundRunId }) {
+        followers(where: { user: $user }) {
+          id
+          fundRunId
+          user
+        }
+      }
+    }
+  `;
+}; //TODO: ^^clean unneeded fields
+
+//for getting all of the Fund Runs that a user is following
+//used in WhoAmIFollowing.tsx
+export const GQL_SOCIAL_FOLLOWING_By_Address = () => {
+  return gql`
+    query ($limit: Int!, $offset: Int!, $user: String!) {
+      follows(
+        orderBy: fundRunId
+        orderDirection: desc
+        first: $limit
+        skip: $offset
+        where: { user: $user, fundRun_not: null }
+      ) {
+        id
+        fundRun {
+          id
+          fundRunId
+          title
+          description
+          amountCollected
+          amountWithdrawn
+        }
+      }
+    }
+  `;
+};
+
+//for getting all of the followers for a particular Fund Run
+//used in WhoFollowsThisFundRun.tsx
+export const GQL_SOCIAL_FOLLOWERS_By_FundRunId = () => {
+  return gql`
+    query ($limit: Int!, $offset: Int!, $fundRunId: Int!) {
+      follows(first: $limit, skip: $offset, where: { fundRunId: $fundRunId, fundRun_not: null }) {
+        id
+        user
       }
     }
   `;

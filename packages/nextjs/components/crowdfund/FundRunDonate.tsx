@@ -24,7 +24,7 @@ export const FundRunDonate = (fundRun: FundRunProps) => {
     onBlockConfirmation: txnReceipt => {
       console.log("📦 Transaction blockHash", txnReceipt.blockHash);
     },
-    value: donationInput, //TODO: pretty sure this HAS to be a string (when sending ether in the tx)
+    value: donationInput,
   });
 
   const validateThenWrite = () => {

@@ -10,10 +10,10 @@ import { GQL_FUNDRUN_By_FundRunId } from "~~/helpers/getQueries";
 
 const VaultPage: NextPage = () => {
   const router = useRouter();
-  const { vault } = router.query as { vault?: `${string}` }; //fundRunId
+  const { fundRunId } = router.query;
 
   const { loading, error, data } = useQuery(GQL_FUNDRUN_By_FundRunId(), {
-    variables: { slug: parseInt(vault) },
+    variables: { slug: parseInt(fundRunId) },
   });
 
   useEffect(() => {

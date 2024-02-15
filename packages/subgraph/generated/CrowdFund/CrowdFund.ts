@@ -10,6 +10,36 @@ import {
   BigInt
 } from "@graphprotocol/graph-ts";
 
+export class Comment extends ethereum.Event {
+  get params(): Comment__Params {
+    return new Comment__Params(this);
+  }
+}
+
+export class Comment__Params {
+  _event: Comment;
+
+  constructor(event: Comment) {
+    this._event = event;
+  }
+
+  get commentId(): i32 {
+    return this._event.parameters[0].value.toI32();
+  }
+
+  get postId(): Bytes {
+    return this._event.parameters[1].value.toBytes();
+  }
+
+  get commentText(): string {
+    return this._event.parameters[2].value.toString();
+  }
+
+  get commenter(): Address {
+    return this._event.parameters[3].value.toAddress();
+  }
+}
+
 export class ContractOwnerWithdrawal extends ethereum.Event {
   get params(): ContractOwnerWithdrawal__Params {
     return new ContractOwnerWithdrawal__Params(this);
@@ -55,6 +85,28 @@ export class Donation__Params {
 
   get amount(): BigInt {
     return this._event.parameters[2].value.toBigInt();
+  }
+}
+
+export class Follow extends ethereum.Event {
+  get params(): Follow__Params {
+    return new Follow__Params(this);
+  }
+}
+
+export class Follow__Params {
+  _event: Follow;
+
+  constructor(event: Follow) {
+    this._event = event;
+  }
+
+  get fundRunId(): i32 {
+    return this._event.parameters[0].value.toI32();
+  }
+
+  get user(): Address {
+    return this._event.parameters[1].value.toAddress();
   }
 }
 
@@ -362,6 +414,28 @@ export class SocialProposalSignature__Params {
   }
 }
 
+export class Unfollow extends ethereum.Event {
+  get params(): Unfollow__Params {
+    return new Unfollow__Params(this);
+  }
+}
+
+export class Unfollow__Params {
+  _event: Unfollow;
+
+  constructor(event: Unfollow) {
+    this._event = event;
+  }
+
+  get fundRunId(): i32 {
+    return this._event.parameters[0].value.toI32();
+  }
+
+  get user(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+}
+
 export class CrowdFund__fundRunValuesResult {
   value0: BigInt;
   value1: BigInt;
@@ -528,6 +602,29 @@ export class CrowdFund extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  numberOfComments(): i32 {
+    let result = super.call(
+      "numberOfComments",
+      "numberOfComments():(uint16)",
+      []
+    );
+
+    return result[0].toI32();
+  }
+
+  try_numberOfComments(): ethereum.CallResult<i32> {
+    let result = super.tryCall(
+      "numberOfComments",
+      "numberOfComments():(uint16)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toI32());
   }
 
   numberOfFundRuns(): i32 {
@@ -892,6 +989,40 @@ export class ContractOwnerWithdrawCall__Outputs {
   }
 }
 
+export class CreateCommentCall extends ethereum.Call {
+  get inputs(): CreateCommentCall__Inputs {
+    return new CreateCommentCall__Inputs(this);
+  }
+
+  get outputs(): CreateCommentCall__Outputs {
+    return new CreateCommentCall__Outputs(this);
+  }
+}
+
+export class CreateCommentCall__Inputs {
+  _call: CreateCommentCall;
+
+  constructor(call: CreateCommentCall) {
+    this._call = call;
+  }
+
+  get _postId(): Bytes {
+    return this._call.inputValues[0].value.toBytes();
+  }
+
+  get _commentText(): string {
+    return this._call.inputValues[1].value.toString();
+  }
+}
+
+export class CreateCommentCall__Outputs {
+  _call: CreateCommentCall;
+
+  constructor(call: CreateCommentCall) {
+    this._call = call;
+  }
+}
+
 export class CreateFundRunCall extends ethereum.Call {
   get inputs(): CreateFundRunCall__Inputs {
     return new CreateFundRunCall__Inputs(this);
@@ -1123,6 +1254,36 @@ export class FinalizeAndPostCall_txStruct extends ethereum.Tuple {
 
   get proposedBy(): Address {
     return this[1].toAddress();
+  }
+}
+
+export class FollowCall extends ethereum.Call {
+  get inputs(): FollowCall__Inputs {
+    return new FollowCall__Inputs(this);
+  }
+
+  get outputs(): FollowCall__Outputs {
+    return new FollowCall__Outputs(this);
+  }
+}
+
+export class FollowCall__Inputs {
+  _call: FollowCall;
+
+  constructor(call: FollowCall) {
+    this._call = call;
+  }
+
+  get _fundRunId(): i32 {
+    return this._call.inputValues[0].value.toI32();
+  }
+}
+
+export class FollowCall__Outputs {
+  _call: FollowCall;
+
+  constructor(call: FollowCall) {
+    this._call = call;
   }
 }
 
@@ -1388,6 +1549,36 @@ export class TransferOwnershipCall__Outputs {
   _call: TransferOwnershipCall;
 
   constructor(call: TransferOwnershipCall) {
+    this._call = call;
+  }
+}
+
+export class UnfollowCall extends ethereum.Call {
+  get inputs(): UnfollowCall__Inputs {
+    return new UnfollowCall__Inputs(this);
+  }
+
+  get outputs(): UnfollowCall__Outputs {
+    return new UnfollowCall__Outputs(this);
+  }
+}
+
+export class UnfollowCall__Inputs {
+  _call: UnfollowCall;
+
+  constructor(call: UnfollowCall) {
+    this._call = call;
+  }
+
+  get _fundRunId(): i32 {
+    return this._call.inputValues[0].value.toI32();
+  }
+}
+
+export class UnfollowCall__Outputs {
+  _call: UnfollowCall;
+
+  constructor(call: UnfollowCall) {
     this._call = call;
   }
 }

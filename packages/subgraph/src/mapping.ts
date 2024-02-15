@@ -12,6 +12,9 @@ import {
   SocialProposalSignature as SocialProposalSignatureEvent,
   SocialPost as SocialPostEvent,
   SocialProposalRevoke as SocialProposalRevokeEvent,
+  Follow as FollowEvent,
+  Unfollow as UnfollowEvent,
+  Comment as CommentEvent,
 } from "../generated/CrowdFund/CrowdFund";
 import {
   ContractOwnerWithdrawal,
@@ -26,6 +29,9 @@ import {
   SocialProposalSignature,
   SocialPost,
   SocialProposalRevoke,
+  Follow,
+  Unfollow,
+  Comment,
 } from "../generated/schema";
 
 export function handleContractOwnerWithdrawal(
@@ -365,7 +371,78 @@ export function handleSocialPost(event: SocialPostEvent): void {
   let fundRunEntity = FundRun.load(
     Bytes.fromHexString("fundruns__").concat(Bytes.fromI32(entity.fundRunId))
   );
-  if (fundRunEntity !== null) entity.fundRunTitle = fundRunEntity.title;
+  if (fundRunEntity !== null){ 
+    entity.fundRunTitle = fundRunEntity.title;
+    entity.fundRun = fundRunEntity.id;
+  }
+
+  entity.save();
+}
+
+export function handleFollow(event: FollowEvent): void {
+  //ID is user address and the fundrun Id
+  let entity = new Follow(
+    Bytes.fromHexString("followers_").concat(
+      event.params.user.concat(Bytes.fromI32(event.params.fundRunId))
+    )
+  );
+  entity.fundRunId = event.params.fundRunId;
+  entity.user = event.params.user;
+
+  entity.blockNumber = event.block.number;
+  entity.blockTimestamp = event.block.timestamp;
+  entity.transactionHash = event.transaction.hash;
+
+  let fundRunEntity = FundRun.load(
+    Bytes.fromHexString("fundruns__").concat(
+      Bytes.fromI32(event.params.fundRunId)
+    )
+  );
+  if (fundRunEntity !== null) entity.fundRun = fundRunEntity.id;
+
+  entity.save();
+}
+
+export function handleUnfollow(event: UnfollowEvent): void {
+  let entity = new Unfollow(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
+  );
+  entity.fundRunId = event.params.fundRunId;
+  entity.user = event.params.user;
+
+  entity.blockNumber = event.block.number;
+  entity.blockTimestamp = event.block.timestamp;
+  entity.transactionHash = event.transaction.hash;
+
+  let followEntity = Follow.load(
+    Bytes.fromHexString("followers_").concat(
+      event.params.user.concat(Bytes.fromI32(event.params.fundRunId))
+    )
+  );
+  if (followEntity !== null) {
+    followEntity.fundRun = null;
+    followEntity.save();
+  }
+
+  entity.save();
+}
+
+export function handleComment(event: CommentEvent): void {
+  let entity = new Comment(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
+  );
+  entity.commentId = event.params.commentId;
+  entity.commentText = event.params.commentText;
+  entity.commenter = event.params.commenter;
+
+  entity.blockNumber = event.block.number;
+  entity.blockTimestamp = event.block.timestamp;
+  entity.transactionHash = event.transaction.hash;
+
+  let postEntity = SocialPost.load(event.params.postId);
+  if(postEntity !== null) {
+    entity.socialPost = postEntity.id;
+  }
 
   entity.save();
 }

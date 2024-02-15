@@ -427,6 +427,26 @@ export class FundRun extends Entity {
       "proposals"
     );
   }
+
+  get followers(): FollowLoader {
+    return new FollowLoader(
+      "FundRun",
+      this.get("id")!
+        .toBytes()
+        .toHexString(),
+      "followers"
+    );
+  }
+
+  get posts(): SocialPostLoader {
+    return new SocialPostLoader(
+      "FundRun",
+      this.get("id")!
+        .toBytes()
+        .toHexString(),
+      "posts"
+    );
+  }
 }
 
 export class MultisigTransfer extends Entity {
@@ -1731,6 +1751,401 @@ export class SocialPost extends Entity {
   set transactionHash(value: Bytes) {
     this.set("transactionHash", Value.fromBytes(value));
   }
+
+  get fundRun(): Bytes | null {
+    let value = this.get("fundRun");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set fundRun(value: Bytes | null) {
+    if (!value) {
+      this.unset("fundRun");
+    } else {
+      this.set("fundRun", Value.fromBytes(<Bytes>value));
+    }
+  }
+
+  get comments(): CommentLoader {
+    return new CommentLoader(
+      "SocialPost",
+      this.get("id")!
+        .toBytes()
+        .toHexString(),
+      "comments"
+    );
+  }
+}
+
+export class Follow extends Entity {
+  constructor(id: Bytes) {
+    super();
+    this.set("id", Value.fromBytes(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save Follow entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.BYTES,
+        `Entities of type Follow must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("Follow", id.toBytes().toHexString(), this);
+    }
+  }
+
+  static loadInBlock(id: Bytes): Follow | null {
+    return changetype<Follow | null>(
+      store.get_in_block("Follow", id.toHexString())
+    );
+  }
+
+  static load(id: Bytes): Follow | null {
+    return changetype<Follow | null>(store.get("Follow", id.toHexString()));
+  }
+
+  get id(): Bytes {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set id(value: Bytes) {
+    this.set("id", Value.fromBytes(value));
+  }
+
+  get fundRunId(): i32 {
+    let value = this.get("fundRunId");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI32();
+    }
+  }
+
+  set fundRunId(value: i32) {
+    this.set("fundRunId", Value.fromI32(value));
+  }
+
+  get user(): Bytes {
+    let value = this.get("user");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set user(value: Bytes) {
+    this.set("user", Value.fromBytes(value));
+  }
+
+  get blockNumber(): BigInt {
+    let value = this.get("blockNumber");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set blockNumber(value: BigInt) {
+    this.set("blockNumber", Value.fromBigInt(value));
+  }
+
+  get blockTimestamp(): BigInt {
+    let value = this.get("blockTimestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set blockTimestamp(value: BigInt) {
+    this.set("blockTimestamp", Value.fromBigInt(value));
+  }
+
+  get transactionHash(): Bytes {
+    let value = this.get("transactionHash");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set transactionHash(value: Bytes) {
+    this.set("transactionHash", Value.fromBytes(value));
+  }
+
+  get fundRun(): Bytes | null {
+    let value = this.get("fundRun");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set fundRun(value: Bytes | null) {
+    if (!value) {
+      this.unset("fundRun");
+    } else {
+      this.set("fundRun", Value.fromBytes(<Bytes>value));
+    }
+  }
+}
+
+export class Unfollow extends Entity {
+  constructor(id: Bytes) {
+    super();
+    this.set("id", Value.fromBytes(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save Unfollow entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.BYTES,
+        `Entities of type Unfollow must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("Unfollow", id.toBytes().toHexString(), this);
+    }
+  }
+
+  static loadInBlock(id: Bytes): Unfollow | null {
+    return changetype<Unfollow | null>(
+      store.get_in_block("Unfollow", id.toHexString())
+    );
+  }
+
+  static load(id: Bytes): Unfollow | null {
+    return changetype<Unfollow | null>(store.get("Unfollow", id.toHexString()));
+  }
+
+  get id(): Bytes {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set id(value: Bytes) {
+    this.set("id", Value.fromBytes(value));
+  }
+
+  get fundRunId(): i32 {
+    let value = this.get("fundRunId");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI32();
+    }
+  }
+
+  set fundRunId(value: i32) {
+    this.set("fundRunId", Value.fromI32(value));
+  }
+
+  get user(): Bytes {
+    let value = this.get("user");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set user(value: Bytes) {
+    this.set("user", Value.fromBytes(value));
+  }
+
+  get blockNumber(): BigInt {
+    let value = this.get("blockNumber");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set blockNumber(value: BigInt) {
+    this.set("blockNumber", Value.fromBigInt(value));
+  }
+
+  get blockTimestamp(): BigInt {
+    let value = this.get("blockTimestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set blockTimestamp(value: BigInt) {
+    this.set("blockTimestamp", Value.fromBigInt(value));
+  }
+
+  get transactionHash(): Bytes {
+    let value = this.get("transactionHash");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set transactionHash(value: Bytes) {
+    this.set("transactionHash", Value.fromBytes(value));
+  }
+}
+
+export class Comment extends Entity {
+  constructor(id: Bytes) {
+    super();
+    this.set("id", Value.fromBytes(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save Comment entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.BYTES,
+        `Entities of type Comment must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("Comment", id.toBytes().toHexString(), this);
+    }
+  }
+
+  static loadInBlock(id: Bytes): Comment | null {
+    return changetype<Comment | null>(
+      store.get_in_block("Comment", id.toHexString())
+    );
+  }
+
+  static load(id: Bytes): Comment | null {
+    return changetype<Comment | null>(store.get("Comment", id.toHexString()));
+  }
+
+  get id(): Bytes {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set id(value: Bytes) {
+    this.set("id", Value.fromBytes(value));
+  }
+
+  get commentId(): i32 {
+    let value = this.get("commentId");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI32();
+    }
+  }
+
+  set commentId(value: i32) {
+    this.set("commentId", Value.fromI32(value));
+  }
+
+  get commentText(): string {
+    let value = this.get("commentText");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set commentText(value: string) {
+    this.set("commentText", Value.fromString(value));
+  }
+
+  get commenter(): Bytes {
+    let value = this.get("commenter");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set commenter(value: Bytes) {
+    this.set("commenter", Value.fromBytes(value));
+  }
+
+  get blockNumber(): BigInt {
+    let value = this.get("blockNumber");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set blockNumber(value: BigInt) {
+    this.set("blockNumber", Value.fromBigInt(value));
+  }
+
+  get blockTimestamp(): BigInt {
+    let value = this.get("blockTimestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set blockTimestamp(value: BigInt) {
+    this.set("blockTimestamp", Value.fromBigInt(value));
+  }
+
+  get transactionHash(): Bytes {
+    let value = this.get("transactionHash");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set transactionHash(value: Bytes) {
+    this.set("transactionHash", Value.fromBytes(value));
+  }
+
+  get socialPost(): Bytes | null {
+    let value = this.get("socialPost");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set socialPost(value: Bytes | null) {
+    if (!value) {
+      this.unset("socialPost");
+    } else {
+      this.set("socialPost", Value.fromBytes(<Bytes>value));
+    }
+  }
 }
 
 export class ProposalLoader extends Entity {
@@ -1748,6 +2163,42 @@ export class ProposalLoader extends Entity {
   load(): Proposal[] {
     let value = store.loadRelated(this._entity, this._id, this._field);
     return changetype<Proposal[]>(value);
+  }
+}
+
+export class FollowLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): Follow[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<Follow[]>(value);
+  }
+}
+
+export class SocialPostLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): SocialPost[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<SocialPost[]>(value);
   }
 }
 
@@ -1784,5 +2235,23 @@ export class SocialProposalSignatureLoader extends Entity {
   load(): SocialProposalSignature[] {
     let value = store.loadRelated(this._entity, this._id, this._field);
     return changetype<SocialProposalSignature[]>(value);
+  }
+}
+
+export class CommentLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): Comment[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<Comment[]>(value);
   }
 }

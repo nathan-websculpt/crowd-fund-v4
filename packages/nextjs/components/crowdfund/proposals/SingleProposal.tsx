@@ -31,37 +31,34 @@ export const SingleProposal = (proposal: DisplayProposalProps) => {
         <Address address={proposal?.proposedBy} size="sm" />
       </td>
       <td className="w-1/12 md:py-4">{proposal.reason}</td>
-      {proposal.status !== 2 ? (
-        <>
-          <SupportProposal
-            fundRunId={proposal.fundRunId}
-            proposalId={proposal.proposalId}
-            amount={proposal.amount}
-            to={proposal.to}
-            proposedBy={proposal.proposedBy}
-            reason={proposal.reason}
-          />
-          {proposal.status !== 0 ? (
-            <FinalizeProposal
-              fundRunId={proposal.fundRunId}
-              proposalId={proposal.proposalId}
-              amount={proposal.amount}
-              to={proposal.to}
-              proposedBy={proposal.proposedBy}
-              reason={proposal.reason}
-            />
-          ) : (
-            <td className="w-1/12 md:py-4"></td>
-          )}
-
-          <RevokeProposal fundRunId={proposal.fundRunId} proposalId={proposal.proposalId} />
-        </>
+      {proposal.status === 0 ? (
+        <SupportProposal
+          fundRunId={proposal.fundRunId}
+          proposalId={proposal.proposalId}
+          amount={proposal.amount}
+          to={proposal.to}
+          proposedBy={proposal.proposedBy}
+          reason={proposal.reason}
+        />
       ) : (
-        <>
-          <td className="w-1/12 md:py-4"></td>
-          <td className="w-1/12 md:py-4"></td>
-          <td className="w-1/12 md:py-4"></td>
-        </>
+        <td className="w-1/12 md:py-4"></td>
+      )}
+      {proposal.status === 1 ? (
+        <FinalizeProposal
+          fundRunId={proposal.fundRunId}
+          proposalId={proposal.proposalId}
+          amount={proposal.amount}
+          to={proposal.to}
+          proposedBy={proposal.proposedBy}
+          reason={proposal.reason}
+        />
+      ) : (
+        <td className="w-1/12 md:py-4"></td>
+      )}
+      {proposal.status !== 2 ? (
+        <RevokeProposal fundRunId={proposal.fundRunId} proposalId={proposal.proposalId} />
+      ) : (
+        <td className="w-1/12 md:py-4"></td>
       )}
     </>
   );

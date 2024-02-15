@@ -65,17 +65,15 @@ export const FundRunsList = () => {
             />
             <div className="flex justify-between">
               <div>
-                {fund.owners.length > 1 && (
-                  <Link href={`/crowdfund/vaults/${fund.fundRunId}`} passHref className="btn btn-primary">
-                    <div className="tooltip tooltip-primary" data-tip="View Proposals in the Vault">
-                      View Vault
-                    </div>
-                  </Link>
-                )}
+                <Link href={`/crowdfund/vaults/${fund.fundRunId}`} passHref className="btn btn-primary">
+                  <div className="tooltip tooltip-primary" data-tip="View Proposals in the Vault">
+                    View Vault
+                  </div>
+                </Link>
               </div>
 
               <div>
-                <Link href={`/crowdfund/${fund.fundRunId}`} passHref className="btn btn-primary">
+                <Link href={`/social/${fund.fundRunId}`} passHref className="btn btn-primary">
                   <div className="tooltip tooltip-primary" data-tip="donate...">
                     View Fund Run
                   </div>
