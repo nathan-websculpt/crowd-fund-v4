@@ -1185,7 +1185,7 @@ const contracts = {
       name: "sepolia",
       contracts: {
         CrowdFund: {
-          address: "0x821001b6Bcf64d65C4258219B5559725Ca095bf6",
+          address: "0x3dce29F3444E4Fe00F47883C8CC2c9847bAb8e3f",
           abi: [
             {
               inputs: [
@@ -1197,6 +1197,37 @@ const contracts = {
               ],
               stateMutability: "nonpayable",
               type: "constructor",
+            },
+            {
+              anonymous: false,
+              inputs: [
+                {
+                  indexed: false,
+                  internalType: "uint16",
+                  name: "commentId",
+                  type: "uint16",
+                },
+                {
+                  indexed: false,
+                  internalType: "bytes",
+                  name: "postId",
+                  type: "bytes",
+                },
+                {
+                  indexed: false,
+                  internalType: "string",
+                  name: "commentText",
+                  type: "string",
+                },
+                {
+                  indexed: false,
+                  internalType: "address",
+                  name: "commenter",
+                  type: "address",
+                },
+              ],
+              name: "Comment",
+              type: "event",
             },
             {
               anonymous: false,
@@ -1240,6 +1271,25 @@ const contracts = {
                 },
               ],
               name: "Donation",
+              type: "event",
+            },
+            {
+              anonymous: false,
+              inputs: [
+                {
+                  indexed: false,
+                  internalType: "uint16",
+                  name: "fundRunId",
+                  type: "uint16",
+                },
+                {
+                  indexed: false,
+                  internalType: "address",
+                  name: "user",
+                  type: "address",
+                },
+              ],
+              name: "Follow",
               type: "event",
             },
             {
@@ -1500,7 +1550,7 @@ const contracts = {
                 },
                 {
                   indexed: false,
-                  internalType: "enum CrowdFund.SocialProposalStatus",
+                  internalType: "enum SocialPostManager.SocialProposalStatus",
                   name: "status",
                   type: "uint8",
                 },
@@ -1559,6 +1609,25 @@ const contracts = {
               type: "event",
             },
             {
+              anonymous: false,
+              inputs: [
+                {
+                  indexed: false,
+                  internalType: "uint16",
+                  name: "fundRunId",
+                  type: "uint16",
+                },
+                {
+                  indexed: false,
+                  internalType: "address",
+                  name: "user",
+                  type: "address",
+                },
+              ],
+              name: "Unfollow",
+              type: "event",
+            },
+            {
               inputs: [],
               name: "MSG_PREFIX",
               outputs: [
@@ -1574,6 +1643,24 @@ const contracts = {
             {
               inputs: [],
               name: "contractOwnerWithdraw",
+              outputs: [],
+              stateMutability: "nonpayable",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  internalType: "bytes",
+                  name: "_postId",
+                  type: "bytes",
+                },
+                {
+                  internalType: "string",
+                  name: "_commentText",
+                  type: "string",
+                },
+              ],
+              name: "createComment",
               outputs: [],
               stateMutability: "nonpayable",
               type: "function",
@@ -1762,6 +1849,19 @@ const contracts = {
               inputs: [
                 {
                   internalType: "uint16",
+                  name: "_fundRunId",
+                  type: "uint16",
+                },
+              ],
+              name: "follow",
+              outputs: [],
+              stateMutability: "nonpayable",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  internalType: "uint16",
                   name: "",
                   type: "uint16",
                 },
@@ -1897,6 +1997,19 @@ const contracts = {
               name: "multisigWithdraw",
               outputs: [],
               stateMutability: "nonpayable",
+              type: "function",
+            },
+            {
+              inputs: [],
+              name: "numberOfComments",
+              outputs: [
+                {
+                  internalType: "uint16",
+                  name: "",
+                  type: "uint16",
+                },
+              ],
+              stateMutability: "view",
               type: "function",
             },
             {
@@ -2129,7 +2242,7 @@ const contracts = {
               name: "socialProposalStatuses",
               outputs: [
                 {
-                  internalType: "enum CrowdFund.SocialProposalStatus",
+                  internalType: "enum SocialPostManager.SocialProposalStatus",
                   name: "",
                   type: "uint8",
                 },
@@ -2205,6 +2318,19 @@ const contracts = {
                 },
               ],
               name: "transferOwnership",
+              outputs: [],
+              stateMutability: "nonpayable",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  internalType: "uint16",
+                  name: "_fundRunId",
+                  type: "uint16",
+                },
+              ],
+              name: "unfollow",
               outputs: [],
               stateMutability: "nonpayable",
               type: "function",
