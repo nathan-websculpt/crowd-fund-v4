@@ -15,6 +15,7 @@ import {
   Follow as FollowEvent,
   Unfollow as UnfollowEvent,
   Comment as CommentEvent,
+  SubComment as SubCommentEvent,
 } from "../generated/CrowdFund/CrowdFund";
 import {
   ContractOwnerWithdrawal,
@@ -32,6 +33,7 @@ import {
   Follow,
   Unfollow,
   Comment,
+  SubComment,
 } from "../generated/schema";
 
 export function handleContractOwnerWithdrawal(
@@ -442,6 +444,26 @@ export function handleComment(event: CommentEvent): void {
   let postEntity = SocialPost.load(event.params.postId);
   if(postEntity !== null) {
     entity.socialPost = postEntity.id;
+  }
+
+  entity.save();
+}
+
+export function handleSubComment(event: SubCommentEvent): void {
+  let entity = new SubComment(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
+  );
+  entity.commentId = event.params.commentId;//todo: rename commentId to parentCommentId
+  entity.commentText = event.params.commentText;
+  entity.commenter = event.params.commenter;
+
+  entity.blockNumber = event.block.number;
+  entity.blockTimestamp = event.block.timestamp;
+  entity.transactionHash = event.transaction.hash;
+
+  let commentEntity = Comment.load(event.params.commentId);
+  if(commentEntity !== null) {
+    entity.comment = commentEntity.id;
   }
 
   entity.save();

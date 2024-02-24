@@ -414,6 +414,36 @@ export class SocialProposalSignature__Params {
   }
 }
 
+export class SubComment extends ethereum.Event {
+  get params(): SubComment__Params {
+    return new SubComment__Params(this);
+  }
+}
+
+export class SubComment__Params {
+  _event: SubComment;
+
+  constructor(event: SubComment) {
+    this._event = event;
+  }
+
+  get postId(): Bytes {
+    return this._event.parameters[0].value.toBytes();
+  }
+
+  get commentId(): Bytes {
+    return this._event.parameters[1].value.toBytes();
+  }
+
+  get commentText(): string {
+    return this._event.parameters[2].value.toString();
+  }
+
+  get commenter(): Address {
+    return this._event.parameters[3].value.toAddress();
+  }
+}
+
 export class Unfollow extends ethereum.Event {
   get params(): Unfollow__Params {
     return new Unfollow__Params(this);
@@ -1166,6 +1196,44 @@ export class CreateSocialProposalCall_txStruct extends ethereum.Tuple {
 
   get proposedBy(): Address {
     return this[1].toAddress();
+  }
+}
+
+export class CreateSubCommentCall extends ethereum.Call {
+  get inputs(): CreateSubCommentCall__Inputs {
+    return new CreateSubCommentCall__Inputs(this);
+  }
+
+  get outputs(): CreateSubCommentCall__Outputs {
+    return new CreateSubCommentCall__Outputs(this);
+  }
+}
+
+export class CreateSubCommentCall__Inputs {
+  _call: CreateSubCommentCall;
+
+  constructor(call: CreateSubCommentCall) {
+    this._call = call;
+  }
+
+  get _postId(): Bytes {
+    return this._call.inputValues[0].value.toBytes();
+  }
+
+  get _commentId(): Bytes {
+    return this._call.inputValues[1].value.toBytes();
+  }
+
+  get _commentText(): string {
+    return this._call.inputValues[2].value.toString();
+  }
+}
+
+export class CreateSubCommentCall__Outputs {
+  _call: CreateSubCommentCall;
+
+  constructor(call: CreateSubCommentCall) {
+    this._call = call;
   }
 }
 

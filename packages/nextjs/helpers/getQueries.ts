@@ -125,7 +125,34 @@ export const GQL_SOCIAL_POST_COMMENTS_For_Display = () => {
         id
         commentText
         commenter
-        # todo: could just pull the comments from the query up above...
+        # todo: might just pull the comments from the query up above?
+        subcomments {
+          id
+          commentId
+          commentText
+          commenter
+        }
+      }
+    }
+  `;
+};
+
+//for viewing a Post's Sub-Sub-Comments
+//used in /post/[postId].tsx -- SubSubComments.tsx
+export const GQL_SOCIAL_SUB_COMMENTS_For_Display = () => {
+  return gql`
+    query ($limit: Int!, $offset: Int!, $parentCommentId: String!) {
+      subComments(
+        orderBy: commentId #todo: rename commentId to parentCommentId
+        orderDirection: desc
+        where: { commentId: $parentCommentId } #todo: rename commentId to parentCommentId
+        first: $limit
+        skip: $offset
+      ) {
+        id
+        commentId #todo: rename commentId to parentCommentId
+        commentText
+        commenter
       }
     }
   `;

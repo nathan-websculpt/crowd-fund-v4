@@ -1,12 +1,12 @@
 {
   "localhost": {
     "CrowdFund": {
-      "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+      "address": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9"
     }
   },
   "sepolia": {
     "CrowdFund": {
-      "address": "0x821001b6Bcf64d65C4258219B5559725Ca095bf6"
+      "address": "0x3dce29F3444E4Fe00F47883C8CC2c9847bAb8e3f"
     }
   }
 }

@@ -2,11 +2,12 @@ import { useState } from "react";
 import { useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 import { notification } from "~~/utils/scaffold-eth";
 
-interface CreateCommentProps {
-  postId: string;
+interface CreateSubCommentProps {
+  postId: string; //TODO: may not need this...
+  commentId: string;
 }
 
-export const CreateComment = (c: CreateCommentProps) => {
+export const CreateSubComment = (c: CreateSubCommentProps) => {
   const [commentText, setCommentText] = useState("");
   const [error, setError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -16,7 +17,7 @@ export const CreateComment = (c: CreateCommentProps) => {
     setError(false);
     // validate data
     if (commentText.trim() === "") {
-      newErr("Please provide text for this comment.");
+      newErr("Please provide text for this sub-comment.");
       return;
     }
     writeAsync();
@@ -30,17 +31,17 @@ export const CreateComment = (c: CreateCommentProps) => {
 
   const { writeAsync, isLoading } = useScaffoldContractWrite({
     contractName: "CrowdFund",
-    functionName: "createComment",
-    args: [c.postId, commentText],
+    functionName: "createSubComment",
+    args: [c.postId, c.commentId, commentText],
     onBlockConfirmation: txnReceipt => {
       console.log("📦 Transaction blockHash", txnReceipt.blockHash);
     },
   });
   return (
     <>
-      <label className="text-lg font-bold">Comment</label>
+      <label className="text-lg font-bold">Sub-Comment</label>
       <textarea
-        placeholder="Leave your comment..."
+        placeholder="Leave your sub-comment..."
         className="px-3 py-3 border rounded-lg bg-base-200 border-base-300 textarea"
         value={commentText}
         onChange={e => setCommentText(e.target.value)}

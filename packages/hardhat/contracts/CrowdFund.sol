@@ -46,6 +46,7 @@ import "./FollowersManager.sol";
 contract CrowdFund is SocialPostManager, FollowersManager {
 	uint16 public numberOfComments = 0; //TODO: may remove this
 	event Comment (uint16 commentId, bytes postId, string commentText, address commenter);
+	event SubComment (bytes postId, bytes commentId, string commentText, address commenter);//todo: rename commentId to parentCommentId
 
 	constructor(address _contractOwner) {
 		_transferOwnership(_contractOwner);
@@ -53,6 +54,11 @@ contract CrowdFund is SocialPostManager, FollowersManager {
 
 	function createComment(bytes memory _postId, string memory _commentText) external {
 		emit Comment(numberOfComments, _postId, _commentText, msg.sender);
-		numberOfComments++;
+		numberOfComments++; //TODO: probably removing
+	}
+
+	//todo: rename commentId to parentCommentId
+	function createSubComment(bytes memory _postId, bytes memory _commentId, string memory _commentText) external {
+		emit SubComment(_postId, _commentId, _commentText, msg.sender);
 	}
 }

@@ -131,7 +131,7 @@ type SocialPost @entity {
   id: Bytes!
   socialProposalId: Int! # uint16
   fundRunId: Int! # uint16
-  fundRunTitle: String! 
+  fundRunTitle: String!
   proposedBy: Bytes! # address
   postText: String!
   blockNumber: BigInt!
@@ -169,4 +169,16 @@ type Comment @entity {
   blockTimestamp: BigInt!
   transactionHash: Bytes!
   socialPost: SocialPost
+  subcomments: [SubComment!] @derivedFrom(field: "comment")
+}
+
+type SubComment @entity {
+  id: Bytes!
+  commentId: Bytes!
+  commentText: String!
+  commenter: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  comment: Comment
 }
