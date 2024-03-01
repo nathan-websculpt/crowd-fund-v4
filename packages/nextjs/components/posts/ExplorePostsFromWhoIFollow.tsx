@@ -83,6 +83,8 @@ export const ExplorePostsFromWhoIFollow = () => {
                     proposedBy={p.proposedBy}
                     isCommenting={false}
                     canTip={true}
+                    likeCount={p.likeCount}
+                    userLikedPost={p.likes.length === 1}
                   />
                 </div>
               ))}

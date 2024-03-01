@@ -44,21 +44,25 @@ import "./FollowersManager.sol";
  */
 
 contract CrowdFund is SocialPostManager, FollowersManager {
-	uint16 public numberOfComments = 0; //TODO: may remove this
-	event Comment (uint16 commentId, bytes postId, string commentText, address commenter);
-	event SubComment (bytes postId, bytes commentId, string commentText, address commenter);//todo: rename commentId to parentCommentId
+	uint256 public numberOfComments = 0; //only using this to get comments ordered nicely in the front-end
+	event Comment (uint256 numericalId, bytes postId, bytes parentCommentId, string commentText, address commenter);
+	event PostLike (bytes postId, address userWhoLiked);
+	event CommentLike (bytes postId, bytes commentId, address userWhoLiked);
 
 	constructor(address _contractOwner) {
 		_transferOwnership(_contractOwner);
 	}
 
-	function createComment(bytes memory _postId, string memory _commentText) external {
-		emit Comment(numberOfComments, _postId, _commentText, msg.sender);
-		numberOfComments++; //TODO: probably removing
+	function createComment(bytes memory _postId, bytes memory _parentCommentId, string memory _commentText) external {
+		emit Comment(numberOfComments, _postId, _parentCommentId, _commentText, msg.sender);
+		numberOfComments++;
 	}
 
-	//todo: rename commentId to parentCommentId
-	function createSubComment(bytes memory _postId, bytes memory _commentId, string memory _commentText) external {
-		emit SubComment(_postId, _commentId, _commentText, msg.sender);
+	function likePost(bytes memory _postId) external {
+		emit PostLike(_postId, msg.sender);
+	}
+
+	function likeComment(bytes memory _postId, bytes memory _commentId) external {
+		emit CommentLike(_postId, _commentId, msg.sender);
 	}
 }

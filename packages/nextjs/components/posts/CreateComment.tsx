@@ -31,7 +31,7 @@ export const CreateComment = (c: CreateCommentProps) => {
   const { writeAsync, isLoading } = useScaffoldContractWrite({
     contractName: "CrowdFund",
     functionName: "createComment",
-    args: [c.postId, commentText],
+    args: [c.postId, "0x", commentText],
     onBlockConfirmation: txnReceipt => {
       console.log("📦 Transaction blockHash", txnReceipt.blockHash);
     },

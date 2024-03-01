@@ -5,7 +5,7 @@ const contracts = {
       name: "localhost",
       contracts: {
         CrowdFund: {
-          address: "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+          address: "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853",
           abi: [
             {
               inputs: [
@@ -23,14 +23,20 @@ const contracts = {
               inputs: [
                 {
                   indexed: false,
-                  internalType: "uint16",
-                  name: "commentId",
-                  type: "uint16",
+                  internalType: "uint256",
+                  name: "numericalId",
+                  type: "uint256",
                 },
                 {
                   indexed: false,
                   internalType: "bytes",
                   name: "postId",
+                  type: "bytes",
+                },
+                {
+                  indexed: false,
+                  internalType: "bytes",
+                  name: "parentCommentId",
                   type: "bytes",
                 },
                 {
@@ -47,6 +53,31 @@ const contracts = {
                 },
               ],
               name: "Comment",
+              type: "event",
+            },
+            {
+              anonymous: false,
+              inputs: [
+                {
+                  indexed: false,
+                  internalType: "bytes",
+                  name: "postId",
+                  type: "bytes",
+                },
+                {
+                  indexed: false,
+                  internalType: "bytes",
+                  name: "commentId",
+                  type: "bytes",
+                },
+                {
+                  indexed: false,
+                  internalType: "address",
+                  name: "userWhoLiked",
+                  type: "address",
+                },
+              ],
+              name: "CommentLike",
               type: "event",
             },
             {
@@ -209,6 +240,25 @@ const contracts = {
                 },
               ],
               name: "OwnershipTransferred",
+              type: "event",
+            },
+            {
+              anonymous: false,
+              inputs: [
+                {
+                  indexed: false,
+                  internalType: "bytes",
+                  name: "postId",
+                  type: "bytes",
+                },
+                {
+                  indexed: false,
+                  internalType: "address",
+                  name: "userWhoLiked",
+                  type: "address",
+                },
+              ],
+              name: "PostLike",
               type: "event",
             },
             {
@@ -433,37 +483,6 @@ const contracts = {
               inputs: [
                 {
                   indexed: false,
-                  internalType: "bytes",
-                  name: "postId",
-                  type: "bytes",
-                },
-                {
-                  indexed: false,
-                  internalType: "bytes",
-                  name: "commentId",
-                  type: "bytes",
-                },
-                {
-                  indexed: false,
-                  internalType: "string",
-                  name: "commentText",
-                  type: "string",
-                },
-                {
-                  indexed: false,
-                  internalType: "address",
-                  name: "commenter",
-                  type: "address",
-                },
-              ],
-              name: "SubComment",
-              type: "event",
-            },
-            {
-              anonymous: false,
-              inputs: [
-                {
-                  indexed: false,
                   internalType: "uint16",
                   name: "fundRunId",
                   type: "uint16",
@@ -503,6 +522,11 @@ const contracts = {
                 {
                   internalType: "bytes",
                   name: "_postId",
+                  type: "bytes",
+                },
+                {
+                  internalType: "bytes",
+                  name: "_parentCommentId",
                   type: "bytes",
                 },
                 {
@@ -615,29 +639,6 @@ const contracts = {
                 },
               ],
               name: "createSocialProposal",
-              outputs: [],
-              stateMutability: "nonpayable",
-              type: "function",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "bytes",
-                  name: "_postId",
-                  type: "bytes",
-                },
-                {
-                  internalType: "bytes",
-                  name: "_commentId",
-                  type: "bytes",
-                },
-                {
-                  internalType: "string",
-                  name: "_commentText",
-                  type: "string",
-                },
-              ],
-              name: "createSubComment",
               outputs: [],
               stateMutability: "nonpayable",
               type: "function",
@@ -821,6 +822,37 @@ const contracts = {
             {
               inputs: [
                 {
+                  internalType: "bytes",
+                  name: "_postId",
+                  type: "bytes",
+                },
+                {
+                  internalType: "bytes",
+                  name: "_commentId",
+                  type: "bytes",
+                },
+              ],
+              name: "likeComment",
+              outputs: [],
+              stateMutability: "nonpayable",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  internalType: "bytes",
+                  name: "_postId",
+                  type: "bytes",
+                },
+              ],
+              name: "likePost",
+              outputs: [],
+              stateMutability: "nonpayable",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
                   components: [
                     {
                       internalType: "uint256",
@@ -878,9 +910,9 @@ const contracts = {
               name: "numberOfComments",
               outputs: [
                 {
-                  internalType: "uint16",
+                  internalType: "uint256",
                   name: "",
-                  type: "uint16",
+                  type: "uint256",
                 },
               ],
               stateMutability: "view",

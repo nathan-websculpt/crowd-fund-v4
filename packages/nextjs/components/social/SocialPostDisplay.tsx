@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PostLikeButton } from "../posts/PostLikeButton";
 import { Tip } from "../posts/Tip";
 import { Address } from "../scaffold-eth";
 
@@ -10,6 +11,8 @@ interface SocialPostDisplayProps {
   proposedBy: string;
   isCommenting: boolean;
   canTip: boolean;
+  likeCount: number;
+  userLikedPost: boolean;
 }
 
 export const SocialPostDisplay = (thisPost: SocialPostDisplayProps) => {
@@ -29,12 +32,17 @@ export const SocialPostDisplay = (thisPost: SocialPostDisplayProps) => {
       <p className="mt-3 mb-5 text-3xl">{thisPost?.postText}</p>
 
       <div className="flex items-center justify-between gap-4">
-        <div>
+        <div className="flex flex-row items-center">
           {!thisPost.isCommenting && (
             <Link href={`/post/${thisPost?.id}`} passHref className="btn btn-primary btn-sm">
               Comment / s
             </Link>
           )}
+          <PostLikeButton
+            postId={thisPost?.id}
+            likeCount={thisPost?.likeCount}
+            userHasLiked={thisPost?.userLikedPost}
+          />
         </div>
         <div>
           <label className="font-mono text-sm font-bold">Originally Proposed By:</label>

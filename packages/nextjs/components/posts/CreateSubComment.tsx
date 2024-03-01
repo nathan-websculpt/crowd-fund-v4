@@ -4,7 +4,7 @@ import { notification } from "~~/utils/scaffold-eth";
 
 interface CreateSubCommentProps {
   postId: string; //TODO: may not need this...
-  commentId: string;
+  parentCommentId: string;
 }
 
 export const CreateSubComment = (c: CreateSubCommentProps) => {
@@ -31,24 +31,25 @@ export const CreateSubComment = (c: CreateSubCommentProps) => {
 
   const { writeAsync, isLoading } = useScaffoldContractWrite({
     contractName: "CrowdFund",
-    functionName: "createSubComment",
-    args: [c.postId, c.commentId, commentText],
+    functionName: "createComment",
+    args: [c.postId, c.parentCommentId, commentText],
     onBlockConfirmation: txnReceipt => {
       console.log("📦 Transaction blockHash", txnReceipt.blockHash);
     },
   });
   return (
     <>
-      <label className="text-lg font-bold">Sub-Comment</label>
-      <textarea
-        placeholder="Leave your sub-comment..."
-        className="px-3 py-3 border rounded-lg bg-base-200 border-base-300 textarea"
-        value={commentText}
-        onChange={e => setCommentText(e.target.value)}
-      />
-      <button className="btn btn-primary" onClick={() => validateThenWrite()}>
-        Leave your Comment
-      </button>
+      <div className="flex flex-col mt-4">
+        <textarea
+          placeholder="Leave your reply..."
+          className="px-3 py-3 border rounded-lg bg-base-200 border-base-300 textarea"
+          value={commentText}
+          onChange={e => setCommentText(e.target.value)}
+        />
+        <button className="w-20 mt-2 btn btn-primary place-self-end" onClick={() => validateThenWrite()}>
+          Reply
+        </button>
+      </div>
     </>
   );
 };

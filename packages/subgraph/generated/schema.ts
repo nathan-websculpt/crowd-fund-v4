@@ -1778,6 +1778,29 @@ export class SocialPost extends Entity {
       "comments"
     );
   }
+
+  get likes(): PostLikeLoader {
+    return new PostLikeLoader(
+      "SocialPost",
+      this.get("id")!
+        .toBytes()
+        .toHexString(),
+      "likes"
+    );
+  }
+
+  get likeCount(): i32 {
+    let value = this.get("likeCount");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI32();
+    }
+  }
+
+  set likeCount(value: i32) {
+    this.set("likeCount", Value.fromI32(value));
+  }
 }
 
 export class Follow extends Entity {
@@ -2052,17 +2075,30 @@ export class Comment extends Entity {
     this.set("id", Value.fromBytes(value));
   }
 
-  get commentId(): i32 {
-    let value = this.get("commentId");
+  get numericalId(): BigInt {
+    let value = this.get("numericalId");
     if (!value || value.kind == ValueKind.NULL) {
-      return 0;
+      throw new Error("Cannot return null for a required field.");
     } else {
-      return value.toI32();
+      return value.toBigInt();
     }
   }
 
-  set commentId(value: i32) {
-    this.set("commentId", Value.fromI32(value));
+  set numericalId(value: BigInt) {
+    this.set("numericalId", Value.fromBigInt(value));
+  }
+
+  get parentCommentId(): Bytes {
+    let value = this.get("parentCommentId");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set parentCommentId(value: Bytes) {
+    this.set("parentCommentId", Value.fromBytes(value));
   }
 
   get commentText(): string {
@@ -2147,8 +2183,8 @@ export class Comment extends Entity {
     }
   }
 
-  get subcomments(): SubCommentLoader {
-    return new SubCommentLoader(
+  get subcomments(): CommentLoader {
+    return new CommentLoader(
       "Comment",
       this.get("id")!
         .toBytes()
@@ -2156,9 +2192,49 @@ export class Comment extends Entity {
       "subcomments"
     );
   }
+
+  get comment(): Bytes | null {
+    let value = this.get("comment");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set comment(value: Bytes | null) {
+    if (!value) {
+      this.unset("comment");
+    } else {
+      this.set("comment", Value.fromBytes(<Bytes>value));
+    }
+  }
+
+  get likes(): CommentLikeLoader {
+    return new CommentLikeLoader(
+      "Comment",
+      this.get("id")!
+        .toBytes()
+        .toHexString(),
+      "likes"
+    );
+  }
+
+  get likeCount(): i32 {
+    let value = this.get("likeCount");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI32();
+    }
+  }
+
+  set likeCount(value: i32) {
+    this.set("likeCount", Value.fromI32(value));
+  }
 }
 
-export class SubComment extends Entity {
+export class PostLike extends Entity {
   constructor(id: Bytes) {
     super();
     this.set("id", Value.fromBytes(id));
@@ -2166,26 +2242,24 @@ export class SubComment extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save SubComment entity without an ID");
+    assert(id != null, "Cannot save PostLike entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.BYTES,
-        `Entities of type SubComment must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type PostLike must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("SubComment", id.toBytes().toHexString(), this);
+      store.set("PostLike", id.toBytes().toHexString(), this);
     }
   }
 
-  static loadInBlock(id: Bytes): SubComment | null {
-    return changetype<SubComment | null>(
-      store.get_in_block("SubComment", id.toHexString())
+  static loadInBlock(id: Bytes): PostLike | null {
+    return changetype<PostLike | null>(
+      store.get_in_block("PostLike", id.toHexString())
     );
   }
 
-  static load(id: Bytes): SubComment | null {
-    return changetype<SubComment | null>(
-      store.get("SubComment", id.toHexString())
-    );
+  static load(id: Bytes): PostLike | null {
+    return changetype<PostLike | null>(store.get("PostLike", id.toHexString()));
   }
 
   get id(): Bytes {
@@ -2201,8 +2275,8 @@ export class SubComment extends Entity {
     this.set("id", Value.fromBytes(value));
   }
 
-  get commentId(): Bytes {
-    let value = this.get("commentId");
+  get postId(): Bytes {
+    let value = this.get("postId");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -2210,25 +2284,12 @@ export class SubComment extends Entity {
     }
   }
 
-  set commentId(value: Bytes) {
-    this.set("commentId", Value.fromBytes(value));
+  set postId(value: Bytes) {
+    this.set("postId", Value.fromBytes(value));
   }
 
-  get commentText(): string {
-    let value = this.get("commentText");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toString();
-    }
-  }
-
-  set commentText(value: string) {
-    this.set("commentText", Value.fromString(value));
-  }
-
-  get commenter(): Bytes {
-    let value = this.get("commenter");
+  get userWhoLiked(): Bytes {
+    let value = this.get("userWhoLiked");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -2236,8 +2297,8 @@ export class SubComment extends Entity {
     }
   }
 
-  set commenter(value: Bytes) {
-    this.set("commenter", Value.fromBytes(value));
+  set userWhoLiked(value: Bytes) {
+    this.set("userWhoLiked", Value.fromBytes(value));
   }
 
   get blockNumber(): BigInt {
@@ -2277,6 +2338,162 @@ export class SubComment extends Entity {
 
   set transactionHash(value: Bytes) {
     this.set("transactionHash", Value.fromBytes(value));
+  }
+
+  get post(): Bytes | null {
+    let value = this.get("post");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set post(value: Bytes | null) {
+    if (!value) {
+      this.unset("post");
+    } else {
+      this.set("post", Value.fromBytes(<Bytes>value));
+    }
+  }
+}
+
+export class CommentLike extends Entity {
+  constructor(id: Bytes) {
+    super();
+    this.set("id", Value.fromBytes(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save CommentLike entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.BYTES,
+        `Entities of type CommentLike must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("CommentLike", id.toBytes().toHexString(), this);
+    }
+  }
+
+  static loadInBlock(id: Bytes): CommentLike | null {
+    return changetype<CommentLike | null>(
+      store.get_in_block("CommentLike", id.toHexString())
+    );
+  }
+
+  static load(id: Bytes): CommentLike | null {
+    return changetype<CommentLike | null>(
+      store.get("CommentLike", id.toHexString())
+    );
+  }
+
+  get id(): Bytes {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set id(value: Bytes) {
+    this.set("id", Value.fromBytes(value));
+  }
+
+  get postId(): Bytes {
+    let value = this.get("postId");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set postId(value: Bytes) {
+    this.set("postId", Value.fromBytes(value));
+  }
+
+  get commentId(): Bytes {
+    let value = this.get("commentId");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set commentId(value: Bytes) {
+    this.set("commentId", Value.fromBytes(value));
+  }
+
+  get userWhoLiked(): Bytes {
+    let value = this.get("userWhoLiked");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set userWhoLiked(value: Bytes) {
+    this.set("userWhoLiked", Value.fromBytes(value));
+  }
+
+  get blockNumber(): BigInt {
+    let value = this.get("blockNumber");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set blockNumber(value: BigInt) {
+    this.set("blockNumber", Value.fromBigInt(value));
+  }
+
+  get blockTimestamp(): BigInt {
+    let value = this.get("blockTimestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set blockTimestamp(value: BigInt) {
+    this.set("blockTimestamp", Value.fromBigInt(value));
+  }
+
+  get transactionHash(): Bytes {
+    let value = this.get("transactionHash");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set transactionHash(value: Bytes) {
+    this.set("transactionHash", Value.fromBytes(value));
+  }
+
+  get post(): Bytes | null {
+    let value = this.get("post");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set post(value: Bytes | null) {
+    if (!value) {
+      this.unset("post");
+    } else {
+      this.set("post", Value.fromBytes(<Bytes>value));
+    }
   }
 
   get comment(): Bytes | null {
@@ -2405,7 +2622,7 @@ export class CommentLoader extends Entity {
   }
 }
 
-export class SubCommentLoader extends Entity {
+export class PostLikeLoader extends Entity {
   _entity: string;
   _field: string;
   _id: string;
@@ -2417,8 +2634,26 @@ export class SubCommentLoader extends Entity {
     this._field = field;
   }
 
-  load(): SubComment[] {
+  load(): PostLike[] {
     let value = store.loadRelated(this._entity, this._id, this._field);
-    return changetype<SubComment[]>(value);
+    return changetype<PostLike[]>(value);
+  }
+}
+
+export class CommentLikeLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): CommentLike[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<CommentLike[]>(value);
   }
 }

@@ -9,7 +9,7 @@ dataSources:
     network: localhost
     source:
       abi: CrowdFund
-      address: "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9"
+      address: "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853"
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -26,8 +26,11 @@ dataSources:
         - ProposalSignature
         - SocialProposalSignature
         - SocialPost
+        - Comment
         - Follow
         - Unfollow
+        - PostLike
+        - CommentLike
       abis:
         - name: CrowdFund
           file: ./abis/localhost_CrowdFund.json
@@ -60,8 +63,10 @@ dataSources:
           handler: handleFollow
         - event: Unfollow(uint16,address)
           handler: handleUnfollow
-        - event: Comment(uint16,bytes,string,address)
+        - event: Comment(uint256,bytes,bytes,string,address)
           handler: handleComment
-        - event: SubComment(bytes,bytes,string,address)
-          handler: handleSubComment
+        - event: PostLike(bytes,address)
+          handler: handlePostLike
+        - event: CommentLike(bytes,bytes,address)
+          handler: handleCommentLike
       file: ./src/mapping.ts

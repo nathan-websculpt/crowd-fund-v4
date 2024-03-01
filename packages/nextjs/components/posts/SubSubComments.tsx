@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import { Spinner } from "../Spinner";
 import { Address } from "../scaffold-eth";
 import { CreateSubComment } from "./CreateSubComment";
+import { ReplyToggle } from "./ReplyToggle";
 import { useQuery } from "@apollo/client";
+import { useAccount } from "wagmi";
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 import { GQL_SOCIAL_SUB_COMMENTS_For_Display } from "~~/helpers/getQueries";
 
@@ -10,14 +12,21 @@ interface SubSubCommentsProps {
   postId: string;
   parentCommentId: string;
   layersDeep: number;
+  userHasLiked: boolean;
 }
 
 export const SubSubComments = (sc: SubSubCommentsProps) => {
+  const userAccount = useAccount();
   const [pageSize, setPageSize] = useState(25);
   const [pageNum, setPageNum] = useState(0);
   const { loading, error, data } = useQuery(GQL_SOCIAL_SUB_COMMENTS_For_Display(), {
-    variables: { limit: pageSize, offset: pageNum * pageSize, parentCommentId: sc.parentCommentId },
-    pollInterval: 5000,
+    variables: {
+      limit: pageSize,
+      offset: pageNum * pageSize,
+      parentCommentId: sc.parentCommentId,
+      userWalletAddress: userAccount.address,
+    },
+    pollInterval: 1000,
   });
 
   useEffect(() => {
@@ -38,7 +47,7 @@ export const SubSubComments = (sc: SubSubCommentsProps) => {
   } else {
     return (
       <>
-      {/* todo: I think being able to change the page-size is too much going on... */}
+        {/* todo: I think being able to change the page-size is too much going on... */}
         {/* <div className="flex justify-end gap-3 mb-3">
           <select
             className="px-4 py-2 text-xl bg-primary"
@@ -50,21 +59,38 @@ export const SubSubComments = (sc: SubSubCommentsProps) => {
             <option value="1">Showing 1</option>
           </select>
         </div> */}
-        {data?.subComments?.map(comment => (
+        {data?.comments?.map(comment => (
           <div
             key={comment.id}
-            className={`flex flex-col gap-2 p-2 pl-4 m-4 mb-4 ml-8 border shadow-xl bg-base-200 sm:rounded-lg border-secondary border-l-${
+            className={`relative flex flex-col gap-2 p-2 pl-4 m-4 mb-4 ml-8 border shadow-xl bg-base-200 sm:rounded-lg border-secondary border-l-${
               sc.layersDeep * 4
             }`}
           >
             <p>{comment.commentText}</p>
-            <Address address={comment.commenter} size="xl" />
-            <CreateSubComment postId={sc.postId} commentId={comment.id} />
-            <SubSubComments postId={sc.postId} parentCommentId={comment.id} layersDeep={comment.layersDeep + 1} />
+            <div className="flex flex-col items-end mt-3">
+              <label className="font-mono text-sm font-bold">Posted By:</label>
+              <Address address={comment.commenter} size="sm" />
+            </div>
+
+            <ReplyToggle
+              postId={sc.postId}
+              commentId={comment.id}
+              likeCount={comment.likeCount}
+              userHasLiked={comment.likes.length === 1}
+            />
+            {/* <CreateSubComment postId={sc.postId} parentCommentId={comment.id} /> */}
+            {/* todo: remove ^^^ */}
+            <SubSubComments
+              postId={sc.postId}
+              parentCommentId={comment.id}
+              userHasLiked={comment.userHasLiked}
+              layersDeep={comment.layersDeep + 1}
+            />
             {/* todo: ^^^ */}
           </div>
         ))}
-        <div className="flex justify-end gap-3 mx-5 mt-5">
+
+        {/* <div className="flex justify-end gap-3 mx-5 mt-5">
           <button className="btn btn-sm" disabled={!pageNum} onClick={() => setPageNum(0)}>
             <ArrowLeftIcon className="w-4 h-4" />
             <ArrowLeftIcon className="w-4 h-4" />
@@ -81,7 +107,7 @@ export const SubSubComments = (sc: SubSubCommentsProps) => {
           >
             <ArrowRightIcon className="w-4 h-4" />
           </button>
-        </div>
+        </div> */}
       </>
     );
   }

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Address } from "../scaffold-eth/Address";
-import { SubSubComments } from "./SubSubComments";
 import { CreateSubComment } from "./CreateSubComment";
+import { SubSubComments } from "./SubSubComments";
 
 interface SubCommentProps {
   postId: string;
@@ -9,15 +9,14 @@ interface SubCommentProps {
   commenter: string;
   commentText: string;
 }
-// todo:rename vars
+
 export const SubComment = (sc: SubCommentProps) => {
   const [isOpened, toggleIsOpened] = useState(false);
   return (
     <>
       <p>{sc.commentText}</p>
-      <div className="flex flex-row justify-between">
-        <Address address={sc.commenter} size="lg" />
-        <div className="flex flex-row items-center justify-end" onClick={() => toggleIsOpened(!isOpened)}>
+      <div className="flex flex-row items-center justify-between" onClick={() => toggleIsOpened(!isOpened)}>
+        <div className="flex flex-row items-center">
           <p className="cursor-pointer">{`${isOpened ? "viewing" : "view"} more`}</p>
           <svg
             className={`w-6 h-6 z-40 cursor-pointer  ${isOpened ? "rotate-90" : "rotate-0"}`}
@@ -31,13 +30,18 @@ export const SubComment = (sc: SubCommentProps) => {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 7l6 5-6 5V7z" fill="#ffffff" />
           </svg>
         </div>
+
+        <div className="flex flex-col items-end justify-end mt-3">
+          <label className="font-mono text-sm font-bold">Posted By:</label>
+          <Address address={sc.commenter} size="sm" />
+        </div>
       </div>
 
-      {/* wrap parts of the ReactTree that contain the components that need to access this context value */}
+      <div className="flex flex-row justify-end"></div>
 
       {isOpened && (
         <div>
-          <CreateSubComment postId={sc.postId} commentId={sc.id} />
+          <CreateSubComment postId={sc.postId} parentCommentId={sc.id} />
           <SubSubComments postId={sc.postId} parentCommentId={sc.id} layersDeep={1} />
         </div>
       )}

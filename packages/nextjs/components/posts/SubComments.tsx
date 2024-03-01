@@ -4,9 +4,8 @@ interface SubCommentsProps {
   postId: string;
   subComments: any[];
 }
-// todo:rename vars
+
 export const SubComments = (subCommentsList: SubCommentsProps) => {
-  console.log(subCommentsList?.subComments[0].id);
   return (
     <>
       <div className="pl-4 mb-4 ml-8 border-l-4 border-secondary">

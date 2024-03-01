@@ -3,10 +3,12 @@ import { useRouter } from "next/router";
 import { Spinner } from "../Spinner";
 import { SocialPostDisplay } from "../social/SocialPostDisplay";
 import { useQuery } from "@apollo/client";
+import { useAccount } from "wagmi";
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 import { GQL_EXPLORE_POSTS_For_Display } from "~~/helpers/getQueries";
 
 export const ExplorePosts = () => {
+  const userAccount = useAccount();
   const router = useRouter();
   const [pageSize, setPageSize] = useState(25);
   const [pageNum, setPageNum] = useState(0);
@@ -15,8 +17,9 @@ export const ExplorePosts = () => {
     variables: {
       limit: pageSize,
       offset: pageNum * pageSize,
+      userWalletAddress: userAccount.address,
     },
-    pollInterval: 5000,
+    pollInterval: 1000,
   });
 
   useEffect(() => {
@@ -80,6 +83,8 @@ export const ExplorePosts = () => {
                 proposedBy={p.proposedBy}
                 isCommenting={false}
                 canTip={true}
+                likeCount={p.likeCount}
+                userLikedPost={p.likes.length === 1}
               />
             </div>
           ))}
