@@ -17,7 +17,7 @@ const ViewSocial: NextPage = () => {
 
   const { loading, error, data } = useQuery(GQL_FUNDRUN_By_FundRunId(), {
     variables: { slug: parseInt(fundRunId) },
-    pollInterval: 1000,
+    pollInterval: 4000,
   });
 
   useEffect(() => {

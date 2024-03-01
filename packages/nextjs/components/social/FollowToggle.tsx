@@ -16,7 +16,7 @@ export const FollowToggle = (fundRun: FollowToggleProps) => {
       fundRunId: fundRun.fundRunId,
       user: userAccount.address,
     },
-    pollInterval: 1000,
+    pollInterval: 5000,
   });
 
   useEffect(() => {
