@@ -34,7 +34,7 @@ const ViewPost: NextPage = () => {
     return (
       <>
         <MetaHeader title="View Post" />
-        <div className="flex flex-col w-full p-4 mx-auto shadow-xl sm:my-auto bg-secondary sm:p-7 sm:rounded-lg sm:w-4/5 lg:w-3/5">
+        <div className="flex flex-col w-full p-4 mx-auto shadow-xl sm:my-auto bg-secondary sm:p-7 sm:rounded-lg sm:w-11/12">
           <div className="flex justify-start mb-5">
             <button className="btn btn-sm btn-primary" onClick={() => router.back()}>
               Back
