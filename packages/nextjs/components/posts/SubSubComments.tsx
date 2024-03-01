@@ -1,38 +1,41 @@
 import { useEffect, useState } from "react";
 import { Spinner } from "../Spinner";
 import { Address } from "../scaffold-eth";
+import { CreateSubComment } from "./CreateSubComment";
 import { ReplyToggle } from "./ReplyToggle";
-import { SubComments } from "./SubComments";
 import { useQuery } from "@apollo/client";
 import { useAccount } from "wagmi";
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
-import { GQL_SOCIAL_POST_COMMENTS_For_Display } from "~~/helpers/getQueries";
+import { GQL_SOCIAL_SUB_COMMENTS_For_Display } from "~~/helpers/getQueries";
 
-interface CommentsProps {
+interface SubSubCommentsProps {
   postId: string;
+  parentCommentId: string;
+  layersDeep: number;
+  userHasLiked: boolean;
 }
 
-export const Comments = (c: CommentsProps) => {
+export const SubSubComments = (sc: SubSubCommentsProps) => {
   const userAccount = useAccount();
   const [pageSize, setPageSize] = useState(25);
   const [pageNum, setPageNum] = useState(0);
-  const { loading, error, data } = useQuery(GQL_SOCIAL_POST_COMMENTS_For_Display(), {
+  const { loading, error, data } = useQuery(GQL_SOCIAL_SUB_COMMENTS_For_Display(), {
     variables: {
       limit: pageSize,
       offset: pageNum * pageSize,
-      socialPostId: c.postId,
-      userWalletAddress: userAccount.address, //todo: what if they aren't connected to a wallet?
+      parentCommentId: sc.parentCommentId,
+      userWalletAddress: userAccount.address,
     },
     pollInterval: 1000,
   });
 
   useEffect(() => {
-    if (error !== undefined && error !== null) console.log("GQL_SOCIAL_POST_COMMENTS_For_Display Query Error: ", error);
+    if (error !== undefined && error !== null) console.log("GQL_SOCIAL_SUB_COMMENTS_For_Display Query Error: ", error);
   }, [error]);
 
   //todo: remove
   useEffect(() => {
-    if (data !== undefined && data !== null) console.log("GQL_SOCIAL_POST_COMMENTS_For_Display DATA: ", data);
+    if (data !== undefined && data !== null) console.log("GQL_SOCIAL_SUB_COMMENTS_For_Display DATA: ", data);
   }, [data]);
 
   if (loading) {
@@ -44,6 +47,7 @@ export const Comments = (c: CommentsProps) => {
   } else {
     return (
       <>
+        {/* todo: I think being able to change the page-size is too much going on... */}
         {/* <div className="flex justify-end gap-3 mb-3">
           <select
             className="px-4 py-2 text-xl bg-primary"
@@ -58,7 +62,9 @@ export const Comments = (c: CommentsProps) => {
         {data?.comments?.map(comment => (
           <div
             key={comment.id}
-            className="relative flex flex-col gap-2 px-2 m-4 border shadow-xl border-base-300 bg-base-200 sm:rounded-lg"
+            className={`relative flex flex-col gap-2 p-2 pl-4 m-4 mb-4 ml-8 border shadow-xl bg-base-200 sm:rounded-lg border-secondary border-l-${
+              sc.layersDeep * 4
+            }`}
           >
             <p>{comment.commentText}</p>
             <div className="flex flex-col items-end mt-3">
@@ -66,15 +72,21 @@ export const Comments = (c: CommentsProps) => {
               <Address address={comment.commenter} size="sm" />
             </div>
 
-            {/* the reply button that will show/hide the textbox to reply */}
             <ReplyToggle
-              postId={c.postId}
+              postId={sc.postId}
               commentId={comment.id}
               likeCount={comment.likeCount}
               userHasLiked={comment.likes.length === 1}
             />
-
-            <SubComments postId={c.postId} subComments={comment.subcomments} />
+            {/* <CreateSubComment postId={sc.postId} parentCommentId={comment.id} /> */}
+            {/* todo: remove ^^^ */}
+            <SubSubComments
+              postId={sc.postId}
+              parentCommentId={comment.id}
+              userHasLiked={comment.userHasLiked}
+              layersDeep={comment.layersDeep + 1}
+            />
+            {/* todo: ^^^ */}
           </div>
         ))}
 

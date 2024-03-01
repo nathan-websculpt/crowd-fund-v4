@@ -23,20 +23,50 @@ export class Comment__Params {
     this._event = event;
   }
 
-  get commentId(): i32 {
-    return this._event.parameters[0].value.toI32();
+  get numericalId(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
   }
 
   get postId(): Bytes {
     return this._event.parameters[1].value.toBytes();
   }
 
+  get parentCommentId(): Bytes {
+    return this._event.parameters[2].value.toBytes();
+  }
+
   get commentText(): string {
-    return this._event.parameters[2].value.toString();
+    return this._event.parameters[3].value.toString();
   }
 
   get commenter(): Address {
-    return this._event.parameters[3].value.toAddress();
+    return this._event.parameters[4].value.toAddress();
+  }
+}
+
+export class CommentLike extends ethereum.Event {
+  get params(): CommentLike__Params {
+    return new CommentLike__Params(this);
+  }
+}
+
+export class CommentLike__Params {
+  _event: CommentLike;
+
+  constructor(event: CommentLike) {
+    this._event = event;
+  }
+
+  get postId(): Bytes {
+    return this._event.parameters[0].value.toBytes();
+  }
+
+  get commentId(): Bytes {
+    return this._event.parameters[1].value.toBytes();
+  }
+
+  get userWhoLiked(): Address {
+    return this._event.parameters[2].value.toAddress();
   }
 }
 
@@ -200,6 +230,28 @@ export class OwnershipTransferred__Params {
   }
 
   get newOwner(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+}
+
+export class PostLike extends ethereum.Event {
+  get params(): PostLike__Params {
+    return new PostLike__Params(this);
+  }
+}
+
+export class PostLike__Params {
+  _event: PostLike;
+
+  constructor(event: PostLike) {
+    this._event = event;
+  }
+
+  get postId(): Bytes {
+    return this._event.parameters[0].value.toBytes();
+  }
+
+  get userWhoLiked(): Address {
     return this._event.parameters[1].value.toAddress();
   }
 }
@@ -604,27 +656,27 @@ export class CrowdFund extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  numberOfComments(): i32 {
+  numberOfComments(): BigInt {
     let result = super.call(
       "numberOfComments",
-      "numberOfComments():(uint16)",
+      "numberOfComments():(uint256)",
       []
     );
 
-    return result[0].toI32();
+    return result[0].toBigInt();
   }
 
-  try_numberOfComments(): ethereum.CallResult<i32> {
+  try_numberOfComments(): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
       "numberOfComments",
-      "numberOfComments():(uint16)",
+      "numberOfComments():(uint256)",
       []
     );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
     let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toI32());
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
   numberOfFundRuns(): i32 {
@@ -1010,8 +1062,12 @@ export class CreateCommentCall__Inputs {
     return this._call.inputValues[0].value.toBytes();
   }
 
+  get _parentCommentId(): Bytes {
+    return this._call.inputValues[1].value.toBytes();
+  }
+
   get _commentText(): string {
-    return this._call.inputValues[1].value.toString();
+    return this._call.inputValues[2].value.toString();
   }
 }
 
@@ -1283,6 +1339,70 @@ export class FollowCall__Outputs {
   _call: FollowCall;
 
   constructor(call: FollowCall) {
+    this._call = call;
+  }
+}
+
+export class LikeCommentCall extends ethereum.Call {
+  get inputs(): LikeCommentCall__Inputs {
+    return new LikeCommentCall__Inputs(this);
+  }
+
+  get outputs(): LikeCommentCall__Outputs {
+    return new LikeCommentCall__Outputs(this);
+  }
+}
+
+export class LikeCommentCall__Inputs {
+  _call: LikeCommentCall;
+
+  constructor(call: LikeCommentCall) {
+    this._call = call;
+  }
+
+  get _postId(): Bytes {
+    return this._call.inputValues[0].value.toBytes();
+  }
+
+  get _commentId(): Bytes {
+    return this._call.inputValues[1].value.toBytes();
+  }
+}
+
+export class LikeCommentCall__Outputs {
+  _call: LikeCommentCall;
+
+  constructor(call: LikeCommentCall) {
+    this._call = call;
+  }
+}
+
+export class LikePostCall extends ethereum.Call {
+  get inputs(): LikePostCall__Inputs {
+    return new LikePostCall__Inputs(this);
+  }
+
+  get outputs(): LikePostCall__Outputs {
+    return new LikePostCall__Outputs(this);
+  }
+}
+
+export class LikePostCall__Inputs {
+  _call: LikePostCall;
+
+  constructor(call: LikePostCall) {
+    this._call = call;
+  }
+
+  get _postId(): Bytes {
+    return this._call.inputValues[0].value.toBytes();
+  }
+}
+
+export class LikePostCall__Outputs {
+  _call: LikePostCall;
+
+  constructor(call: LikePostCall) {
     this._call = call;
   }
 }

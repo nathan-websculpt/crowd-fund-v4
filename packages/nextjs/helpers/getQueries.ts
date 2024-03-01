@@ -38,7 +38,7 @@ export const GQL_FUNDRUNS_For_Display = () => {
 //returns latest-first
 export const GQL_SOCIAL_POSTS_For_Display = () => {
   return gql`
-    query ($limit: Int!, $offset: Int!, $fundRunId: Int!) {
+    query ($limit: Int!, $offset: Int!, $fundRunId: Int!, $userWalletAddress: String) {
       socialPosts(
         where: { fundRunId: $fundRunId }
         orderBy: socialProposalId
@@ -51,6 +51,10 @@ export const GQL_SOCIAL_POSTS_For_Display = () => {
         proposedBy
         fundRunId
         fundRunTitle
+        likeCount
+        likes(where: { userWhoLiked: $userWalletAddress }) {
+          id
+        }
       }
     }
   `;
@@ -60,13 +64,17 @@ export const GQL_SOCIAL_POSTS_For_Display = () => {
 //used on Explore page
 export const GQL_EXPLORE_POSTS_For_Display = () => {
   return gql`
-    query ($limit: Int!, $offset: Int!) {
+    query ($limit: Int!, $offset: Int!, $userWalletAddress: String) {
       socialPosts(orderBy: blockTimestamp, orderDirection: desc, first: $limit, skip: $offset) {
         id
         postText
         proposedBy
         fundRunId
         fundRunTitle
+        likeCount
+        likes(where: { userWhoLiked: $userWalletAddress }) {
+          id
+        }
       }
     }
   `;
@@ -76,7 +84,7 @@ export const GQL_EXPLORE_POSTS_For_Display = () => {
 //used on Explore page
 export const GQL_EXPLORE_POSTS_By_Who_You_Follow = () => {
   return gql`
-    query ($limit: Int!, $offset: Int!, $user: String!) {
+    query ($limit: Int!, $offset: Int!, $user: String) {
       follows(orderBy: blockTimestamp, orderDirection: desc, first: $limit, skip: $offset, where: { user: $user }) {
         id
         fundRun {
@@ -87,6 +95,10 @@ export const GQL_EXPLORE_POSTS_By_Who_You_Follow = () => {
             proposedBy
             fundRunId
             fundRunTitle
+            likeCount
+            likes(where: { userWhoLiked: $user }) {
+              id
+            }
           }
         }
       }
@@ -98,13 +110,17 @@ export const GQL_EXPLORE_POSTS_By_Who_You_Follow = () => {
 //used in /post/[postId].tsx
 export const GQL_SOCIAL_POST_For_Display = () => {
   return gql`
-    query ($socialPostId: String!) {
+    query ($socialPostId: String!, $userWalletAddress: String) {
       socialPost(id: $socialPostId) {
         id
         postText
         proposedBy
         fundRunId
         fundRunTitle
+        likeCount
+        likes(where: { userWhoLiked: $userWalletAddress }) {
+          id
+        }
       }
     }
   `;
@@ -114,18 +130,67 @@ export const GQL_SOCIAL_POST_For_Display = () => {
 //used in /post/[postId].tsx -- Comments.tsx
 export const GQL_SOCIAL_POST_COMMENTS_For_Display = () => {
   return gql`
-    query ($limit: Int!, $offset: Int!, $socialPostId: String!) {
+    query ($limit: Int!, $offset: Int!, $socialPostId: String!, $userWalletAddress: String) {
       comments(
-        orderBy: commentId
+        orderBy: numericalId
         orderDirection: desc
-        where: { socialPost_: { id: $socialPostId } }
+        where: { parentCommentId: "0x", socialPost_: { id: $socialPostId } }
         first: $limit
         skip: $offset
       ) {
         id
         commentText
         commenter
-        # todo: could just pull the comments from the query up above...
+        likeCount
+        likes(where: { userWhoLiked: $userWalletAddress }) {
+          id
+        }
+        # todo: might just pull the comments from the query up above?
+        subcomments(orderBy: numericalId, orderDirection: desc) {
+          id
+          parentCommentId
+          commentText
+          commenter
+          likeCount
+          likes(where: { userWhoLiked: $userWalletAddress }) {
+            id
+          }
+        }
+      }
+    }
+  `;
+};
+
+//for viewing a Post's Sub-Sub-Comments
+//used in /post/[postId].tsx -- SubSubComments.tsx
+export const GQL_SOCIAL_SUB_COMMENTS_For_Display = () => {
+  return gql`
+    query ($limit: Int!, $offset: Int!, $parentCommentId: String!, $userWalletAddress: String) {
+      comments(
+        orderBy: numericalId
+        orderDirection: desc
+        where: { parentCommentId: $parentCommentId }
+        first: $limit
+        skip: $offset
+      ) {
+        id
+        parentCommentId
+        commentText
+        commenter
+        likeCount
+        likes(where: { userWhoLiked: $userWalletAddress }) {
+          id
+        }
+        subcomments(orderBy: numericalId, orderDirection: desc) {
+          id
+          parentCommentId
+          commentText
+          commenter
+          likeCount
+          likes(where: { userWhoLiked: $userWalletAddress }) {
+            id
+          }
+        }
       }
     }
   `;

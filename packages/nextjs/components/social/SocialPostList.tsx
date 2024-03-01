@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
+import { useAccount } from "wagmi";
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 import { Spinner } from "~~/components/Spinner";
 import { SocialPostDisplay } from "~~/components/social/SocialPostDisplay";
@@ -11,6 +11,7 @@ interface SocialPostProps {
 }
 
 export const SocialPostList = (fund: SocialPostProps) => {
+  const userAccount = useAccount();
   const [pageSize, setPageSize] = useState(25);
   const [pageNum, setPageNum] = useState(0);
 
@@ -19,8 +20,9 @@ export const SocialPostList = (fund: SocialPostProps) => {
       limit: pageSize,
       offset: pageNum * pageSize,
       fundRunId: parseInt(fund?.fundRunId),
+      userWalletAddress: userAccount.address,
     },
-    pollInterval: 10000,
+    pollInterval: 1000,
   });
 
   useEffect(() => {
@@ -76,6 +78,8 @@ export const SocialPostList = (fund: SocialPostProps) => {
               proposedBy={p.proposedBy}
               isCommenting={false}
               canTip={false}
+              likeCount={p.likeCount}
+              userLikedPost={p.likes.length === 1}
             />
           </div>
         ))}

@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
 import { NextPage } from "next";
+import { useAccount } from "wagmi";
 import { MetaHeader } from "~~/components/MetaHeader";
 import { Spinner } from "~~/components/Spinner";
 import { Comments } from "~~/components/posts/Comments";
@@ -10,11 +11,12 @@ import { SocialPostDisplay } from "~~/components/social/SocialPostDisplay";
 import { GQL_SOCIAL_POST_For_Display } from "~~/helpers/getQueries";
 
 const ViewPost: NextPage = () => {
+  const userAccount = useAccount();
   const router = useRouter();
   const { postId } = router.query;
 
   const { loading, error, data } = useQuery(GQL_SOCIAL_POST_For_Display(), {
-    variables: { socialPostId: postId },
+    variables: { socialPostId: postId, userWalletAddress: userAccount.address },
     pollInterval: 1000,
   });
 
@@ -32,7 +34,7 @@ const ViewPost: NextPage = () => {
     return (
       <>
         <MetaHeader title="View Post" />
-        <div className="flex flex-col w-full p-4 mx-auto shadow-xl sm:my-auto bg-secondary sm:p-7 sm:rounded-lg sm:w-4/5 lg:w-2/5">
+        <div className="flex flex-col w-full p-4 mx-auto shadow-xl sm:my-auto bg-secondary sm:p-7 sm:rounded-lg sm:w-4/5 lg:w-3/5">
           <div className="flex justify-start mb-5">
             <button className="btn btn-sm btn-primary" onClick={() => router.back()}>
               Back
@@ -48,6 +50,8 @@ const ViewPost: NextPage = () => {
                 proposedBy={data.socialPost.proposedBy}
                 isCommenting={true}
                 canTip={true}
+                likeCount={data.socialPost.likeCount}
+                userLikedPost={data.socialPost.likes.length === 1}
               />
             )}
             <div className="mt-6"></div>
@@ -55,7 +59,6 @@ const ViewPost: NextPage = () => {
 
             {data !== undefined && (
               <>
-                <h1 className="mt-12 text-right">Comments</h1>
                 <Comments postId={data.socialPost.id} />
               </>
             )}

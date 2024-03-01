@@ -15,6 +15,8 @@ import {
   Follow as FollowEvent,
   Unfollow as UnfollowEvent,
   Comment as CommentEvent,
+  PostLike as PostLikeEvent,
+  CommentLike as CommentLikeEvent,
 } from "../generated/CrowdFund/CrowdFund";
 import {
   ContractOwnerWithdrawal,
@@ -32,6 +34,8 @@ import {
   Follow,
   Unfollow,
   Comment,
+  PostLike,
+  CommentLike,
 } from "../generated/schema";
 
 export function handleContractOwnerWithdrawal(
@@ -354,6 +358,7 @@ export function handleSocialPost(event: SocialPostEvent): void {
   entity.fundRunId = event.params.fundRunId;
   entity.proposedBy = event.params.proposedBy;
   entity.postText = event.params.postText;
+  entity.likeCount = 0;
 
   entity.blockNumber = event.block.number;
   entity.blockTimestamp = event.block.timestamp;
@@ -431,9 +436,11 @@ export function handleComment(event: CommentEvent): void {
   let entity = new Comment(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   );
-  entity.commentId = event.params.commentId;
+  entity.numericalId = event.params.numericalId;
+  entity.parentCommentId = event.params.parentCommentId;
   entity.commentText = event.params.commentText;
   entity.commenter = event.params.commenter;
+  entity.likeCount = 0;
 
   entity.blockNumber = event.block.number;
   entity.blockTimestamp = event.block.timestamp;
@@ -442,6 +449,55 @@ export function handleComment(event: CommentEvent): void {
   let postEntity = SocialPost.load(event.params.postId);
   if(postEntity !== null) {
     entity.socialPost = postEntity.id;
+  }
+
+  //for comments-of-comments
+  let commentEntity = Comment.load(event.params.parentCommentId);
+  if(commentEntity !== null) {
+    entity.comment = commentEntity.id;
+  }
+
+  entity.save();
+}
+
+export function handlePostLike(event: PostLikeEvent): void {
+  let entity = new PostLike(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
+  );
+  entity.postId = event.params.postId; //TODO: may not actually need this if the post obj is on this entity
+  entity.userWhoLiked = event.params.userWhoLiked;
+
+  entity.blockNumber = event.block.number;
+  entity.blockTimestamp = event.block.timestamp;
+  entity.transactionHash = event.transaction.hash;
+
+  let postEntity = SocialPost.load(event.params.postId);
+  if(postEntity !== null) {
+    entity.post = postEntity.id;
+    postEntity.likeCount++; //TODO: handle better?
+    postEntity.save();
+  }
+
+  entity.save();
+}
+
+export function handleCommentLike(event: CommentLikeEvent): void {
+  let entity = new CommentLike(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
+  );
+  entity.postId = event.params.postId; //TODO: may not actually need this if the [parent] post obj is on this entity
+  entity.commentId = event.params.commentId;
+  entity.userWhoLiked = event.params.userWhoLiked;
+
+  entity.blockNumber = event.block.number;
+  entity.blockTimestamp = event.block.timestamp;
+  entity.transactionHash = event.transaction.hash;
+
+  let commentEntity = Comment.load(event.params.commentId);
+  if(commentEntity !== null) {
+    entity.comment = commentEntity.id;
+    commentEntity.likeCount++; //TODO: handle better?
+    commentEntity.save();
   }
 
   entity.save();

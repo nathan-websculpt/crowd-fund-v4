@@ -131,7 +131,7 @@ type SocialPost @entity {
   id: Bytes!
   socialProposalId: Int! # uint16
   fundRunId: Int! # uint16
-  fundRunTitle: String! 
+  fundRunTitle: String!
   proposedBy: Bytes! # address
   postText: String!
   blockNumber: BigInt!
@@ -139,6 +139,8 @@ type SocialPost @entity {
   transactionHash: Bytes!
   fundRun: FundRun
   comments: [Comment!] @derivedFrom(field: "socialPost")
+  likes: [PostLike!] @derivedFrom(field: "post")
+  likeCount: Int!
 }
 
 type Follow @entity {
@@ -162,11 +164,38 @@ type Unfollow @entity {
 
 type Comment @entity {
   id: Bytes!
-  commentId: Int!
+  numericalId: BigInt! # uint256
+  parentCommentId: Bytes!
   commentText: String!
   commenter: Bytes!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
   socialPost: SocialPost
+  subcomments: [Comment!] @derivedFrom(field: "comment")
+  comment: Comment
+  likes: [CommentLike!] @derivedFrom(field: "comment")
+  likeCount: Int!
+}
+
+type PostLike @entity {
+  id: Bytes!
+  postId: Bytes!
+  userWhoLiked: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  post: SocialPost
+}
+
+type CommentLike @entity {
+  id: Bytes!
+  postId: Bytes!
+  commentId: Bytes!
+  userWhoLiked: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  post: SocialPost #todo: needed?
+  comment: Comment
 }
