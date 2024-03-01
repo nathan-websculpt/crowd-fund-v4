@@ -23,7 +23,7 @@ export const Comments = (c: CommentsProps) => {
       socialPostId: c.postId,
       userWalletAddress: userAccount.address, //todo: what if they aren't connected to a wallet?
     },
-    pollInterval: 2000,
+    pollInterval: 5000,
   });
 
   useEffect(() => {
