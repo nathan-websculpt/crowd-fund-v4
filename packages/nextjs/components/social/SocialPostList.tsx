@@ -22,7 +22,7 @@ export const SocialPostList = (fund: SocialPostProps) => {
       fundRunId: parseInt(fund?.fundRunId),
       userWalletAddress: userAccount.address,
     },
-    pollInterval: 1000,
+    pollInterval: 2000,
   });
 
   useEffect(() => {

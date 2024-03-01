@@ -17,7 +17,7 @@ const ViewPost: NextPage = () => {
 
   const { loading, error, data } = useQuery(GQL_SOCIAL_POST_For_Display(), {
     variables: { socialPostId: postId, userWalletAddress: userAccount.address },
-    pollInterval: 1000,
+    pollInterval: 2000,
   });
 
   useEffect(() => {
