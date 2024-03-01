@@ -16,6 +16,8 @@ export const SubComments = (subCommentsList: SubCommentsProps) => {
               id={sc.id}
               commentText={sc.commentText}
               commenter={sc.commenter}
+              likeCount={sc.likeCount}
+              userHasLiked={sc.likes.length === 1}
             />
           </div>
         ))}
