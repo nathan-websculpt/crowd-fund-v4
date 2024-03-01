@@ -5,8 +5,8 @@
 https://github.com/nathan-websculpt/crowd-fund-v4/assets/58645278/4ccb41ab-12d9-4749-80c7-c75c8a08ff91
 
 ### 📌 Overview
-- [Current Contract](https://sepolia.etherscan.io/address/0x3dce29F3444E4Fe00F47883C8CC2c9847bAb8e3f)
-  - 0x3dce29F3444E4Fe00F47883C8CC2c9847bAb8e3f
+- [Current Contract](https://sepolia.etherscan.io/address/0xeea60Fbe2d877c0AB5DfFdFa20d0040550a010b0)
+  - 0xeea60Fbe2d877c0AB5DfFdFa20d0040550a010b0
 - [Current Site](https://crowd-fund-v4-nextjs.vercel.app/)
 - [View a Vault](https://crowd-fund-v4-nextjs.vercel.app/crowdfund/vaults/0)
 - [View Query Data](https://crowd-fund-v4-nextjs.vercel.app/queries)
