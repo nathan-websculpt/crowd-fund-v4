@@ -20,7 +20,7 @@ export const CommentLikeButton = (c: CommentProps) => {
   return (
     <>
       <div className="flex flex-row items-center gap-2 ml-4">
-        {/* This is the "like/heart" icon, it is currently a custom color, because I needed something that works with both light an dark themes */}
+        {/* This is the "like/heart" icon, it is currently a custom color, because I needed something that works with both light and dark themes */}
         {c.userHasLiked ? (
           <svg
             xmlns="http://www.w3.org/2000/svg"

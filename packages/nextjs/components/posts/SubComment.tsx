@@ -3,6 +3,7 @@ import { Address } from "../scaffold-eth/Address";
 import { CommentLikeButton } from "./CommentLikeButton";
 import { CreateSubComment } from "./CreateSubComment";
 import { SubSubComments } from "./SubSubComments";
+import { ReplyToggle } from "./ReplyToggle";
 
 interface SubCommentProps {
   postId: string;
@@ -33,6 +34,13 @@ export const SubComment = (sc: SubCommentProps) => {
             >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 7l6 5-6 5V7z" fill="#ffffff" />
             </svg>
+
+            {/* <ReplyToggle
+              postId={sc.postId}
+              commentId={sc.id}
+              likeCount={sc.likeCount}
+              userHasLiked={sc.userHasLiked}
+            /> */}
           </div>
           <CommentLikeButton
             postId={sc.postId}

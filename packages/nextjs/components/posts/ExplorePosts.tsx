@@ -47,7 +47,7 @@ export const ExplorePosts = () => {
                 Exploring posts from all Fund Runs
               </h1>
             ) : (
-              <h1 className="mt-4 mb-4 text-4xl text-center text-primary-content">No Posts found for this Fund Run</h1>
+              <h1 className="mt-4 mb-4 text-4xl text-center text-primary-content">No posts loaded onto contract yet</h1>
             )}
           </div>
           <div className="flex justify-center gap-3 mb-3">

@@ -14,8 +14,10 @@ export const ReplyToggle = (c: CommentProps) => {
 
   return (
     <>
+    {/* todo: */}
       <div className="absolute flex flex-row items-center gap-2 top-20">
-        {/* This is the "comment" icon, it is currently a custom color, because I needed something that works with both light an dark themes */}
+      {/* <div className="flex flex-row items-center gap-2 top-20"> */}
+        {/* This is the "comment" icon, it is currently a custom color, because I needed something that works with both light and dark themes */}
         <div className="flex flex-row items-center gap-2 cursor-pointer" onClick={() => setShowReply(!showReply)}>
           <svg
             xmlns="http://www.w3.org/2000/svg"

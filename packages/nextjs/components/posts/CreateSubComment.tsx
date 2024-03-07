@@ -47,7 +47,7 @@ export const CreateSubComment = (c: CreateSubCommentProps) => {
           onChange={e => setCommentText(e.target.value)}
         />
         <button className="w-20 mt-2 btn btn-primary place-self-end" onClick={() => validateThenWrite()}>
-          Reply
+          {isLoading ? <span className="loading loading-spinner loading-sm"></span> : <>Reply</>}
         </button>
       </div>
     </>

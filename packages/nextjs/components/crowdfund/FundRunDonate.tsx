@@ -37,16 +37,15 @@ export const FundRunDonate = (fundRun: FundRunProps) => {
 
   return (
     <>
-      <div className="flex w-full mt-5">
+      <div className="flex gap-1 mt-5">
         <input
-          placeholder="Donation Amount EX: 0.1"
+          placeholder="Amount EX: 0.1"
           className="w-3/4 input input-bordered input-accent"
           value={donationInput}
           onChange={e => handleBigIntChange(e.target.value)}
         />
-
-        <button className="ml-2 btn btn-primary" onClick={() => validateThenWrite()} disabled={isLoading}>
-          {isLoading ? <span className="loading loading-spinner loading-sm"></span> : <>DONATE NOW</>}
+        <button className="w-1/4 btn btn-primary" onClick={() => validateThenWrite()} disabled={isLoading}>
+          {isLoading ? <span className="loading loading-spinner loading-sm"></span> : <>DONATE</>}
         </button>
       </div>
 

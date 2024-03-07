@@ -28,7 +28,12 @@ const ManageSocial: NextPage = () => {
         <>
           <div className="px-6 pt-10 pb-8 shadow-xl sm:my-auto bg-secondary sm:mx-auto sm:max-w-11/12 md:w-9/12 sm:rounded-lg sm:px-10">
             <div className="flex items-center justify-center">
-              <CreateSocialProposal fundRunId={data?.fundRuns[0].fundRunId} title={data?.fundRuns[0].title} />
+              <CreateSocialProposal
+                fundRunId={data?.fundRuns[0].fundRunId}
+                title={data?.fundRuns[0].title}
+                owners={data?.fundRuns[0].owners}
+                remainingEther={BigInt(data?.fundRuns[0].amountCollected) - BigInt(data?.fundRuns[0].amountWithdrawn)}
+              />
             </div>
           </div>
           {loading ? (

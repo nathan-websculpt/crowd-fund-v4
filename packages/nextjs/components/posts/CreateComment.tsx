@@ -34,6 +34,7 @@ export const CreateComment = (c: CreateCommentProps) => {
     args: [c.postId, "0x", commentText],
     onBlockConfirmation: txnReceipt => {
       console.log("📦 Transaction blockHash", txnReceipt.blockHash);
+      setCommentText("");
     },
   });
   return (
@@ -45,8 +46,8 @@ export const CreateComment = (c: CreateCommentProps) => {
         value={commentText}
         onChange={e => setCommentText(e.target.value)}
       />
-      <button className="btn btn-primary" onClick={() => validateThenWrite()}>
-        Leave your Comment
+      <button className="self-end w-2/12 btn btn-primary" onClick={() => validateThenWrite()}>
+        {isLoading ? <span className="loading loading-spinner loading-sm"></span> : <>Leave your Comment</>}
       </button>
     </>
   );
