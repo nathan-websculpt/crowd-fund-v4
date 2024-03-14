@@ -26,7 +26,7 @@ export const SubSubComments = (sc: SubSubCommentsProps) => {
       parentCommentId: sc.parentCommentId,
       userWalletAddress: userAccount.address,
     },
-    pollInterval: 5000,
+    pollInterval: 1000, //PRODTODO:5000
   });
 
   useEffect(() => {

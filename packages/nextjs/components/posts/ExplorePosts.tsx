@@ -19,7 +19,7 @@ export const ExplorePosts = () => {
       offset: pageNum * pageSize,
       userWalletAddress: userAccount.address,
     },
-    pollInterval: 5000,
+    pollInterval: 1000, //PRODTODO:5000
   });
 
   useEffect(() => {

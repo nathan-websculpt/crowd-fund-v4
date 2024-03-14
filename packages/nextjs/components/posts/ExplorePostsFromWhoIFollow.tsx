@@ -19,7 +19,7 @@ export const ExplorePostsFromWhoIFollow = () => {
       offset: pageNum * pageSize,
       user: userAccount.address,
     },
-    pollInterval: 5000,
+    pollInterval: 1000, //PRODTODO:5000
   });
 
   useEffect(() => {

@@ -17,7 +17,7 @@ export const WhoFollowsThisFundRun = (fund: WhoFollowsProps) => {
       offset: pageNum * pageSize,
       fundRunId: fund?.fundRunId,
     },
-    pollInterval: 5000,
+    pollInterval: 1000, //PRODTODO:5000
   });
 
   useEffect(() => {

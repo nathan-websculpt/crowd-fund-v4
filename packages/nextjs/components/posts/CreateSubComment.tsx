@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { ReplyContext } from "~~/contexts/posts/replyContext";
 import { useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 import { notification } from "~~/utils/scaffold-eth";
 
@@ -9,7 +10,8 @@ interface CreateSubCommentProps {
 
 export const CreateSubComment = (c: CreateSubCommentProps) => {
   const [commentText, setCommentText] = useState("");
-  const [error, setError] = useState(false);
+  const replyContext = useContext(ReplyContext);
+  const [error, setError] = useState(false); //TODO:
   const [errorMsg, setErrorMsg] = useState("");
 
   const validateThenWrite = () => {
@@ -34,6 +36,7 @@ export const CreateSubComment = (c: CreateSubCommentProps) => {
     functionName: "createComment",
     args: [c.postId, c.parentCommentId, commentText],
     onBlockConfirmation: txnReceipt => {
+      replyContext?.setShowReply(false);
       console.log("📦 Transaction blockHash", txnReceipt.blockHash);
     },
   });
