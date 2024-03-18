@@ -479,7 +479,7 @@ export const GQL_SOCIAL_FOLLOWING_By_Address = () => {
   `;
 };
 
-//for getting all of the followers for a particular Fund Run
+//for getting all of the followers for a particular Fund Run//
 //used in WhoFollowsThisFundRun.tsx
 export const GQL_SOCIAL_FOLLOWERS_By_FundRunId = () => {
   return gql`
