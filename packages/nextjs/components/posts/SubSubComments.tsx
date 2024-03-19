@@ -34,9 +34,9 @@ export const SubSubComments = (sc: SubSubCommentsProps) => {
   }, [error]);
 
   //todo: remove
-  useEffect(() => {
-    if (data !== undefined && data !== null) console.log("GQL_SOCIAL_SUB_COMMENTS_For_Display DATA: ", data);
-  }, [data]);
+  // useEffect(() => {
+  //   if (data !== undefined && data !== null) console.log("GQL_SOCIAL_SUB_COMMENTS_For_Display DATA: ", data);
+  // }, [data]);
 
   if (loading) {
     return (

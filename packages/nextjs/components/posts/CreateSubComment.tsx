@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { ReplyContext } from "~~/contexts/posts/replyContext";
+import { ReplyContext, useReplyContext } from "~~/contexts/posts/replyContext";
 import { useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 import { notification } from "~~/utils/scaffold-eth";
 
@@ -11,8 +11,11 @@ interface CreateSubCommentProps {
 export const CreateSubComment = (c: CreateSubCommentProps) => {
   const [commentText, setCommentText] = useState("");
   const replyContext = useContext(ReplyContext);
+  // const replyContext = useReplyContext();
   const [error, setError] = useState(false); //TODO:
   const [errorMsg, setErrorMsg] = useState("");
+
+  console.log("from CreateSubComment(), replyContext equals: ", replyContext);
 
   const validateThenWrite = () => {
     setErrorMsg("");

@@ -3,11 +3,13 @@ import { Spinner } from "../Spinner";
 import { Address } from "../scaffold-eth";
 import { ReplyToggle } from "./ReplyToggle";
 import { SubComments } from "./SubComments";
+import { Tst } from "./Tst";
 import { useQuery } from "@apollo/client";
 import { useAccount } from "wagmi";
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
+import { CommentsContext, IComment } from "~~/contexts/posts/commentsContext";
 import { GQL_SOCIAL_POST_COMMENTS_For_Display } from "~~/helpers/getQueries";
-//
+
 interface CommentsProps {
   postId: string;
 }
@@ -16,6 +18,7 @@ export const Comments = (c: CommentsProps) => {
   const userAccount = useAccount();
   const [pageSize, setPageSize] = useState(25);
   const [pageNum, setPageNum] = useState(0);
+  const halp: IComment = { postId: "the post id", commentId: "the comment id" };
   const { loading, error, data } = useQuery(GQL_SOCIAL_POST_COMMENTS_For_Display(), {
     variables: {
       limit: pageSize,
@@ -31,9 +34,9 @@ export const Comments = (c: CommentsProps) => {
   }, [error]);
 
   //todo: remove
-  useEffect(() => {
-    if (data !== undefined && data !== null) console.log("GQL_SOCIAL_POST_COMMENTS_For_Display DATA: ", data);
-  }, [data]);
+  // useEffect(() => {
+  //   if (data !== undefined && data !== null) console.log("GQL_SOCIAL_POST_COMMENTS_For_Display DATA: ", data);
+  // }, [data]);
 
   if (loading) {
     return (
@@ -65,6 +68,19 @@ export const Comments = (c: CommentsProps) => {
               <label className="font-mono text-sm font-bold">Posted By:</label>
               <Address address={comment.commenter} size="sm" />
             </div>
+
+            <CommentsContext.Provider
+              value={{
+                postId: c.postId,
+                commentId: comment.id,
+                commenter: comment.commenter,
+                commentText: comment.commentText,
+                likeCount: comment.likeCount,
+                userHasLiked: comment.likes.length === 1
+              }}
+            >
+              <Tst></Tst>
+            </CommentsContext.Provider>
 
             {/* the reply button that will show/hide the textbox to reply */}
             <ReplyToggle

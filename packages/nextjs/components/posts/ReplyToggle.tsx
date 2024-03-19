@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { CommentLikeButton } from "./CommentLikeButton";
 import { CreateSubComment } from "./CreateSubComment";
 import { ReplyContext } from "~~/contexts/posts/replyContext";
+import { CommentsContext, useCommentsContext } from "~~/contexts/posts/commentsContext";
 
 interface CommentProps {
   postId: string;
