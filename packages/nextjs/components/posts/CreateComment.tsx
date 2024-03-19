@@ -1,12 +1,15 @@
 import { useState } from "react";
+import { usePostContext } from "~~/contexts/posts/postContext";
 import { useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 import { notification } from "~~/utils/scaffold-eth";
 
-interface CreateCommentProps {
-  postId: string;
-}
+// interface CreateCommentProps {
+//   postId: string;
+// }
 
-export const CreateComment = (c: CreateCommentProps) => {
+// export const CreateComment = (c: CreateCommentProps) => {
+export const CreateComment = () => {
+  const postContext = usePostContext();
   const [commentText, setCommentText] = useState("");
   const [error, setError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -31,7 +34,7 @@ export const CreateComment = (c: CreateCommentProps) => {
   const { writeAsync, isLoading } = useScaffoldContractWrite({
     contractName: "CrowdFund",
     functionName: "createComment",
-    args: [c.postId, "0x", commentText],
+    args: [postContext.postId, "0x", commentText],
     onBlockConfirmation: txnReceipt => {
       console.log("📦 Transaction blockHash", txnReceipt.blockHash);
       setCommentText("");

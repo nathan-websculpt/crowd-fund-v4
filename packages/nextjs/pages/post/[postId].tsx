@@ -41,21 +41,21 @@ const ViewPost: NextPage = () => {
               Back
             </button>
           </div>
-          <div className="flex flex-col gap-2 p-2 m-4 border shadow-xl border-base-300 bg-base-200 sm:rounded-lg">
-            {data !== undefined && (
-              <PostContext.Provider
-                value={{
-                  postId: data.socialPost.id,
-                  fundRunId: data.socialPost.fundRunId,
-                  fundRunTitle: data.socialPost.fundRunTitle,
-                  postText: data.socialPost.postText,
-                  proposedBy: data.socialPost.proposedBy,
-                  isCommenting: true,
-                  canTip: true,
-                  likeCount: data.socialPost.likeCount,
-                  userLikedPost: data.socialPost.likes.length === 1,
-                }}
-              >
+          {data !== undefined && (
+            <PostContext.Provider
+              value={{
+                postId: data.socialPost.id,
+                fundRunId: data.socialPost.fundRunId,
+                fundRunTitle: data.socialPost.fundRunTitle,
+                postText: data.socialPost.postText,
+                proposedBy: data.socialPost.proposedBy,
+                isCommenting: true,
+                canTip: true,
+                likeCount: data.socialPost.likeCount,
+                userLikedPost: data.socialPost.likes.length === 1,
+              }}
+            >
+              <div className="flex flex-col gap-2 p-2 m-4 border shadow-xl border-base-300 bg-base-200 sm:rounded-lg">
                 <SocialPostDisplay
                 // id={data.socialPost.id}
                 // fundRunId={data.socialPost.fundRunId}
@@ -67,17 +67,13 @@ const ViewPost: NextPage = () => {
                 // likeCount={data.socialPost.likeCount}
                 // userLikedPost={data.socialPost.likes.length === 1}
                 />
-              </PostContext.Provider>
-            )}
-            <div className="mt-6"></div>
-            <CreateComment postId={postId} />
+                <div className="mt-6"></div>
+                <CreateComment />
 
-            {data !== undefined && (
-              <>
-                <Comments postId={data.socialPost.id} />
-              </>
-            )}
-          </div>
+                <Comments />
+              </div>
+            </PostContext.Provider>
+          )}
         </div>
       </>
     );

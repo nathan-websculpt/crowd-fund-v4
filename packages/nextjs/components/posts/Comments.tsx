@@ -7,12 +7,15 @@ import { useQuery } from "@apollo/client";
 import { useAccount } from "wagmi";
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 import { GQL_SOCIAL_POST_COMMENTS_For_Display } from "~~/helpers/getQueries";
+import { usePostContext } from "~~/contexts/posts/postContext";
 
-interface CommentsProps {
-  postId: string;
-}
+// interface CommentsProps {
+//   postId: string;
+// }
 
-export const Comments = (c: CommentsProps) => {
+// export const Comments = (c: CommentsProps) => {
+export const Comments = () => {
+  const postContext = usePostContext();
   const userAccount = useAccount();
   const [pageSize, setPageSize] = useState(25);
   const [pageNum, setPageNum] = useState(0);
@@ -20,7 +23,7 @@ export const Comments = (c: CommentsProps) => {
     variables: {
       limit: pageSize,
       offset: pageNum * pageSize,
-      socialPostId: c.postId,
+      socialPostId: postContext.postId,
       userWalletAddress: userAccount.address, //todo: what if they aren't connected to a wallet?
     },
     pollInterval: 1000, //PRODTODO:5000
@@ -68,13 +71,13 @@ export const Comments = (c: CommentsProps) => {
 
             {/* the reply button that will show/hide the textbox to reply */}
             <ReplyToggle
-              postId={c.postId}
+              postId={postContext.postId}
               commentId={comment.id}
               likeCount={comment.likeCount}
               userHasLiked={comment.likes.length === 1}
             />
 
-            <SubComments postId={c.postId} subComments={comment.subcomments} />
+            <SubComments postId={postContext.postId} subComments={comment.subcomments} />
           </div>
         ))}
 
