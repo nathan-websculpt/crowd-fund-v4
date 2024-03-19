@@ -9,4 +9,8 @@ export interface IComment {
     userHasLiked: boolean;
 }
 
+export const ListOfContexts: any[] = [];
+
 export const CommentsContext = createContext<IComment | undefined>(undefined);
+
+export const SubCommentsContext = createContext<IComment | undefined>(undefined);

@@ -8,8 +8,8 @@ import { SubCommentsContext } from "~~/contexts/posts/subCommentsContext";
 import { CommentsContext } from "~~/contexts/posts/commentsContext";
 
 export const SubComment = () => {
-  // const subCommentsContext = useContext(SubCommentsContext);
-  const subCommentsContext = useContext(CommentsContext);
+  const subCommentsContext = useContext(SubCommentsContext);
+  // const subCommentsContext = useContext(CommentsContext);
   const [isOpened, toggleIsOpened] = useState(false);
   console.log("from SubComment: ", subCommentsContext?.postId, " ... ", subCommentsContext?.commentId);
   console.log("allllllllllllllso from SubComment: ", subCommentsContext);
@@ -40,10 +40,10 @@ export const SubComment = () => {
             /> */}
           </div>
           <CommentLikeButton
-            // postId={sc.postId}
-            // commentId={sc.id}
-            // likeCount={sc.likeCount}
-            // userHasLiked={sc.userHasLiked}
+            postId={subCommentsContext.postId}
+            commentId={subCommentsContext.id}
+            likeCount={subCommentsContext.likeCount}
+            userHasLiked={subCommentsContext.userHasLiked}
           />
         </div>
 

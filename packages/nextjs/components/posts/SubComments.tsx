@@ -1,4 +1,3 @@
-import { CommentsContext } from "~~/contexts/posts/commentsContext";
 import { SubComment } from "./SubComment";
 import { SubCommentsContext } from "~~/contexts/posts/subCommentsContext";
 
@@ -18,7 +17,7 @@ export const SubComments = (subCommentsList: SubCommentsProps) => {
               value={(subCommentsList.postId, sc.id, sc.commenter, sc.commentText, sc.likeCount, sc.likes.length === 1)}
             > */}
 
-            <CommentsContext.Provider
+            <SubCommentsContext.Provider
               value={{
                 postId: subCommentsList.postId,
                 commentId: sc.id,
@@ -36,7 +35,7 @@ export const SubComments = (subCommentsList: SubCommentsProps) => {
               // likeCount={sc.likeCount}
               // userHasLiked={sc.likes.length === 1}
               />
-            </CommentsContext.Provider>
+            </SubCommentsContext.Provider>
             {/* </SubCommentsContext.Provider> */}
           </div>
         ))}

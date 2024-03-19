@@ -33,10 +33,10 @@ export const ReplyToggle = () => {
           </div>
 
           <CommentLikeButton
-            // postId={c.postId}
-            // commentId={c.commentId}
-            // likeCount={c.likeCount}
-            // userHasLiked={c.userHasLiked}
+            postId={commentsContext.postId}
+            commentId={commentsContext.commentId}
+            likeCount={commentsContext.likeCount}
+            userHasLiked={commentsContext.userHasLiked}
           />
         </div>
         <div className="flex flex-col">
