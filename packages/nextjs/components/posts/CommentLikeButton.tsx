@@ -1,17 +1,19 @@
+import { usePostContext } from "~~/contexts/posts/postContext";
 import { useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 
 interface CommentProps {
-  postId: string;
+  // postId: string;
   commentId: string;
   likeCount: number;
   userHasLiked: boolean;
 }
 
 export const CommentLikeButton = (c: CommentProps) => {
+  const postContext = usePostContext();
   const { writeAsync, isLoading } = useScaffoldContractWrite({
     contractName: "CrowdFund",
     functionName: "likeComment",
-    args: [c.postId, c.commentId],
+    args: [postContext.postId, c.commentId],
     onBlockConfirmation: txnReceipt => {
       console.log("📦 Transaction blockHash", txnReceipt.blockHash);
     },

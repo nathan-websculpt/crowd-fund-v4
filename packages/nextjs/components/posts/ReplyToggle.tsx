@@ -2,15 +2,17 @@ import { useState } from "react";
 import { CommentLikeButton } from "./CommentLikeButton";
 import { CreateSubComment } from "./CreateSubComment";
 import { ReplyContext } from "~~/contexts/posts/replyContext";
+import { usePostContext } from "~~/contexts/posts/postContext";
 
 interface CommentProps {
-  postId: string;
+  // postId: string;
   commentId: string;
   likeCount: number;
   userHasLiked: boolean;
 }
 
 export const ReplyToggle = (c: CommentProps) => {
+  const postContext = usePostContext();
   const [showReply, setShowReply] = useState(false);
 
   return (
@@ -37,14 +39,13 @@ export const ReplyToggle = (c: CommentProps) => {
           </div>
 
           <CommentLikeButton
-            postId={c.postId}
             commentId={c.commentId}
             likeCount={c.likeCount}
             userHasLiked={c.userHasLiked}
           />
         </div>
         <div className="flex flex-col">
-          {showReply && <CreateSubComment postId={c.postId} parentCommentId={c.commentId} />}
+          {showReply && <CreateSubComment parentCommentId={c.commentId} />}
         </div>
       </ReplyContext.Provider>
     </>

@@ -1,14 +1,16 @@
 import { useContext, useState } from "react";
+import { usePostContext } from "~~/contexts/posts/postContext";
 import { ReplyContext } from "~~/contexts/posts/replyContext";
 import { useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 import { notification } from "~~/utils/scaffold-eth";
 
 interface CreateSubCommentProps {
-  postId: string; //TODO: may not need this...
+  // postId: string; //TODO: may not need this...
   parentCommentId: string;
 }
 
 export const CreateSubComment = (c: CreateSubCommentProps) => {
+  const postContext = usePostContext();
   const [commentText, setCommentText] = useState("");
   const replyContext = useContext(ReplyContext);
   const [error, setError] = useState(false); //TODO:
@@ -34,7 +36,7 @@ export const CreateSubComment = (c: CreateSubCommentProps) => {
   const { writeAsync, isLoading } = useScaffoldContractWrite({
     contractName: "CrowdFund",
     functionName: "createComment",
-    args: [c.postId, c.parentCommentId, commentText],
+    args: [postContext.postId, c.parentCommentId, commentText],
     onBlockConfirmation: txnReceipt => {
       replyContext?.setShowReply(false);
       console.log("📦 Transaction blockHash", txnReceipt.blockHash);

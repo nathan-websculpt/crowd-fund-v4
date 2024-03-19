@@ -1,7 +1,8 @@
+import { usePostContext } from "~~/contexts/posts/postContext";
 import { SubComment } from "./SubComment";
 
 interface SubCommentsProps {
-  postId: string;
+  // postId: string;
   subComments: any[];
 }
 
@@ -12,7 +13,6 @@ export const SubComments = (subCommentsList: SubCommentsProps) => {
         {subCommentsList?.subComments.map(sc => (
           <div key={sc.id} className="p-4 m-2 border-b-2 border-primary">
             <SubComment
-              postId={subCommentsList.postId}
               id={sc.id}
               commentText={sc.commentText}
               commenter={sc.commenter}

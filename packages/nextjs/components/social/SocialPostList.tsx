@@ -5,6 +5,7 @@ import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 import { Spinner } from "~~/components/Spinner";
 import { SocialPostDisplay } from "~~/components/social/SocialPostDisplay";
 import { GQL_SOCIAL_POSTS_For_Display } from "~~/helpers/getQueries";
+import { PostContext } from "~~/contexts/posts/postContext";
 
 interface SocialPostProps {
   fundRunId: number;
@@ -70,17 +71,30 @@ export const SocialPostList = (fund: SocialPostProps) => {
             key={p.id.toString()}
             className="flex flex-col gap-2 p-2 m-4 border shadow-xl border-base-300 bg-base-200 sm:rounded-lg"
           >
+            <PostContext.Provider
+              value={{
+                postId: p.id,
+                fundRunId: p.fundRunId,
+                fundRunTitle: p.fundRunTitle,
+                postText: p.postText,
+                proposedBy: p.proposedBy,
+                isCommenting: false,
+                canTip: false,
+                likeCount: p.likeCount,
+                userLikedPost: p.likes.length === 1,
+              }}
+            >
             <SocialPostDisplay
-              id={p.id}
-              fundRunId={p.fundRunId}
-              fundRunTitle={p.fundRunTitle}
-              postText={p.postText}
-              proposedBy={p.proposedBy}
-              isCommenting={false}
-              canTip={false}
-              likeCount={p.likeCount}
-              userLikedPost={p.likes.length === 1}
-            />
+              // id={p.id}
+              // fundRunId={p.fundRunId}
+              // fundRunTitle={p.fundRunTitle}
+              // postText={p.postText}
+              // proposedBy={p.proposedBy}
+              // isCommenting={false}
+              // canTip={false}
+              // likeCount={p.likeCount}
+              // userLikedPost={p.likes.length === 1}
+            /></PostContext.Provider>
           </div>
         ))}
 

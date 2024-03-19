@@ -4,9 +4,9 @@ import { CommentLikeButton } from "./CommentLikeButton";
 import { CreateSubComment } from "./CreateSubComment";
 import { SubSubComments } from "./SubSubComments";
 import { ReplyToggle } from "./ReplyToggle";
+import { usePostContext } from "~~/contexts/posts/postContext";
 
 interface SubCommentProps {
-  postId: string;
   id: string;
   commenter: string;
   commentText: string;
@@ -43,7 +43,6 @@ export const SubComment = (sc: SubCommentProps) => {
             /> */}
           </div>
           <CommentLikeButton
-            postId={sc.postId}
             commentId={sc.id}
             likeCount={sc.likeCount}
             userHasLiked={sc.userHasLiked}
@@ -60,8 +59,8 @@ export const SubComment = (sc: SubCommentProps) => {
 
       {isOpened && (
         <div>
-          <CreateSubComment postId={sc.postId} parentCommentId={sc.id} />
-          <SubSubComments postId={sc.postId} parentCommentId={sc.id} layersDeep={1} />
+          <CreateSubComment parentCommentId={sc.id} />
+          <SubSubComments parentCommentId={sc.id} layersDeep={1} />
         </div>
       )}
     </>

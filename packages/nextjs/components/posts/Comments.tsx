@@ -71,13 +71,12 @@ export const Comments = () => {
 
             {/* the reply button that will show/hide the textbox to reply */}
             <ReplyToggle
-              postId={postContext.postId}
               commentId={comment.id}
               likeCount={comment.likeCount}
               userHasLiked={comment.likes.length === 1}
             />
 
-            <SubComments postId={postContext.postId} subComments={comment.subcomments} />
+            <SubComments subComments={comment.subcomments} />
           </div>
         ))}
 

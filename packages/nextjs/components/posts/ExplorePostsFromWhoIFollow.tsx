@@ -5,6 +5,7 @@ import { SocialPostDisplay } from "../social/SocialPostDisplay";
 import { useQuery } from "@apollo/client";
 import { useAccount } from "wagmi";
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
+import { PostContext } from "~~/contexts/posts/postContext";
 import { GQL_EXPLORE_POSTS_By_Who_You_Follow } from "~~/helpers/getQueries";
 
 export const ExplorePostsFromWhoIFollow = () => {
@@ -75,17 +76,31 @@ export const ExplorePostsFromWhoIFollow = () => {
                   key={p.id.toString()}
                   className="flex flex-col gap-2 p-2 m-4 border shadow-xl border-base-300 bg-base-200 sm:rounded-lg"
                 >
-                  <SocialPostDisplay
-                    id={p.id}
-                    fundRunId={p.fundRunId}
-                    fundRunTitle={p.fundRunTitle}
-                    postText={p.postText}
-                    proposedBy={p.proposedBy}
-                    isCommenting={false}
-                    canTip={true}
-                    likeCount={p.likeCount}
-                    userLikedPost={p.likes.length === 1}
-                  />
+                  <PostContext.Provider
+                    value={{
+                      postId: p.id,
+                      fundRunId: p.fundRunId,
+                      fundRunTitle: p.fundRunTitle,
+                      postText: p.postText,
+                      proposedBy: p.proposedBy,
+                      isCommenting: false,
+                      canTip: true,
+                      likeCount: p.likeCount,
+                      userLikedPost: p.likes.length === 1,
+                    }}
+                  >
+                    <SocialPostDisplay
+                    // id={p.id}
+                    // fundRunId={p.fundRunId}
+                    // fundRunTitle={p.fundRunTitle}
+                    // postText={p.postText}
+                    // proposedBy={p.proposedBy}
+                    // isCommenting={false}
+                    // canTip={true}
+                    // likeCount={p.likeCount}
+                    // userLikedPost={p.likes.length === 1}
+                    />
+                  </PostContext.Provider>
                 </div>
               ))}
             </div>

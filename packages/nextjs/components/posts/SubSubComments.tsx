@@ -9,7 +9,6 @@ import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 import { GQL_SOCIAL_SUB_COMMENTS_For_Display } from "~~/helpers/getQueries";
 
 interface SubSubCommentsProps {
-  postId: string;
   parentCommentId: string;
   layersDeep: number;
   userHasLiked: boolean;
@@ -73,7 +72,6 @@ export const SubSubComments = (sc: SubSubCommentsProps) => {
             </div>
 
             <ReplyToggle
-              postId={sc.postId}
               commentId={comment.id}
               likeCount={comment.likeCount}
               userHasLiked={comment.likes.length === 1}
@@ -81,7 +79,6 @@ export const SubSubComments = (sc: SubSubCommentsProps) => {
             {/* <CreateSubComment postId={sc.postId} parentCommentId={comment.id} /> */}
             {/* todo: remove ^^^ */}
             <SubSubComments
-              postId={sc.postId}
               parentCommentId={comment.id}
               userHasLiked={comment.userHasLiked}
               layersDeep={comment.layersDeep + 1}

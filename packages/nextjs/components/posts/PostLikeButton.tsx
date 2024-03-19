@@ -1,16 +1,19 @@
+import { usePostContext } from "~~/contexts/posts/postContext";
 import { useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 
-interface PostProps {
-  postId: string;
-  likeCount: number;
-  userHasLiked: boolean;
-}
+// interface PostProps {
+//   postId: string;
+//   likeCount: number;
+//   userHasLiked: boolean;
+// }
 
-export const PostLikeButton = (post: PostProps) => {
+// export const PostLikeButton = (post: PostProps) => {
+export const PostLikeButton = () => {
+  const postContext = usePostContext();
   const { writeAsync, isLoading } = useScaffoldContractWrite({
     contractName: "CrowdFund",
     functionName: "likePost",
-    args: [post.postId],
+    args: [postContext.postId],
     onBlockConfirmation: txnReceipt => {
       console.log("📦 Transaction blockHash", txnReceipt.blockHash);
     },
@@ -20,7 +23,7 @@ export const PostLikeButton = (post: PostProps) => {
     <>
       <div className="flex flex-row items-center gap-2 ml-4">
         {/* This is the "like/heart" icon for posts, it is currently a custom color, because I needed something that works with both light an dark themes */}
-        {post.userHasLiked ? (
+        {postContext.userHasLiked ? (
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="30"
@@ -57,7 +60,7 @@ export const PostLikeButton = (post: PostProps) => {
             <path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" />
           </svg>
         )}
-        <p className="font-mono text-sm font-bold">{post.likeCount} Likes</p>
+        <p className="font-mono text-sm font-bold">{postContext.likeCount} Likes</p>
       </div>
     </>
   );

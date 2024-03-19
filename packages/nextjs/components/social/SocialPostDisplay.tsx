@@ -38,15 +38,11 @@ export const SocialPostDisplay = () => {
       <div className="flex items-center justify-between gap-4">
         <div className="flex flex-row items-center">
           {!postContext.isCommenting && (
-            <Link href={`/post/${postContext?.id}`} passHref className="btn btn-primary btn-sm">
+            <Link href={`/post/${postContext?.postId}`} passHref className="btn btn-primary btn-sm">
               Comment / s
             </Link>
           )}
-          <PostLikeButton
-            postId={postContext?.id}
-            likeCount={postContext?.likeCount}
-            userHasLiked={postContext?.userLikedPost}
-          />
+          <PostLikeButton/>
         </div>
         <div>
           <label className="font-mono text-sm font-bold">Originally Proposed By:</label>
