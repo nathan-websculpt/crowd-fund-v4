@@ -8,6 +8,7 @@ import { Spinner } from "~~/components/Spinner";
 import { Comments } from "~~/components/posts/Comments";
 import { CreateComment } from "~~/components/posts/CreateComment";
 import { SocialPostDisplay } from "~~/components/social/SocialPostDisplay";
+import { PostContext } from "~~/contexts/posts/postContext";
 import { GQL_SOCIAL_POST_For_Display } from "~~/helpers/getQueries";
 
 const ViewPost: NextPage = () => {
@@ -42,17 +43,31 @@ const ViewPost: NextPage = () => {
           </div>
           <div className="flex flex-col gap-2 p-2 m-4 border shadow-xl border-base-300 bg-base-200 sm:rounded-lg">
             {data !== undefined && (
-              <SocialPostDisplay
-                id={data.socialPost.id}
-                fundRunId={data.socialPost.fundRunId}
-                fundRunTitle={data.socialPost.fundRunTitle}
-                postText={data.socialPost.postText}
-                proposedBy={data.socialPost.proposedBy}
-                isCommenting={true}
-                canTip={true}
-                likeCount={data.socialPost.likeCount}
-                userLikedPost={data.socialPost.likes.length === 1}
-              />
+              <PostContext.Provider
+                value={{
+                  postId: data.socialPost.id,
+                  fundRunId: data.socialPost.fundRunId,
+                  fundRunTitle: data.socialPost.fundRunTitle,
+                  postText: data.socialPost.postText,
+                  proposedBy: data.socialPost.proposedBy,
+                  isCommenting: true,
+                  canTip: true,
+                  likeCount: data.socialPost.likeCount,
+                  userLikedPost: data.socialPost.likes.length === 1,
+                }}
+              >
+                <SocialPostDisplay
+                // id={data.socialPost.id}
+                // fundRunId={data.socialPost.fundRunId}
+                // fundRunTitle={data.socialPost.fundRunTitle}
+                // postText={data.socialPost.postText}
+                // proposedBy={data.socialPost.proposedBy}
+                // isCommenting={true}
+                // canTip={true}
+                // likeCount={data.socialPost.likeCount}
+                // userLikedPost={data.socialPost.likes.length === 1}
+                />
+              </PostContext.Provider>
             )}
             <div className="mt-6"></div>
             <CreateComment postId={postId} />
