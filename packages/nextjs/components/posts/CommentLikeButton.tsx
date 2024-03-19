@@ -1,17 +1,15 @@
 import { useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
+import { CommentsContext } from "~~/contexts/posts/commentsContext";
+import { useContext } from "react";
 
-interface CommentProps {
-  postId: string;
-  commentId: string;
-  likeCount: number;
-  userHasLiked: boolean;
-}
+export const CommentLikeButton = () => {
+  const commentsContext = useContext(CommentsContext);
+  console.log("from CommentLikeButton: ", commentsContext?.commentId);
 
-export const CommentLikeButton = (c: CommentProps) => {
   const { writeAsync, isLoading } = useScaffoldContractWrite({
     contractName: "CrowdFund",
     functionName: "likeComment",
-    args: [c.postId, c.commentId],
+    args: [commentsContext?.postId, commentsContext?.commentId],
     onBlockConfirmation: txnReceipt => {
       console.log("📦 Transaction blockHash", txnReceipt.blockHash);
     },
@@ -21,7 +19,7 @@ export const CommentLikeButton = (c: CommentProps) => {
     <>
       <div className="flex flex-row items-center gap-2 ml-4">
         {/* This is the "like/heart" icon, it is currently a custom color, because I needed something that works with both light and dark themes */}
-        {c.userHasLiked ? (
+        {commentsContext?.userHasLiked ? (
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="30"
@@ -58,7 +56,7 @@ export const CommentLikeButton = (c: CommentProps) => {
             <path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" />
           </svg>
         )}
-        <p className="font-mono text-sm font-bold">{c.likeCount} Likes</p>
+        <p className="font-mono text-sm font-bold">{commentsContext?.likeCount} Likes</p>
       </div>
     </>
   );

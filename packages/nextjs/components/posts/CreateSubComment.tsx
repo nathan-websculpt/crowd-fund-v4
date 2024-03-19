@@ -4,7 +4,7 @@ import { useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 import { notification } from "~~/utils/scaffold-eth";
 
 interface CreateSubCommentProps {
-  postId: string; //TODO: may not need this...
+  postId: string;
   parentCommentId: string;
 }
 

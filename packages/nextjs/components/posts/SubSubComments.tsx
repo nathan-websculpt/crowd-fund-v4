@@ -23,7 +23,7 @@ export const SubSubComments = (sc: SubSubCommentsProps) => {
     variables: {
       limit: pageSize,
       offset: pageNum * pageSize,
-      parentCommentId: sc.parentCommentId,
+      parentCommentId: sc?.parentCommentId,
       userWalletAddress: userAccount.address,
     },
     pollInterval: 1000, //PRODTODO:5000
@@ -34,9 +34,9 @@ export const SubSubComments = (sc: SubSubCommentsProps) => {
   }, [error]);
 
   //todo: remove
-  useEffect(() => {
-    if (data !== undefined && data !== null) console.log("GQL_SOCIAL_SUB_COMMENTS_For_Display DATA: ", data);
-  }, [data]);
+  // useEffect(() => {
+  //   if (data !== undefined && data !== null) console.log("GQL_SOCIAL_SUB_COMMENTS_For_Display DATA: ", data);
+  // }, [data]);
 
   if (loading) {
     return (
@@ -73,10 +73,10 @@ export const SubSubComments = (sc: SubSubCommentsProps) => {
             </div>
 
             <ReplyToggle
-              postId={sc.postId}
-              commentId={comment.id}
-              likeCount={comment.likeCount}
-              userHasLiked={comment.likes.length === 1}
+              // postId={sc.postId}
+              // commentId={comment.id}
+              // likeCount={comment.likeCount}
+              // userHasLiked={comment.likes.length === 1}
             />
             {/* <CreateSubComment postId={sc.postId} parentCommentId={comment.id} /> */}
             {/* todo: remove ^^^ */}

@@ -6,6 +6,7 @@ import { SubComments } from "./SubComments";
 import { useQuery } from "@apollo/client";
 import { useAccount } from "wagmi";
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
+import { CommentsContext } from "~~/contexts/posts/commentsContext";
 import { GQL_SOCIAL_POST_COMMENTS_For_Display } from "~~/helpers/getQueries";
 
 interface CommentsProps {
@@ -13,6 +14,7 @@ interface CommentsProps {
 }
 
 export const Comments = (c: CommentsProps) => {
+  console.log("Comments: ", c.postId);
   const userAccount = useAccount();
   const [pageSize, setPageSize] = useState(25);
   const [pageNum, setPageNum] = useState(0);
@@ -31,9 +33,9 @@ export const Comments = (c: CommentsProps) => {
   }, [error]);
 
   //todo: remove
-  useEffect(() => {
-    if (data !== undefined && data !== null) console.log("GQL_SOCIAL_POST_COMMENTS_For_Display DATA: ", data);
-  }, [data]);
+  // useEffect(() => {
+  //   if (data !== undefined && data !== null) console.log("GQL_SOCIAL_POST_COMMENTS_For_Display DATA: ", data);
+  // }, [data]);
 
   if (loading) {
     return (
@@ -66,13 +68,24 @@ export const Comments = (c: CommentsProps) => {
               <Address address={comment.commenter} size="sm" />
             </div>
 
-            {/* the reply button that will show/hide the textbox to reply */}
-            <ReplyToggle
-              postId={c.postId}
-              commentId={comment.id}
-              likeCount={comment.likeCount}
-              userHasLiked={comment.likes.length === 1}
-            />
+            <CommentsContext.Provider
+              value={
+                (c.postId,
+                comment.id,
+                comment.commenter,
+                comment.commentText,
+                comment.likeCount,
+                comment.likes.length === 1)
+              }
+            >
+              {/* the reply button that will show/hide the textbox to reply */}
+              <ReplyToggle
+                // postId={c.postId}
+                // commentId={comment.id}
+                // likeCount={comment.likeCount}
+                // userHasLiked={comment.likes.length === 1}
+              />
+            </CommentsContext.Provider>
 
             <SubComments postId={c.postId} subComments={comment.subcomments} />
           </div>

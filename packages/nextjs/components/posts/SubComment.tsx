@@ -1,24 +1,21 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Address } from "../scaffold-eth/Address";
 import { CommentLikeButton } from "./CommentLikeButton";
 import { CreateSubComment } from "./CreateSubComment";
 import { SubSubComments } from "./SubSubComments";
 import { ReplyToggle } from "./ReplyToggle";
+import { SubCommentsContext } from "~~/contexts/posts/subCommentsContext";
+import { CommentsContext } from "~~/contexts/posts/commentsContext";
 
-interface SubCommentProps {
-  postId: string;
-  id: string;
-  commenter: string;
-  commentText: string;
-  likeCount: number;
-  userHasLiked: boolean;
-}
-
-export const SubComment = (sc: SubCommentProps) => {
+export const SubComment = () => {
+  // const subCommentsContext = useContext(SubCommentsContext);
+  const subCommentsContext = useContext(CommentsContext);
   const [isOpened, toggleIsOpened] = useState(false);
+  console.log("from SubComment: ", subCommentsContext?.postId, " ... ", subCommentsContext?.commentId);
+  console.log("allllllllllllllso from SubComment: ", subCommentsContext);
   return (
     <>
-      <p>{sc.commentText}</p>
+      <p>{subCommentsContext.commentText}</p>
       <div className="flex flex-row items-center justify-between">
         <div className="flex flex-row items-center">
           <div className="flex flex-row items-center" onClick={() => toggleIsOpened(!isOpened)}>
@@ -43,16 +40,16 @@ export const SubComment = (sc: SubCommentProps) => {
             /> */}
           </div>
           <CommentLikeButton
-            postId={sc.postId}
-            commentId={sc.id}
-            likeCount={sc.likeCount}
-            userHasLiked={sc.userHasLiked}
+            // postId={sc.postId}
+            // commentId={sc.id}
+            // likeCount={sc.likeCount}
+            // userHasLiked={sc.userHasLiked}
           />
         </div>
 
         <div className="flex flex-col items-end justify-end mt-3">
           <label className="font-mono text-sm font-bold">Posted By:</label>
-          <Address address={sc.commenter} size="sm" />
+          <Address address={subCommentsContext.commenter} size="sm" />
         </div>
       </div>
 
@@ -60,8 +57,8 @@ export const SubComment = (sc: SubCommentProps) => {
 
       {isOpened && (
         <div>
-          <CreateSubComment postId={sc.postId} parentCommentId={sc.id} />
-          <SubSubComments postId={sc.postId} parentCommentId={sc.id} layersDeep={1} />
+          <CreateSubComment postId={subCommentsContext.postId} parentCommentId={subCommentsContext.commentId} />
+          <SubSubComments postId={subCommentsContext.postId} parentCommentId={subCommentsContext.commentId} layersDeep={1} />
         </div>
       )}
     </>

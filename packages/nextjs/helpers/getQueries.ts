@@ -127,7 +127,7 @@ export const GQL_SOCIAL_POST_For_Display = () => {
 };
 
 //for viewing a Post's Comments
-//used in /post/[postId].tsx -- Comments.tsx
+//used in Comments.tsx
 export const GQL_SOCIAL_POST_COMMENTS_For_Display = () => {
   return gql`
     query ($limit: Int!, $offset: Int!, $socialPostId: String!, $userWalletAddress: String) {
