@@ -19,7 +19,14 @@ export const SubComments = (subCommentsList: SubCommentsProps) => {
             > */}
 
             <CommentsContext.Provider
-              value={(subCommentsList.postId, sc.id, sc.commenter, sc.commentText, sc.likeCount, sc.likes.length === 1)}
+              value={{
+                postId: subCommentsList.postId,
+                commentId: sc.id,
+                commenter: sc.commenter,
+                commentText: sc.commentText,
+                likeCount: sc.likeCount,
+                userHasLiked: sc.likes.length === 1
+              }}
             >
               <SubComment
               // postId={subCommentsList.postId}

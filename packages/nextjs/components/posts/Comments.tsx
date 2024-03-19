@@ -69,14 +69,14 @@ export const Comments = (c: CommentsProps) => {
             </div>
 
             <CommentsContext.Provider
-              value={
-                (c.postId,
-                comment.id,
-                comment.commenter,
-                comment.commentText,
-                comment.likeCount,
-                comment.likes.length === 1)
-              }
+              value={{
+                postId: c.postId,
+                commentId: comment.id,
+                commenter: comment.commenter,
+                commentText: comment.commentText,
+                likeCount: comment.likeCount,
+                userHasLiked: comment.likes.length === 1
+              }}
             >
               {/* the reply button that will show/hide the textbox to reply */}
               <ReplyToggle
