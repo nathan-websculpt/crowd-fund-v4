@@ -143,7 +143,6 @@ export const GQL_SOCIAL_POST_COMMENTS_For_Display = () => {
         likes(where: { userWhoLiked: $userWalletAddress }) {
           id
         }
-        # todo: might just pull the comments from the query up above?
         subcomments(orderBy: numericalId, orderDirection: desc) {
           id
           parentCommentId
@@ -443,7 +442,7 @@ export const GQL_SOCIAL_FOLLOWERS_By_FundRunId_and_Address = () => {
       }
     }
   `;
-}; //TODO: ^^clean unneeded fields
+};
 
 //for getting all of the Fund Runs that a user is following
 //used in WhoAmIFollowing.tsx
