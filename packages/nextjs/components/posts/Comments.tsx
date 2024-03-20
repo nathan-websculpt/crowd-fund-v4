@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Spinner } from "../Spinner";
 import { ReplyToggle } from "./ReplyToggle";
-import { SubComments } from "./SubComments";
+import { SubComment } from "./SubComment";
 import { useQuery } from "@apollo/client";
 import { useAccount } from "wagmi";
 import { GQL_SOCIAL_POST_COMMENTS_For_Display } from "~~/helpers/getQueries";
@@ -57,8 +57,21 @@ export const Comments = (c: CommentsProps) => {
               userHasLiked={comment.likes.length === 1}
               commenter={comment.commenter}
             />
-
-            <SubComments postId={c.postId} subComments={comment.subcomments} />
+            {/* sub-comments -- map to <SubComment /> */}
+            <div className="pl-4 mb-4 ml-8 border-l-4 border-secondary">
+              {comment.subcomments.map(sc => (
+                <div key={sc.id} className="p-4 m-2 border-b-2 border-primary">
+                  <SubComment
+                    postId={c.postId}
+                    id={sc.id}
+                    commentText={sc.commentText}
+                    commenter={sc.commenter}
+                    likeCount={sc.likeCount}
+                    userHasLiked={sc.likes.length === 1}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         ))}
       </>
