@@ -26,10 +26,6 @@ export const ExplorePostsFromWhoIFollow = () => {
     if (error !== undefined && error !== null) console.log("GQL_EXPLORE_POSTS_By_Who_You_Follow Query Error: ", error);
   }, [error]);
 
-  useEffect(() => {
-    if (data !== undefined && data !== null) console.log("Query data: ", data);
-  }, [data]);
-
   if (loading) {
     return (
       <div className="flex flex-col gap-2 p-2 m-4 mx-auto border shadow-xl border-base-300 bg-base-200 sm:rounded-lg">

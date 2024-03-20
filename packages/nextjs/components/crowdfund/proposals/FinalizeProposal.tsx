@@ -33,7 +33,6 @@ export const FinalizeProposal = (proposal: FinalizeProposalProps) => {
 
   useEffect(() => {
     if (data !== undefined) {
-      console.log(data);
       const thisArr = [];
       for (let i = 0; i < data.proposals[0].signatures.length; i++) {
         thisArr.push(data.proposals[0].signatures[i].signature);
