@@ -7,7 +7,7 @@ interface PostProps {
 }
 
 export const PostLikeButton = (post: PostProps) => {
-  const { writeAsync, isLoading } = useScaffoldContractWrite({
+  const { writeAsync } = useScaffoldContractWrite({
     contractName: "CrowdFund",
     functionName: "likePost",
     args: [post.postId],

@@ -29,7 +29,7 @@ export const SocialPostDisplay = (thisPost: SocialPostDisplayProps) => {
         {thisPost.canTip && <Tip id={thisPost.fundRunId} />}
       </div>
 
-      <p className="mt-3 mb-5 text-3xl">{thisPost?.postText}</p>
+      <p className="mt-3 mb-5 text-3xl">{thisPost.postText}</p>
 
       <div className="flex items-center justify-between gap-4">
         <div className="flex flex-row items-center">
@@ -39,14 +39,14 @@ export const SocialPostDisplay = (thisPost: SocialPostDisplayProps) => {
             </Link>
           )}
           <PostLikeButton
-            postId={thisPost?.id}
-            likeCount={thisPost?.likeCount}
-            userHasLiked={thisPost?.userLikedPost}
+            postId={thisPost.id}
+            likeCount={thisPost.likeCount}
+            userHasLiked={thisPost.userLikedPost}
           />
         </div>
         <div className="flex flex-col items-end">
           <label className="font-mono text-sm font-bold">Originally Proposed By:</label>
-          <Address address={thisPost?.proposedBy} size="sm" />
+          <Address address={thisPost.proposedBy} size="sm" />
         </div>
       </div>
     </>

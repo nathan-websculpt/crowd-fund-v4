@@ -8,7 +8,7 @@ interface CommentProps {
 }
 
 export const CommentLikeButton = (c: CommentProps) => {
-  const { writeAsync, isLoading } = useScaffoldContractWrite({
+  const { writeAsync } = useScaffoldContractWrite({
     contractName: "CrowdFund",
     functionName: "likeComment",
     args: [c.postId, c.commentId],

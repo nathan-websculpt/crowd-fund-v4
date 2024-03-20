@@ -13,7 +13,6 @@ interface SubSubCommentsProps {
 }
 
 export const SubSubComments = (sc: SubSubCommentsProps) => {
-  console.log(sc.layersDeep);
   const userAccount = useAccount();
   const { loading, error, data } = useQuery(GQL_SOCIAL_SUB_COMMENTS_For_Display(), {
     variables: {
@@ -26,11 +25,6 @@ export const SubSubComments = (sc: SubSubCommentsProps) => {
   useEffect(() => {
     if (error !== undefined && error !== null) console.log("GQL_SOCIAL_SUB_COMMENTS_For_Display Query Error: ", error);
   }, [error]);
-
-  //todo: remove
-  useEffect(() => {
-    if (data !== undefined && data !== null) console.log("GQL_SOCIAL_SUB_COMMENTS_For_Display DATA: ", data);
-  }, [data]);
 
   if (loading) {
     return (
