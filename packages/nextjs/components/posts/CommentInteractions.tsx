@@ -82,7 +82,7 @@ export const CommentInteractions = (c: CommentProps) => {
           />
         </div>
 
-        <div className="flex flex-col items-end mt-3">
+        <div className="flex flex-col items-end">
           <label className="font-mono text-sm font-bold">Posted By:</label>
           <Address address={c.commenter} size="sm" />
         </div>

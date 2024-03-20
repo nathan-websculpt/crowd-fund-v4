@@ -36,7 +36,7 @@ export const Comments = (c: CommentsProps) => {
         {data?.comments?.map(comment => (
           <div
             key={comment.id}
-            className="flex flex-col gap-2 px-2 m-4 border shadow-xl border-base-300 bg-base-200 sm:rounded-lg"
+            className="flex flex-col gap-2 px-2 m-4 border-l-8 shadow-xl bg-base-200 sm:rounded-lg border-secondary"
           >
             <p>{comment.commentText}</p>
 
@@ -47,10 +47,11 @@ export const Comments = (c: CommentsProps) => {
               userHasLiked={comment.likes.length === 1}
               commenter={comment.commenter}
             />
+            
             {/* sub-comments -- map to <SubComment /> */}
-            <div className="pl-4 mb-4 ml-8 border-l-4 border-secondary">
+            <div className="mb-4 ml-2 border-l-8 border-accent">
               {comment.subcomments.map(sc => (
-                <div key={sc.id} className="p-4 m-2 border-b-2 border-primary">
+                <div key={sc.id} className="p-4 border-b-4 border-accent">
                   <SubComment
                     postId={c.postId}
                     id={sc.id}

@@ -44,7 +44,7 @@ export const SocialPostDisplay = (thisPost: SocialPostDisplayProps) => {
             userHasLiked={thisPost?.userLikedPost}
           />
         </div>
-        <div>
+        <div className="flex flex-col items-end">
           <label className="font-mono text-sm font-bold">Originally Proposed By:</label>
           <Address address={thisPost?.proposedBy} size="sm" />
         </div>

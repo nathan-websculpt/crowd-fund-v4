@@ -13,6 +13,7 @@ interface SubSubCommentsProps {
 }
 
 export const SubSubComments = (sc: SubSubCommentsProps) => {
+  console.log(sc.layersDeep);
   const userAccount = useAccount();
   const { loading, error, data } = useQuery(GQL_SOCIAL_SUB_COMMENTS_For_Display(), {
     variables: {
@@ -43,8 +44,8 @@ export const SubSubComments = (sc: SubSubCommentsProps) => {
         {data?.comments?.map(comment => (
           <div
             key={comment.id}
-            className={`flex flex-col gap-2 p-2 pl-4 m-4 mb-4 ml-8 border shadow-xl bg-base-200 sm:rounded-lg border-secondary border-l-${
-              sc.layersDeep * 4
+            className={`flex flex-col gap-2 p-2 pl-4 m-4 mb-4 ml-0 border-l-8 border-t shadow-xl bg-base-200 sm:rounded-lg ${
+              sc.layersDeep % 2 === 0 ? "border-l-accent border-t-accent" : "border-l-secondary border-t-secondary"
             }`}
           >
             <p>{comment.commentText}</p>
@@ -61,7 +62,7 @@ export const SubSubComments = (sc: SubSubCommentsProps) => {
               postId={sc.postId}
               parentCommentId={comment.id}
               userHasLiked={comment.userHasLiked}
-              layersDeep={comment.layersDeep + 1}
+              layersDeep={sc.layersDeep + 1}
             />
           </div>
         ))}
