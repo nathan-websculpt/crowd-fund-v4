@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Spinner } from "../Spinner";
 import { ReplyToggle } from "./ReplyToggle";
 import { useQuery } from "@apollo/client";
@@ -14,12 +14,8 @@ interface SubSubCommentsProps {
 
 export const SubSubComments = (sc: SubSubCommentsProps) => {
   const userAccount = useAccount();
-  const [pageSize, setPageSize] = useState(25);
-  const [pageNum, setPageNum] = useState(0);
   const { loading, error, data } = useQuery(GQL_SOCIAL_SUB_COMMENTS_For_Display(), {
     variables: {
-      limit: pageSize,
-      offset: pageNum * pageSize,
       parentCommentId: sc.parentCommentId,
       userWalletAddress: userAccount.address,
     },
@@ -52,7 +48,7 @@ export const SubSubComments = (sc: SubSubCommentsProps) => {
             }`}
           >
             <p>{comment.commentText}</p>
-            
+
             <ReplyToggle
               postId={sc.postId}
               commentId={comment.id}
@@ -60,7 +56,7 @@ export const SubSubComments = (sc: SubSubCommentsProps) => {
               userHasLiked={comment.likes.length === 1}
               commenter={comment.commenter}
             />
-            
+
             <SubSubComments
               postId={sc.postId}
               parentCommentId={comment.id}

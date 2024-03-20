@@ -163,14 +163,8 @@ export const GQL_SOCIAL_POST_COMMENTS_For_Display = () => {
 //used in /post/[postId].tsx -- SubSubComments.tsx
 export const GQL_SOCIAL_SUB_COMMENTS_For_Display = () => {
   return gql`
-    query ($limit: Int!, $offset: Int!, $parentCommentId: String!, $userWalletAddress: String) {
-      comments(
-        orderBy: numericalId
-        orderDirection: desc
-        where: { parentCommentId: $parentCommentId }
-        first: $limit
-        skip: $offset
-      ) {
+    query ($parentCommentId: String!, $userWalletAddress: String) {
+      comments(orderBy: numericalId, orderDirection: desc, where: { parentCommentId: $parentCommentId }) {
         id
         parentCommentId
         commentText
