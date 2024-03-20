@@ -130,13 +130,11 @@ export const GQL_SOCIAL_POST_For_Display = () => {
 //used in /post/[postId].tsx -- Comments.tsx
 export const GQL_SOCIAL_POST_COMMENTS_For_Display = () => {
   return gql`
-    query ($limit: Int!, $offset: Int!, $socialPostId: String!, $userWalletAddress: String) {
+    query ($socialPostId: String!, $userWalletAddress: String) {
       comments(
         orderBy: numericalId
         orderDirection: desc
         where: { parentCommentId: "0x", socialPost_: { id: $socialPostId } }
-        first: $limit
-        skip: $offset
       ) {
         id
         commentText

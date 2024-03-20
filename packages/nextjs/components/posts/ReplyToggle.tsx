@@ -17,24 +17,13 @@ export const ReplyToggle = (c: CommentProps) => {
   const userAccount = useAccount();
   const [showReply, setShowReply] = useState(false);
   const [thisCommentsText, setThisCommentsText] = useState("");
-  const [error, setError] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
 
   const validateThenWrite = () => {
-    setErrorMsg("");
-    setError(false);
-    // validate data
     if (thisCommentsText.trim() === "") {
-      newErr("Please provide text for this sub-comment.");
+      notification.warning("Please provide text for this comment.", { position: "top-right", duration: 6000 });
       return;
     }
     writeAsync();
-  };
-
-  const newErr = (msg: string) => {
-    notification.warning(msg, { position: "top-right", duration: 6000 });
-    setErrorMsg(msg);
-    setError(true);
   };
 
   const { writeAsync, isLoading } = useScaffoldContractWrite({
@@ -103,7 +92,7 @@ export const ReplyToggle = (c: CommentProps) => {
           <>
             <div className="flex flex-col mt-4">
               <textarea
-                placeholder="Leave youuuuuuuur reply..."
+                placeholder="Leave your reply..."
                 className="px-3 py-3 border rounded-lg bg-base-200 border-base-300 textarea"
                 value={thisCommentsText}
                 onChange={e => setThisCommentsText(e.target.value)}

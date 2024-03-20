@@ -54,7 +54,7 @@ const ViewPost: NextPage = () => {
                 userLikedPost={data.socialPost.likes.length === 1}
               />
             )}
-            <div className="mt-6"></div>
+
             <CreateComment postId={postId} />
 
             {data !== undefined && (

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Spinner } from "../Spinner";
 import { ReplyToggle } from "./ReplyToggle";
 import { SubComment } from "./SubComment";
@@ -12,14 +12,10 @@ interface CommentsProps {
 
 export const Comments = (c: CommentsProps) => {
   const userAccount = useAccount();
-  const [pageSize, setPageSize] = useState(25);
-  const [pageNum, setPageNum] = useState(0);
   const { loading, error, data } = useQuery(GQL_SOCIAL_POST_COMMENTS_For_Display(), {
     variables: {
-      limit: pageSize,
-      offset: pageNum * pageSize,
       socialPostId: c.postId,
-      userWalletAddress: userAccount.address, //todo: what if they aren't connected to a wallet?
+      userWalletAddress: userAccount.address,
     },
     pollInterval: 5000,
   });
@@ -27,11 +23,6 @@ export const Comments = (c: CommentsProps) => {
   useEffect(() => {
     if (error !== undefined && error !== null) console.log("GQL_SOCIAL_POST_COMMENTS_For_Display Query Error: ", error);
   }, [error]);
-
-  //todo: remove
-  useEffect(() => {
-    if (data !== undefined && data !== null) console.log("GQL_SOCIAL_POST_COMMENTS_For_Display DATA: ", data);
-  }, [data]);
 
   if (loading) {
     return (

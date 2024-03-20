@@ -8,24 +8,13 @@ interface CreateCommentProps {
 
 export const CreateComment = (c: CreateCommentProps) => {
   const [commentText, setCommentText] = useState("");
-  const [error, setError] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
 
   const validateThenWrite = () => {
-    setErrorMsg("");
-    setError(false);
-    // validate data
     if (commentText.trim() === "") {
-      newErr("Please provide text for this comment.");
+      notification.warning("Please provide text for this comment.", { position: "top-right", duration: 6000 });
       return;
     }
     writeAsync();
-  };
-
-  const newErr = (msg: string) => {
-    notification.warning(msg, { position: "top-right", duration: 6000 });
-    setErrorMsg(msg);
-    setError(true);
   };
 
   const { writeAsync, isLoading } = useScaffoldContractWrite({
