@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Spinner } from "../Spinner";
-import { ReplyToggle } from "./ReplyToggle";
+import { CommentInteractions } from "./CommentInteractions";
 import { useQuery } from "@apollo/client";
 import { useAccount } from "wagmi";
 import { GQL_SOCIAL_SUB_COMMENTS_For_Display } from "~~/helpers/getQueries";
@@ -49,7 +49,7 @@ export const SubSubComments = (sc: SubSubCommentsProps) => {
           >
             <p>{comment.commentText}</p>
 
-            <ReplyToggle
+            <CommentInteractions
               postId={sc.postId}
               commentId={comment.id}
               likeCount={comment.likeCount}

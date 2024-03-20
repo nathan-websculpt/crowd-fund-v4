@@ -13,7 +13,7 @@ interface CommentProps {
   userHasLiked: boolean;
 }
 
-export const ReplyToggle = (c: CommentProps) => {
+export const CommentInteractions = (c: CommentProps) => {
   const userAccount = useAccount();
   const [showReply, setShowReply] = useState(false);
   const [thisCommentsText, setThisCommentsText] = useState("");
@@ -45,7 +45,7 @@ export const ReplyToggle = (c: CommentProps) => {
           setTimeout(() => {
             setThisCommentsText("");
             setShowReply(false);
-          }, 5000);
+          }, 2000);
         }
       });
     },

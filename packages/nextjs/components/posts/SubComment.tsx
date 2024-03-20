@@ -1,4 +1,4 @@
-import { ReplyToggle } from "./ReplyToggle";
+import { CommentInteractions } from "./CommentInteractions";
 import { SubSubComments } from "./SubSubComments";
 
 interface SubCommentProps {
@@ -15,7 +15,7 @@ export const SubComment = (sc: SubCommentProps) => {
     <>
       <p>{sc.commentText}</p>
 
-      <ReplyToggle
+      <CommentInteractions
         postId={sc.postId}
         commentId={sc.id}
         likeCount={sc.likeCount}

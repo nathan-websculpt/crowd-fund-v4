@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Spinner } from "../Spinner";
-import { ReplyToggle } from "./ReplyToggle";
+import { CommentInteractions } from "./CommentInteractions";
 import { SubComment } from "./SubComment";
 import { useQuery } from "@apollo/client";
 import { useAccount } from "wagmi";
@@ -41,7 +41,7 @@ export const Comments = (c: CommentsProps) => {
             <p>{comment.commentText}</p>
 
             {/* TODO: ReplyToggle needs a rename */}
-            <ReplyToggle
+            <CommentInteractions
               postId={c.postId}
               commentId={comment.id}
               likeCount={comment.likeCount}
