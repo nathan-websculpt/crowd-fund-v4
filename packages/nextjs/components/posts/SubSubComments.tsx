@@ -43,7 +43,7 @@ export const SubSubComments = (sc: SubSubCommentsProps) => {
         {data?.comments?.map(comment => (
           <div
             key={comment.id}
-            className={`relative flex flex-col gap-2 p-2 pl-4 m-4 mb-4 ml-8 border shadow-xl bg-base-200 sm:rounded-lg border-secondary border-l-${
+            className={`flex flex-col gap-2 p-2 pl-4 m-4 mb-4 ml-8 border shadow-xl bg-base-200 sm:rounded-lg border-secondary border-l-${
               sc.layersDeep * 4
             }`}
           >

@@ -40,7 +40,6 @@ export const Comments = (c: CommentsProps) => {
           >
             <p>{comment.commentText}</p>
 
-            {/* TODO: ReplyToggle needs a rename */}
             <CommentInteractions
               postId={c.postId}
               commentId={comment.id}
