@@ -2,7 +2,6 @@ import { useState } from "react";
 import { CommentLikeButton } from "./CommentLikeButton";
 import { CreateSubComment } from "./CreateSubComment";
 import { ReplyContext } from "~~/contexts/posts/replyContext";
-import { usePostContext } from "~~/contexts/posts/postContext";
 
 interface CommentProps {
   // postId: string;
@@ -12,7 +11,6 @@ interface CommentProps {
 }
 
 export const ReplyToggle = (c: CommentProps) => {
-  const postContext = usePostContext();
   const [showReply, setShowReply] = useState(false);
 
   return (
