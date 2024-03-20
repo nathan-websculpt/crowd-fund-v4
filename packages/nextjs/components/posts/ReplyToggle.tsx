@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Address } from "../scaffold-eth/Address";
 import { CommentLikeButton } from "./CommentLikeButton";
-import { CreateSubComment } from "./CreateSubComment";
+import { useAccount } from "wagmi";
+import { useScaffoldContractWrite, useScaffoldEventSubscriber } from "~~/hooks/scaffold-eth";
+import { notification } from "~~/utils/scaffold-eth";
 
 interface CommentProps {
   postId: string;
@@ -12,7 +14,53 @@ interface CommentProps {
 }
 
 export const ReplyToggle = (c: CommentProps) => {
+  const userAccount = useAccount();
   const [showReply, setShowReply] = useState(false);
+  const [thisCommentsText, setThisCommentsText] = useState("");
+  const [error, setError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const validateThenWrite = () => {
+    setErrorMsg("");
+    setError(false);
+    // validate data
+    if (thisCommentsText.trim() === "") {
+      newErr("Please provide text for this sub-comment.");
+      return;
+    }
+    writeAsync();
+  };
+
+  const newErr = (msg: string) => {
+    notification.warning(msg, { position: "top-right", duration: 6000 });
+    setErrorMsg(msg);
+    setError(true);
+  };
+
+  const { writeAsync, isLoading } = useScaffoldContractWrite({
+    contractName: "CrowdFund",
+    functionName: "createComment",
+    args: [c.postId, c.commentId, thisCommentsText],
+    onBlockConfirmation: txnReceipt => {
+      console.log("📦 Transaction blockHash", txnReceipt.blockHash);
+    },
+  });
+
+  useScaffoldEventSubscriber({
+    contractName: "CrowdFund",
+    eventName: "Comment",
+    listener: logs => {
+      logs.map(log => {
+        const { commenter } = log.args;
+        if (userAccount.address === commenter) {
+          setTimeout(() => {
+            setThisCommentsText("");
+            setShowReply(false);
+          }, 5000);
+        }
+      });
+    },
+  });
 
   return (
     <>
@@ -51,7 +99,21 @@ export const ReplyToggle = (c: CommentProps) => {
         </div>
       </div>
       <div className="flex flex-col">
-        {showReply && <CreateSubComment postId={c.postId} parentCommentId={c.commentId} />}
+        {showReply && (
+          <>
+            <div className="flex flex-col mt-4">
+              <textarea
+                placeholder="Leave youuuuuuuur reply..."
+                className="px-3 py-3 border rounded-lg bg-base-200 border-base-300 textarea"
+                value={thisCommentsText}
+                onChange={e => setThisCommentsText(e.target.value)}
+              />
+              <button className="w-20 mt-2 btn btn-primary place-self-end" onClick={() => validateThenWrite()}>
+                {isLoading ? <span className="loading loading-spinner loading-sm"></span> : <>Reply</>}
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </>
   );
