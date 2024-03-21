@@ -3,7 +3,7 @@ import { useDarkMode, useIsMounted } from "usehooks-ts";
 import { MoonIcon, SunIcon } from "@heroicons/react/24/outline";
 
 export const SwitchTheme = ({ className }: { className?: string }) => {
-  const { isDarkMode, toggle } = useDarkMode();
+  const { isDarkMode, toggle } = useDarkMode(true);
   const isMounted = useIsMounted();
 
   useEffect(() => {
@@ -22,8 +22,8 @@ export const SwitchTheme = ({ className }: { className?: string }) => {
       />
       {isMounted() && (
         <label htmlFor="theme-toggle" className={`swap swap-rotate ${!isDarkMode ? "swap-active" : ""}`}>
-          <SunIcon className="swap-on h-5 w-5" />
-          <MoonIcon className="swap-off h-5 w-5" />
+          <SunIcon className="w-5 h-5 swap-on" />
+          <MoonIcon className="w-5 h-5 swap-off" />
         </label>
       )}
     </div>
