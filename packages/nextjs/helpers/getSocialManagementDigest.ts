@@ -2,9 +2,6 @@
 import { encodeAbiParameters, encodePacked, keccak256 } from "viem";
 
 const getSocialManagementDigest = async (nonce: bigint, postText: string, proposedBy: string) => {
-  console.log("getSocialManagementDigest postText: ", postText);
-  console.log("getSocialManagementDigest proposedBy: ", proposedBy);
-
   const abi_struct = [
     {
       inputs: [

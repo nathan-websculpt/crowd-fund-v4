@@ -196,6 +196,6 @@ type CommentLike @entity {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
-  post: SocialPost #todo: needed?
+  post: SocialPost
   comment: Comment
 }

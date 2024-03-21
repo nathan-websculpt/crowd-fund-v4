@@ -8,24 +8,13 @@ interface CreateCommentProps {
 
 export const CreateComment = (c: CreateCommentProps) => {
   const [commentText, setCommentText] = useState("");
-  const [error, setError] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
 
   const validateThenWrite = () => {
-    setErrorMsg("");
-    setError(false);
-    // validate data
     if (commentText.trim() === "") {
-      newErr("Please provide text for this comment.");
+      notification.warning("Please provide text for this comment.", { position: "top-right", duration: 6000 });
       return;
     }
     writeAsync();
-  };
-
-  const newErr = (msg: string) => {
-    notification.warning(msg, { position: "top-right", duration: 6000 });
-    setErrorMsg(msg);
-    setError(true);
   };
 
   const { writeAsync, isLoading } = useScaffoldContractWrite({
@@ -34,6 +23,7 @@ export const CreateComment = (c: CreateCommentProps) => {
     args: [c.postId, "0x", commentText],
     onBlockConfirmation: txnReceipt => {
       console.log("📦 Transaction blockHash", txnReceipt.blockHash);
+      setCommentText("");
     },
   });
   return (
@@ -45,8 +35,8 @@ export const CreateComment = (c: CreateCommentProps) => {
         value={commentText}
         onChange={e => setCommentText(e.target.value)}
       />
-      <button className="btn btn-primary" onClick={() => validateThenWrite()}>
-        Leave your Comment
+      <button className="self-end w-2/12 btn btn-primary" onClick={() => validateThenWrite()}>
+        {isLoading ? <span className="loading loading-spinner loading-sm"></span> : <>Leave your Comment</>}
       </button>
     </>
   );

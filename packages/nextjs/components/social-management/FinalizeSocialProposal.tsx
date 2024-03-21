@@ -31,7 +31,6 @@ export const FinalizeSocialProposal = (proposal: FinalizeSocialProposalProps) =>
 
   useEffect(() => {
     if (data !== undefined) {
-      console.log(data);
       const thisArr = [];
       for (let i = 0; i < data.socialProposals[0].signatures.length; i++) {
         thisArr.push(data.socialProposals[0].signatures[i].signature);

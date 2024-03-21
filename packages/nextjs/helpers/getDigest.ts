@@ -2,10 +2,6 @@
 import { encodeAbiParameters, encodePacked, keccak256 } from "viem";
 
 const getDigest = async (nonce: bigint, amount: bigint, to: string, proposedBy: string, reason: string) => {
-  console.log("getDigest amount: ", amount.toString());
-  console.log("getDigest to: ", to);
-  console.log("getDigest proposedBy: ", proposedBy);
-
   //TODO: get from
   //     nextjs\generated\deployedcontracts.ts
   // ... not sure where this abi snippet should come from?

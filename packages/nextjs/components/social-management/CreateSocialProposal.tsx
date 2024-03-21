@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import router from "next/router";
-import { SignMessageReturnType, toBytes } from "viem";
+import { Address } from "../scaffold-eth";
+import { SignMessageReturnType, formatEther, toBytes } from "viem";
 import { useAccount, useWalletClient } from "wagmi";
 import getNonce from "~~/helpers/getNonce";
 import getSocialManagementDigest from "~~/helpers/getSocialManagementDigest";
@@ -11,6 +12,8 @@ import { notification } from "~~/utils/scaffold-eth";
 interface CreateSocialProposalProps {
   fundRunId: number;
   title: string;
+  owners: [];
+  remainingEther: bigint;
 }
 
 export const CreateSocialProposal = (fundRun: CreateSocialProposalProps) => {
@@ -108,17 +111,34 @@ export const CreateSocialProposal = (fundRun: CreateSocialProposalProps) => {
         ) : (
           <></>
         )}
-        <div className="flex mb-5">
-          <label className="mr-2 text-lg font-bold underline">Fund Run Title:</label>
-          <p className="m-0 text-lg">{fundRun.title}</p>
+        <div className="flex items-center justify-between px-8 mb-4">
+          <h1 className="text-2xl underline">Create a New SOCIAL Proposal</h1>
+          <div className="flex items-center gap-4">
+            <h4 className="text-xl font-bold underline">Remaining Ether:</h4>
+            <span className="text-lg">{formatEther(fundRun?.remainingEther)}</span>
+          </div>
         </div>
-        <h1 className="mb-0 text-xl">Create a New SOCIAL Proposal</h1>
-        <h4 className="mt-0 mb-4 text-lg">
-          Note: You have to handle proposals in order. If one proposal is not finalized before another is created, the
-          nonce will be off (for the unfinished proposal).
-        </h4>
-
-        <div className="justify-center sm:gap-5 sm:flex sm:flex-row">
+        <div className="flex items-center justify-between px-16 mb-8">
+          <div className="flex items-center gap-6">
+            <label className="text-xl font-bold underline">Title:</label>
+            <p className="mr-16 text-lg sm:mr-24">{fundRun.title}</p>
+          </div>
+          <div className="flex items-center gap-6">
+            <h1 className="text-xl font-bold underline">Owners:</h1>
+            <div className="flex flex-col gap-4">
+              {fundRun?.owners?.map(owner => (
+                <div key={owner}>
+                  <Address address={owner} size="md" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-col w-3/5 gap-4 mx-auto">
+          <h4 className="mb-4 text-center text-md">
+            Note: You have to handle proposals in order. If one proposal is not finalized before another is created, the
+            nonce will be off (for the unfinished proposal).
+          </h4>
           <div className="flex flex-col">
             <label className="mb-3 text-2xl font-bold">Propose a Post</label>
             <textarea
@@ -132,6 +152,7 @@ export const CreateSocialProposal = (fundRun: CreateSocialProposalProps) => {
             />{" "}
           </div>
         </div>
+
         <button
           className="w-10/12 mx-auto md:w-3/5 btn btn-primary"
           onClick={() => signNewProposal()}

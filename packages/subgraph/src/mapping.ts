@@ -376,7 +376,7 @@ export function handleSocialPost(event: SocialPostEvent): void {
   let fundRunEntity = FundRun.load(
     Bytes.fromHexString("fundruns__").concat(Bytes.fromI32(entity.fundRunId))
   );
-  if (fundRunEntity !== null){ 
+  if (fundRunEntity !== null) {
     entity.fundRunTitle = fundRunEntity.title;
     entity.fundRun = fundRunEntity.id;
   }
@@ -447,13 +447,13 @@ export function handleComment(event: CommentEvent): void {
   entity.transactionHash = event.transaction.hash;
 
   let postEntity = SocialPost.load(event.params.postId);
-  if(postEntity !== null) {
+  if (postEntity !== null) {
     entity.socialPost = postEntity.id;
   }
 
   //for comments-of-comments
   let commentEntity = Comment.load(event.params.parentCommentId);
-  if(commentEntity !== null) {
+  if (commentEntity !== null) {
     entity.comment = commentEntity.id;
   }
 
@@ -464,7 +464,7 @@ export function handlePostLike(event: PostLikeEvent): void {
   let entity = new PostLike(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   );
-  entity.postId = event.params.postId; //TODO: may not actually need this if the post obj is on this entity
+  entity.postId = event.params.postId;
   entity.userWhoLiked = event.params.userWhoLiked;
 
   entity.blockNumber = event.block.number;
@@ -472,9 +472,9 @@ export function handlePostLike(event: PostLikeEvent): void {
   entity.transactionHash = event.transaction.hash;
 
   let postEntity = SocialPost.load(event.params.postId);
-  if(postEntity !== null) {
+  if (postEntity !== null) {
     entity.post = postEntity.id;
-    postEntity.likeCount++; //TODO: handle better?
+    postEntity.likeCount++;
     postEntity.save();
   }
 
@@ -485,7 +485,7 @@ export function handleCommentLike(event: CommentLikeEvent): void {
   let entity = new CommentLike(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   );
-  entity.postId = event.params.postId; //TODO: may not actually need this if the [parent] post obj is on this entity
+  entity.postId = event.params.postId;
   entity.commentId = event.params.commentId;
   entity.userWhoLiked = event.params.userWhoLiked;
 
@@ -494,9 +494,9 @@ export function handleCommentLike(event: CommentLikeEvent): void {
   entity.transactionHash = event.transaction.hash;
 
   let commentEntity = Comment.load(event.params.commentId);
-  if(commentEntity !== null) {
+  if (commentEntity !== null) {
     entity.comment = commentEntity.id;
-    commentEntity.likeCount++; //TODO: handle better?
+    commentEntity.likeCount++;
     commentEntity.save();
   }
 

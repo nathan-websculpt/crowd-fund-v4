@@ -130,13 +130,11 @@ export const GQL_SOCIAL_POST_For_Display = () => {
 //used in /post/[postId].tsx -- Comments.tsx
 export const GQL_SOCIAL_POST_COMMENTS_For_Display = () => {
   return gql`
-    query ($limit: Int!, $offset: Int!, $socialPostId: String!, $userWalletAddress: String) {
+    query ($socialPostId: String!, $userWalletAddress: String) {
       comments(
         orderBy: numericalId
         orderDirection: desc
         where: { parentCommentId: "0x", socialPost_: { id: $socialPostId } }
-        first: $limit
-        skip: $offset
       ) {
         id
         commentText
@@ -145,7 +143,6 @@ export const GQL_SOCIAL_POST_COMMENTS_For_Display = () => {
         likes(where: { userWhoLiked: $userWalletAddress }) {
           id
         }
-        # todo: might just pull the comments from the query up above?
         subcomments(orderBy: numericalId, orderDirection: desc) {
           id
           parentCommentId
@@ -165,14 +162,8 @@ export const GQL_SOCIAL_POST_COMMENTS_For_Display = () => {
 //used in /post/[postId].tsx -- SubSubComments.tsx
 export const GQL_SOCIAL_SUB_COMMENTS_For_Display = () => {
   return gql`
-    query ($limit: Int!, $offset: Int!, $parentCommentId: String!, $userWalletAddress: String) {
-      comments(
-        orderBy: numericalId
-        orderDirection: desc
-        where: { parentCommentId: $parentCommentId }
-        first: $limit
-        skip: $offset
-      ) {
+    query ($parentCommentId: String!, $userWalletAddress: String) {
+      comments(orderBy: numericalId, orderDirection: desc, where: { parentCommentId: $parentCommentId }) {
         id
         parentCommentId
         commentText
@@ -451,7 +442,7 @@ export const GQL_SOCIAL_FOLLOWERS_By_FundRunId_and_Address = () => {
       }
     }
   `;
-}; //TODO: ^^clean unneeded fields
+};
 
 //for getting all of the Fund Runs that a user is following
 //used in WhoAmIFollowing.tsx
