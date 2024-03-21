@@ -42,10 +42,8 @@ export const CommentInteractions = (c: CommentProps) => {
       logs.map(log => {
         const { commenter } = log.args;
         if (userAccount.address === commenter) {
-          setTimeout(() => {
-            setThisCommentsText("");
-            setShowReply(false);
-          }, 2000);
+          setThisCommentsText("");
+          setShowReply(false);
         }
       });
     },

@@ -21,7 +21,7 @@ const ScaffoldEthApp = ({ Component, pageProps }: AppProps) => {
   const setNativeCurrencyPrice = useGlobalState(state => state.setNativeCurrencyPrice);
   // This variable is required for initial client side rendering of correct theme for RainbowKit
   const [isDarkTheme, setIsDarkTheme] = useState(true);
-  const { isDarkMode } = useDarkMode();
+  const { isDarkMode } = useDarkMode(true);
 
   const subgraphUri = "http://localhost:8000/subgraphs/name/scaffold-eth/your-contract"; //PRODTODO::
   const apolloClient = new ApolloClient({
