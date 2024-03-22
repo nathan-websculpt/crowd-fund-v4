@@ -1,5 +1,9 @@
 # 🚀 🌑 Social Crowd Funds
 
+## Follow-along in the blogs
+- [part nine](https://medium.com/@websculpt/building-a-project-with-se-2-crowd-fund-part-nine-followers-and-posts-9f2621600ac8)
+- [part ten](https://medium.com/@websculpt/building-a-project-with-se-2-crowd-fund-part-ten-infinite-comments-1201ca2c42b1)
+
 ## Demo
 
 https://github.com/nathan-websculpt/crowd-fund-v4/assets/58645278/27f4931b-8a6f-46ae-a680-c18d83d60e5d
